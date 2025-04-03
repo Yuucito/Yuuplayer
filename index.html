@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Iframe</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Generador de Iframe para JW Player</h1>
+    <form id="iframe-generator">
+        <!-- Selector de servicio -->
+        <label for="service">Servicio:</label>
+        <select id="service">
+            <option value="direct">Directo (URL completa)</option>
+            <option value="pixeldrain">Pixeldrain (ID del archivo)</option>
+            <option value="googledrive">Google Drive (ID o enlace público)</option>
+        </select>
+
+        <!-- Campo para el video -->
+        <label for="video-id">ID/URL del Video:</label>
+        <input type="text" id="video-id" placeholder="Ejemplo: tmMzuTHm (Pixeldrain) o https://drive.google.com/file/d/FILE_ID/view" required>
+
+        <!-- Campo para la imagen de portada -->
+        <label for="poster-url">URL de la Imagen de Portada:</label>
+        <input type="text" id="poster-url" placeholder="https://example.com/poster.jpg">
+
+        <button type="button" onclick="generateIframe()">Generar Iframe</button>
+    </form>
+
+    <div class="iframe-preview" id="iframe-preview"></div>
+
+    <script>
+        const gDriveApikey = "AIzaSyAIpSmdpo48g_EK9kQdcuDKEYJtyqNEGAU";
+
+        function isValidUrl(url) {
+            try { return new URL(url); } catch (e) { return false; }
+        }
+
+        function extractGoogleDriveId(url) {
+            const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            return match ? match[1] : null;
+        }
+
+        async function getGoogleDriveFileUrl(fileId) {
+            const apiUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${gDriveApikey}`;
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Error al acceder al archivo. Asegúrate de que sea público.");
+                return apiUrl;
+            } catch (error) { alert(error.message); return null; }
+        }
+
+        async function generateIframe() {
+            const service = document.getElementById('service').value;
+            const videoInput = document.getElementById('video-id').value.trim();
+            const posterUrl = document.getElementById('poster-url').value.trim();
+
+            let videoUrl;
+
+            if (service === "direct") {
+                videoUrl = videoInput;
+            } else if (service === "pixeldrain") {
+                videoUrl = `https://pixeldrain.com/api/file/${videoInput}`;
+            } else if (service === "googledrive") {
+                const fileId = videoInput.startsWith("https://drive.google.com") 
+                    ? extractGoogleDriveId(videoInput) 
+                    : videoInput;
+                videoUrl = await getGoogleDriveFileUrl(fileId);
+            }
+
+            if (!videoUrl) {
+                alert("Por favor, ingresa un ID/URL válido.");
+                return;
+            }
+
+            const iframeParams = new URLSearchParams({
+                video: videoUrl,
+                poster: posterUrl
+            });
+
+            const iframeSrc = `https://jeison-ramos.github.io/player/player.html?${iframeParams.toString()}`;
+
+            document.getElementById('iframe-preview').innerHTML = `
+                <h2>Iframe Generado:</h2>
+                <textarea rows="4" style="width: 100%;">${`<iframe src="${iframeSrc}" width="800" height="450" frameborder="0" allowfullscreen></iframe>`}</textarea>
+                <h3>Vista Previa:</h3>
+                <iframe src="${iframeSrc}" width="800" height="450" frameborder="0" allowfullscreen></iframe>
+            `;
+        }
+    </script>
+</body>
+</html>

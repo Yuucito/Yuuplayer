@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor Fluid Player con Publicidad VAST</title>
+    <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css">
+    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="video-player" playsinline controls>
+            Tu navegador no soporta el elemento de video.
+        </video>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const videoUrl = params.get('video');
+
+        if (videoUrl) {
+            const player = fluidPlayer("video-player", {
+                layoutControls: {
+                    primaryColor: "#FF6600",
+                    playButtonShowing: true,
+                    autoPlay: false,
+                    mute: false,
+                    allowTheatre: true,
+                    controlBar: {
+                        autoHide: true
+                    }
+                },
+                vastOptions: {
+                    adList: [
+                        {
+                            roll: "preRoll",
+                            vastTag: "https://thusizulu.com/d.maFqzwdDGyNkvEZrG/UO/Re/md9YuiZMUplokQPVTwYox/NczUM_3LMpzaANtCN/jdEk3mMazec/ztM/SIZis/aGW/1/pZd/D/0kxF"
+                        }
+                    ],
+                    skipButtonCaption: "Saltar en [[seconds]] segundos",
+                    skipButtonClickCaption: "Saltar ahora",
+                    adText: "Publicidad",
+                    adCTAText: "Más información"
+                }
+            });
+
+            document.getElementById("video-player").setAttribute("src", videoUrl);
+
+            // Evento para reanudar el video tras la publicidad
+            player.on('adFinished', function() {
+                document.getElementById("video-player").play();
+            });
+        } else {
+            document.getElementById('video-container').innerHTML = `
+                <div style="color: white; text-align: center; font-size: 1.5em;">
+                    Error: No se proporcionó una URL de video. Usa el parámetro "video" en la URL.
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

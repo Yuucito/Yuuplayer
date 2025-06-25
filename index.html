@@ -1,93 +1,99 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Iframe</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Video.js Embed Generator</title>
+  
+  <!-- Video.js CSS -->
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+
+  <!-- Optional: HTTP Quality Selector Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/videojs-http-source-selector@1.1.6/dist/videojs-http-source-selector.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: white;
+      padding: 20px;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+    }
+    input {
+      background: #1e1e1e;
+      color: white;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+    iframe {
+      margin-top: 20px;
+      width: 100%;
+      height: 300px;
+      border: 1px solid #333;
+    }
+  </style>
 </head>
 <body>
-    <h1>Generador de Iframe para JW Player</h1>
-    <form id="iframe-generator">
-        <!-- Selector de servicio -->
-        <label for="service">Servicio:</label>
-        <select id="service">
-            <option value="direct">Directo (URL completa)</option>
-            <option value="pixeldrain">Pixeldrain (ID del archivo)</option>
-            <option value="googledrive">Google Drive (ID o enlace público)</option>
-        </select>
 
-        <!-- Campo para el video -->
-        <label for="video-id">ID/URL del Video:</label>
-        <input type="text" id="video-id" placeholder="Ejemplo: tmMzuTHm (Pixeldrain) o https://drive.google.com/file/d/FILE_ID/view" required>
+  <h2>🎬 Generador de Embed para Video.js (.m3u8)</h2>
 
-        <!-- Campo para la imagen de portada -->
-        <label for="poster-url">URL de la Imagen de Portada:</label>
-        <input type="text" id="poster-url" placeholder="https://example.com/poster.jpg">
+  <label>URL .m3u8</label>
+  <input type="text" id="m3u8" placeholder="https://tuservidor.com/stream.m3u8" />
 
-        <button type="button" onclick="generateIframe()">Generar Iframe</button>
-    </form>
+  <label>URL del banner (imagen de portada)</label>
+  <input type="text" id="poster" placeholder="https://tuservidor.com/banner.jpg" />
 
-    <div class="iframe-preview" id="iframe-preview"></div>
+  <button onclick="generarEmbed()">🎥 Generar reproductor</button>
 
-    <script>
-        const gDriveApikey = "AIzaSyAIpSmdpo48g_EK9kQdcuDKEYJtyqNEGAU";
+  <h3>Embed generado:</h3>
+  <textarea id="embedCode" rows="5" readonly style="width: 100%;"></textarea>
 
-        function isValidUrl(url) {
-            try { return new URL(url); } catch (e) { return false; }
-        }
+  <h3>Vista previa:</h3>
+  <iframe id="preview"></iframe>
 
-        function extractGoogleDriveId(url) {
-            const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-            return match ? match[1] : null;
-        }
+  <script>
+    function generarEmbed() {
+      const m3u8 = document.getElementById('m3u8').value;
+      const poster = document.getElementById('poster').value;
+      const embedHtml = `
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/videojs-http-streaming@3.0.0/dist/videojs-http-streaming.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/videojs-http-source-selector@1.1.6/dist/videojs-http-source-selector.min.js"></script>
+</head>
+<body style="margin:0;">
+  <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%" poster="${poster}" data-setup='{}'>
+    <source src="${m3u8}" type="application/x-mpegURL" />
+  </video>
+  <script>
+    var player = videojs('my-video');
+    player.httpSourceSelector({ default: 'auto' });
+    player.ready(function() {
+      player.httpSourceSelector();
+    });
+  </script>
+</body>
+</html>`;
 
-        async function getGoogleDriveFileUrl(fileId) {
-            const apiUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&key=${gDriveApikey}`;
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error("Error al acceder al archivo. Asegúrate de que sea público.");
-                return apiUrl;
-            } catch (error) { alert(error.message); return null; }
-        }
+      const blob = new Blob([embedHtml], { type: 'text/html' });
+      const iframeUrl = URL.createObjectURL(blob);
 
-        async function generateIframe() {
-            const service = document.getElementById('service').value;
-            const videoInput = document.getElementById('video-id').value.trim();
-            const posterUrl = document.getElementById('poster-url').value.trim();
+      document.getElementById('embedCode').value = `<iframe src="${iframeUrl}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
+      document.getElementById('preview').src = iframeUrl;
+    }
+  </script>
 
-            let videoUrl;
-
-            if (service === "direct") {
-                videoUrl = videoInput;
-            } else if (service === "pixeldrain") {
-                videoUrl = `https://pixeldrain.com/api/file/${videoInput}`;
-            } else if (service === "googledrive") {
-                const fileId = videoInput.startsWith("https://drive.google.com") 
-                    ? extractGoogleDriveId(videoInput) 
-                    : videoInput;
-                videoUrl = await getGoogleDriveFileUrl(fileId);
-            }
-
-            if (!videoUrl) {
-                alert("Por favor, ingresa un ID/URL válido.");
-                return;
-            }
-
-            const iframeParams = new URLSearchParams({
-                video: videoUrl,
-                poster: posterUrl
-            });
-
-            const iframeSrc = `https://jeison-ramos.github.io/player/player.html?${iframeParams.toString()}`;
-
-            document.getElementById('iframe-preview').innerHTML = `
-                <h2>Iframe Generado:</h2>
-                <textarea rows="4" style="width: 100%;">${`<iframe src="${iframeSrc}" width="800" height="450" frameborder="0" allowfullscreen></iframe>`}</textarea>
-                <h3>Vista Previa:</h3>
-                <iframe src="${iframeSrc}" width="800" height="450" frameborder="0" allowfullscreen></iframe>
-            `;
-        }
-    </script>
 </body>
 </html>

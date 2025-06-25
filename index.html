@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Generador JWPlayer Embed</title>
+  <title>Generador Embed (.m3u8)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     body {
@@ -11,7 +11,7 @@
       font-family: sans-serif;
       padding: 20px;
     }
-    input, button, textarea {
+    input, button, textarea, select {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
@@ -36,16 +36,19 @@
   </style>
 </head>
 <body>
-  <h2>🎬 Generador Embed JWPlayer (.m3u8)</h2>
+  <h2>🎬 Generador Embed (.m3u8)</h2>
 
   <label>URL del video (.m3u8):</label>
   <input type="text" id="videoUrl" placeholder="https://tuservidor.com/video.m3u8" />
 
-  <label>Imagen de portada (poster):</label>
+  <label>Imagen de portada:</label>
   <input type="text" id="posterUrl" placeholder="https://tuservidor.com/imagen.jpg" />
 
-  <label>ID de JWPlayer (tu clave):</label>
-  <input type="text" id="jwKey" placeholder="XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo" />
+  <label>Reproductor:</label>
+  <select id="playerType">
+    <option value="shaka-player.html">Shaka Player</option>
+    <option value="videojs-player.html">Video.js</option>
+  </select>
 
   <button onclick="generar()">🎥 Generar Embed</button>
 
@@ -59,9 +62,9 @@
     function generar() {
       const videoUrl = encodeURIComponent(document.getElementById('videoUrl').value);
       const posterUrl = encodeURIComponent(document.getElementById('posterUrl').value);
-      const jwKey = encodeURIComponent(document.getElementById('jwKey').value);
+      const playerType = document.getElementById('playerType').value;
 
-      const embedSrc = `player.html?src=${videoUrl}&poster=${posterUrl}&key=${jwKey}`;
+      const embedSrc = `${playerType}?src=${videoUrl}&poster=${posterUrl}`;
       const embedCode = `<iframe src="${embedSrc}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
 
       document.getElementById('embedCode').value = embedCode;

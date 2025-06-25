@@ -2,35 +2,29 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Generador Embed Video.js</title>
+  <title>Generador Clappr Embed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
-      font-family: sans-serif;
-      background: #121212;
+      background: #111;
       color: white;
+      font-family: sans-serif;
       padding: 20px;
     }
-    input, button {
-      padding: 10px;
-      margin: 10px 0;
+    input, button, textarea {
       width: 100%;
+      margin: 10px 0;
+      padding: 10px;
       border-radius: 5px;
       border: none;
     }
     input {
-      background: #1e1e1e;
+      background: #222;
       color: white;
     }
     button {
       background: #4caf50;
       color: white;
-      cursor: pointer;
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-      margin-top: 10px;
     }
     iframe {
       width: 100%;
@@ -41,16 +35,17 @@
   </style>
 </head>
 <body>
-  <h2>🎬 Generador Video.js Embed</h2>
-  <label>URL del video (.m3u8):</label>
+  <h2>🎬 Generador Clappr Embed (.m3u8)</h2>
+
+  <label>URL .m3u8:</label>
   <input type="text" id="videoUrl" placeholder="https://tuservidor.com/video.m3u8" />
 
-  <label>URL del banner (imagen de portada):</label>
-  <input type="text" id="posterUrl" placeholder="https://tuservidor.com/banner.jpg" />
+  <label>Banner / imagen de portada:</label>
+  <input type="text" id="posterUrl" placeholder="https://tuservidor.com/portada.jpg" />
 
-  <button onclick="generar()">🎥 Generar iframe</button>
+  <button onclick="generar()">🎥 Generar Embed</button>
 
-  <label>Código embed:</label>
+  <label>Embed generado:</label>
   <textarea id="embedCode" readonly></textarea>
 
   <h3>Vista previa:</h3>
@@ -60,11 +55,10 @@
     function generar() {
       const videoUrl = encodeURIComponent(document.getElementById('videoUrl').value);
       const posterUrl = encodeURIComponent(document.getElementById('posterUrl').value);
-
       const embedSrc = `player.html?src=${videoUrl}&poster=${posterUrl}`;
-      const iframeCode = `<iframe src="${embedSrc}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
+      const embedCode = `<iframe src="${embedSrc}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
 
-      document.getElementById('embedCode').value = iframeCode;
+      document.getElementById('embedCode').value = embedCode;
       document.getElementById('preview').src = embedSrc;
     }
   </script>

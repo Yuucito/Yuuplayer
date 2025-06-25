@@ -41,13 +41,9 @@
   <label>URL del video (.m3u8):</label>
   <input type="text" id="videoUrl" placeholder="https://tuservidor.com/video.m3u8" />
 
-  <label>Imagen de portada:</label>
-  <input type="text" id="posterUrl" placeholder="https://tuservidor.com/imagen.jpg" />
-
   <label>Reproductor:</label>
   <select id="playerType">
-    <option value="shaka-player.html">Shaka Player</option>
-    <option value="videojs-player.html">Video.js</option>
+    <option value="videojs-player.html">Video.js (Recomendado)</option>
     <option value="fluid-player.html">Fluid Player</option>
   </select>
 
@@ -62,10 +58,10 @@
   <script>
     function generar() {
       const videoUrl = encodeURIComponent(document.getElementById('videoUrl').value);
-      const posterUrl = encodeURIComponent(document.getElementById('posterUrl').value);
+      const bannerUrl = encodeURIComponent("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNR--hfnu_326uvVE3R07IbLhlG2iDS7w1nxYePkRO6lp68gShbBFEaopRXjvhqjMf37Q9xH0-a_AdRZmcQ_53EqHL1OwYMaTKj60kmJoL5PDFNOwla5baOgaWow9tj0bm2DhOCRke7SygGCibwtEmiEamV8vzez27lzv33bFv3wBlQ3kSZXPNlGfEMRJ3/s1600/Untitled87_20250618205847.png");
       const playerType = document.getElementById('playerType').value;
 
-      const embedSrc = `${playerType}?src=${videoUrl}&poster=${posterUrl}`;
+      const embedSrc = `${playerType}?src=${videoUrl}&poster=${bannerUrl}`;
       const embedCode = `<iframe src="${embedSrc}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
 
       document.getElementById('embedCode').value = embedCode;

@@ -2,11 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Video.js Player</title>
+  <title>Video.js Player con Calidad</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Video.js core -->
   <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
   <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+
+  <!-- Plugin de selección de calidad -->
   <script src="https://cdn.jsdelivr.net/npm/videojs-http-source-selector@1.1.6/dist/videojs-http-source-selector.min.js"></script>
 
   <style>
@@ -25,10 +28,12 @@
   <video id="videoPlayer" class="video-js vjs-default-skin" controls></video>
 
   <script>
+    // Obtener parámetros de la URL
     const params = new URLSearchParams(window.location.search);
     const src = decodeURIComponent(params.get("src") || "");
     const poster = decodeURIComponent(params.get("poster") || "");
 
+    // Inicializar Video.js
     const player = videojs('videoPlayer', {
       autoplay: false,
       controls: true,
@@ -37,13 +42,29 @@
       sources: [{
         src: src,
         type: 'application/x-mpegURL'
-      }]
+      }],
+      controlBar: {
+        children: [
+          'playToggle',
+          'volumePanel',
+          'currentTimeDisplay',
+          'timeDivider',
+          'durationDisplay',
+          'progressControl',
+          'liveDisplay',
+          'remainingTimeDisplay',
+          'fullscreenToggle',
+          'settingsMenuButton' // Añade aquí el botón de configuración
+        ]
+      }
     });
 
+    // Registrar plugin y agregar Quality Selector
     player.ready(function () {
       player.httpSourceSelector({ default: 'auto' });
-      player.controlBar.addChild('QualitySelector');
+      player.controlBar.addChild('QualitySelector', {});
     });
   </script>
+
 </body>
 </html>

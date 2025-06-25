@@ -3,97 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Video.js Embed Generator</title>
-  
-  <!-- Video.js CSS -->
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-
-  <!-- Optional: HTTP Quality Selector Plugin -->
-  <script src="https://cdn.jsdelivr.net/npm/videojs-http-source-selector@1.1.6/dist/videojs-http-source-selector.min.js"></script>
-
+  <title>Generador Embed Video.js</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       background: #121212;
       color: white;
       padding: 20px;
     }
     input, button {
-      padding: 8px;
-      margin: 5px 0;
+      padding: 10px;
+      margin: 10px 0;
       width: 100%;
-      border: none;
       border-radius: 5px;
+      border: none;
     }
     input {
       background: #1e1e1e;
       color: white;
     }
     button {
-      background-color: #4CAF50;
+      background: #4caf50;
       color: white;
       cursor: pointer;
     }
-    iframe {
-      margin-top: 20px;
+    textarea {
       width: 100%;
-      height: 300px;
+      height: 100px;
+      margin-top: 10px;
+    }
+    iframe {
+      width: 100%;
+      height: 360px;
+      margin-top: 20px;
       border: 1px solid #333;
     }
   </style>
 </head>
 <body>
+  <h2>🎬 Generador Video.js Embed</h2>
+  <label>URL del video (.m3u8):</label>
+  <input type="text" id="videoUrl" placeholder="https://tuservidor.com/video.m3u8" />
 
-  <h2>🎬 Generador de Embed para Video.js (.m3u8)</h2>
+  <label>URL del banner (imagen de portada):</label>
+  <input type="text" id="posterUrl" placeholder="https://tuservidor.com/banner.jpg" />
 
-  <label>URL .m3u8</label>
-  <input type="text" id="m3u8" placeholder="https://tuservidor.com/stream.m3u8" />
+  <button onclick="generar()">🎥 Generar iframe</button>
 
-  <label>URL del banner (imagen de portada)</label>
-  <input type="text" id="poster" placeholder="https://tuservidor.com/banner.jpg" />
-
-  <button onclick="generarEmbed()">🎥 Generar reproductor</button>
-
-  <h3>Embed generado:</h3>
-  <textarea id="embedCode" rows="5" readonly style="width: 100%;"></textarea>
+  <label>Código embed:</label>
+  <textarea id="embedCode" readonly></textarea>
 
   <h3>Vista previa:</h3>
-  <iframe id="preview"></iframe>
+  <iframe id="preview" allowfullscreen></iframe>
 
   <script>
-    function generarEmbed() {
-      const m3u8 = document.getElementById('m3u8').value;
-      const poster = document.getElementById('poster').value;
-      const embedHtml = `
-<!DOCTYPE html>
-<html>
-<head>
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/videojs-http-streaming@3.0.0/dist/videojs-http-streaming.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/videojs-http-source-selector@1.1.6/dist/videojs-http-source-selector.min.js"></script>
-</head>
-<body style="margin:0;">
-  <video id="my-video" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%" poster="${poster}" data-setup='{}'>
-    <source src="${m3u8}" type="application/x-mpegURL" />
-  </video>
-  <script>
-    var player = videojs('my-video');
-    player.httpSourceSelector({ default: 'auto' });
-    player.ready(function() {
-      player.httpSourceSelector();
-    });
-  </script>
-</body>
-</html>`;
+    function generar() {
+      const videoUrl = encodeURIComponent(document.getElementById('videoUrl').value);
+      const posterUrl = encodeURIComponent(document.getElementById('posterUrl').value);
 
-      const blob = new Blob([embedHtml], { type: 'text/html' });
-      const iframeUrl = URL.createObjectURL(blob);
+      const embedSrc = `player.html?src=${videoUrl}&poster=${posterUrl}`;
+      const iframeCode = `<iframe src="${embedSrc}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
 
-      document.getElementById('embedCode').value = `<iframe src="${iframeUrl}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
-      document.getElementById('preview').src = iframeUrl;
+      document.getElementById('embedCode').value = iframeCode;
+      document.getElementById('preview').src = embedSrc;
     }
   </script>
-
 </body>
 </html>

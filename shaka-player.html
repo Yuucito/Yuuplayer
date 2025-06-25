@@ -6,19 +6,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.9/shaka-player.compiled.js"></script>
   <style>
-    body {
+    html, body {
       margin: 0;
+      padding: 0;
       background: black;
-    }
-    #video {
+      height: 100%;
       width: 100%;
+    }
+    #container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       height: 100vh;
-      background: black;
+      width: 100%;
+    }
+    video {
+      max-width: 100%;
+      max-height: 100%;
     }
   </style>
 </head>
 <body>
-  <video id="video" poster="" controls autoplay></video>
+  <div id="container">
+    <video id="video" poster="" controls autoplay></video>
+  </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);

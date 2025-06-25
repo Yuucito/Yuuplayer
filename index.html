@@ -33,6 +33,13 @@
       border: 1px solid #333;
       margin-top: 20px;
     }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 1em;
+      margin-top: 10px;
+      overflow-x: auto;
+    }
   </style>
 </head>
 <body>
@@ -55,6 +62,12 @@
   <h3>Vista previa:</h3>
   <iframe id="preview" allowfullscreen></iframe>
 
+  <hr>
+  <h2>📦 Convertir JSON a servidores .m3u8 (Video.js + Fluid)</h2>
+  <textarea id="inputJson" placeholder="Pega aquí el JSON" rows="15"></textarea>
+  <button onclick="procesar()">Convertir JSON</button>
+  <pre id="outputJson"></pre>
+
   <script>
     function generar() {
       const videoUrl = encodeURIComponent(document.getElementById('videoUrl').value);
@@ -66,6 +79,42 @@
 
       document.getElementById('embedCode').value = embedCode;
       document.getElementById('preview').src = embedSrc;
+    }
+
+    function convertirJSON(inputJsonText) {
+      const BASE_URL_VIDEOJS = "https://yuucito.github.io/Yuuplayer/videojs-player.html?src=";
+      const BASE_URL_FLUID   = "https://yuucito.github.io/Yuuplayer/fluid-player.html?src=";
+      let originalArray;
+      try {
+        originalArray = JSON.parse(inputJsonText);
+      } catch (e) {
+        return "❌ JSON inválido.";
+      }
+
+      const banner = encodeURIComponent("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNR--hfnu_326uvVE3R07IbLhlG2iDS7w1nxYePkRO6lp68gShbBFEaopRXjvhqjMf37Q9xH0-a_AdRZmcQ_53EqHL1OwYMaTKj60kmJoL5PDFNOwla5baOgaWow9tj0bm2DhOCRke7SygGCibwtEmiEamV8vzez27lzv33bFv3wBlQ3kSZXPNlGfEMRJ3/s1600/Untitled87_20250618205847.png");
+
+      const nuevoArray = originalArray.map(item => {
+        const episode = item.episode;
+        const playlist = item.servers?.[0]?.playlist;
+        if (!playlist || !playlist.endsWith(".m3u8")) return null;
+
+        const encodedSrc = encodeURIComponent(playlist);
+        return {
+          episode,
+          servers: [
+            { sub: "Yuuplayer", value: `${BASE_URL_VIDEOJS}${encodedSrc}&poster=${banner}` },
+            { sub: "Yuuplayer", value: `${BASE_URL_FLUID}${encodedSrc}&poster=${banner}` }
+          ]
+        };
+      }).filter(Boolean);
+
+      return JSON.stringify(nuevoArray, null, 2);
+    }
+
+    function procesar() {
+      const input = document.getElementById("inputJson").value;
+      const output = convertirJSON(input);
+      document.getElementById("outputJson").textContent = output;
     }
   </script>
 </body>

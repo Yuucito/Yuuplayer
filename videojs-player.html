@@ -3,141 +3,112 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video.js con anuncios estilo HDVB</title>
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
-  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+  <title>Reproductor con Anuncios</title>
   <style>
-    body, html {
+    * {
       margin: 0;
       padding: 0;
-      background: black;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      box-sizing: border-box;
     }
-    .video-container {
+    html, body {
+      height: 100%;
+      background: #000;
+    }
+    #video-container {
       position: relative;
       width: 100%;
-      max-width: 800px;
-      aspect-ratio: 16 / 9;
+      height: 100vh;
+      overflow: hidden;
     }
-    .hdvb-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
+    video, .main-video {
       width: 100%;
       height: 100%;
-      z-index: 1000;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      pointer-events: none;
+      object-fit: contain;
     }
-    .hdvb-ad-label {
-      font-size: 14px;
-      color: white;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 5px 10px;
+    #skipBtn {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 1001;
-      pointer-events: auto;
-    }
-    .skip-btn {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(0,0,0,0.5);
-      color: white;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      padding: 10px 15px;
       border: none;
-      border-radius: 30px;
-      width: 80px;
-      height: 30px;
       cursor: pointer;
-      z-index: 1001;
-      pointer-events: auto;
-    }
-    .loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(2);
-      z-index: 1001;
-    }
-    .loader svg {
-      animation: spin 2s linear infinite;
-    }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
+      border-radius: 5px;
+      z-index: 9999;
+      font-size: 14px;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="video-container">
-    <video id="videoPlayer" class="video-js vjs-default-skin" preload="auto" poster="https://via.placeholder.com/800x450.png?text=Cargando..." playsinline></video>
-    <div class="hdvb-overlay" id="adOverlay">
-      <div class="hdvb-ad-label" id="adLabel">Ad 1/2</div>
-      <button class="skip-btn" id="skipAd">Saltar</button>
-      <div class="loader"><svg class="circular" viewBox="25 25 50 50" width="30" height="30"><circle class="path" stroke="#fff" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle></svg></div>
+  <div id="video-container">
+    <!-- Primer anuncio -->
+    <div id="adContainer">
+      <video id="adVideo" autoplay muted>
+        <source src="https://amd.cdn-z1.streamvid.net/ads/fakead1.mp4" type="video/mp4">
+      </video>
+      <button id="skipBtn">Saltar anuncio</button>
     </div>
+
+    <!-- Segundo anuncio se añadirá por JS -->
+
+    <!-- Video principal (oculto hasta terminar los anuncios) -->
+    <video id="mainVideo" controls class="main-video" style="display: none;">
+      <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+    </video>
   </div>
 
   <script>
-    const player = videojs('videoPlayer', {
-      autoplay: true,
-      controls: true,
-      preload: 'auto',
-      fluid: true,
-    });
+    const adVideo = document.getElementById('adVideo');
+    const skipBtn = document.getElementById('skipBtn');
+    const mainVideo = document.getElementById('mainVideo');
+    const adContainer = document.getElementById('adContainer');
 
-    const adOverlay = document.getElementById('adOverlay');
-    const adLabel = document.getElementById('adLabel');
-    const skipAdBtn = document.getElementById('skipAd');
+    let adCount = 1;
+    let skipTimeout;
 
-    const adSources = [
-      "https://www.w3schools.com/html/mov_bbb.mp4",
-      "https://www.w3schools.com/html/movie.mp4"
-    ];
-    const mainVideo = new URLSearchParams(window.location.search).get("src") || "https://www.w3schools.com/html/mov_bbb.mp4";
-    const directLink = "https://plusanime.com";
+    const secondAdSrc = "https://amd.cdn-z1.streamvid.net/ads/fakead2.mp4";
+    const redirectUrl = "https://plusanime.com";
 
-    let adIndex = 0;
-    
-    function playAd(index) {
-      player.src({ type: "video/mp4", src: adSources[index] });
-      player.play();
-      adLabel.textContent = `Ad ${index + 1}/2`;
-      adOverlay.style.display = 'flex';
-      skipAdBtn.style.display = 'none';
-      setTimeout(() => skipAdBtn.style.display = 'block', 5000);
+    function enableSkip(seconds) {
+      skipBtn.innerText = `Saltar anuncio (${seconds})`;
+      skipBtn.style.display = 'block';
+      let count = seconds;
+      const countdown = setInterval(() => {
+        count--;
+        if (count > 0) {
+          skipBtn.innerText = `Saltar anuncio (${count})`;
+        } else {
+          clearInterval(countdown);
+          skipBtn.innerText = 'Saltar anuncio';
+          skipBtn.onclick = () => {
+            if (adCount === 1) {
+              // Mostrar segundo anuncio
+              adVideo.src = secondAdSrc;
+              adVideo.play();
+              adCount++;
+              skipBtn.style.display = 'none';
+              enableSkip(5);
+            } else {
+              window.location.href = redirectUrl;
+            }
+          };
+        }
+      }, 1000);
     }
 
-    skipAdBtn.onclick = () => {
-      adIndex++;
-      if (adIndex === 1) {
-        playAd(adIndex);
-      } else {
-        window.location.href = directLink;
-      }
+    adVideo.onloadeddata = () => {
+      enableSkip(5);
     };
 
-    player.on('ended', () => {
-      if (adIndex < adSources.length - 1) {
-        adIndex++;
-        playAd(adIndex);
-      } else if (adIndex === adSources.length - 1) {
-        adOverlay.style.display = 'none';
-        player.src({ type: "video/mp4", src: mainVideo });
-        player.play();
-        adIndex++;
+    adVideo.onended = () => {
+      if (adCount === 2) {
+        adContainer.style.display = 'none';
+        mainVideo.style.display = 'block';
+        mainVideo.play();
       }
-    });
-
-    // Inicia con el primer anuncio
-    playAd(adIndex);
+    };
   </script>
 </body>
 </html>

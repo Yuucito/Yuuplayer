@@ -2,56 +2,88 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Video.js Player</title>
+  <title>Video.js con Anuncios y Botón de Salto</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
   <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/videojs-http-source-selector@1.1.6/dist/videojs-http-source-selector.min.js"></script>
   <style>
-    html, body {
+    body {
+      background: black;
       margin: 0;
       padding: 0;
-      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .video-container {
+      width: 100%;
+      max-width: 800px;
       position: relative;
-      width: 100%;
-      max-width: 100%;
-      aspect-ratio: 16 / 9;
-      background: black;
     }
-    video {
+    #skipBtn {
       position: absolute;
-      width: 100%;
-      height: 100%;
+      top: 15px;
+      right: 15px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+      border-radius: 4px;
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="video-container">
-    <video id="videoPlayer" class="video-js vjs-default-skin" controls></video>
+    <button id="skipBtn">⏩ Saltar anuncio</button>
+    <video id="videoPlayer" class="video-js vjs-default-skin" controls preload="auto" poster="https://via.placeholder.com/800x450.png?text=Esperando+video"></video>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const src = decodeURIComponent(params.get('src') || '');
-    const poster = decodeURIComponent(params.get('poster') || '');
+    const ad1 = "https://www.w3schools.com/html/mov_bbb.mp4";
+    const ad2 = "https://www.w3schools.com/html/movie.mp4";
+    const mainVideo = new URLSearchParams(window.location.search).get("src") || "https://www.w3schools.com/html/mov_bbb.mp4";
+    const directLink = "https://plusanime.com";
 
     const player = videojs('videoPlayer', {
-      autoplay: false,
       controls: true,
+      autoplay: true,
       preload: 'auto',
-      poster: poster,
       fluid: true,
-      sources: [{
-        src: src,
-        type: 'application/x-mpegURL'
-      }]
+      sources: [{ src: ad1, type: 'video/mp4' }]
     });
 
+    const skipBtn = document.getElementById('skipBtn');
+    let currentAd = 1;
+
     player.ready(function () {
-      player.httpSourceSelector({ default: 'auto' });
-      player.controlBar.addChild('QualitySelector', {});
+      skipBtn.style.display = 'block';
+
+      skipBtn.onclick = () => {
+        if (currentAd === 1) {
+          currentAd = 2;
+          player.src({ src: ad2, type: 'video/mp4' });
+          player.play();
+        } else if (currentAd === 2) {
+          window.location.href = directLink;
+        }
+      };
+
+      player.on('ended', function () {
+        if (currentAd === 1) {
+          currentAd = 2;
+          player.src({ src: ad2, type: 'video/mp4' });
+          player.play();
+        } else if (currentAd === 2) {
+          skipBtn.style.display = 'none';
+          player.src({ src: mainVideo, type: 'video/mp4' });
+          player.play();
+        }
+      });
     });
   </script>
 </body>

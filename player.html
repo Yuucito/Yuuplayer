@@ -3,75 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Generador de Reproductor</title>
+  <title>Reproductor con Anuncios</title>
+  <!-- Video.js -->
+  <link href="https://vjs.zencdn.net/7.20.1/video-js.css " rel="stylesheet">
+  <!-- Video.js IMA Plugin CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/videojs-ima @2.5.0/dist/videojs.ima.css" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
-      padding: 1em;
-      background: #111;
-      color: #fff;
+      margin: 0;
+      background: #000;
     }
-    label, input, textarea, button {
-      display: block;
+    #myPlayer {
       width: 100%;
-      margin-bottom: 1em;
-    }
-    input, textarea {
-      padding: 0.5em;
-      background: #222;
-      border: 1px solid #555;
-      color: #fff;
-    }
-    button {
-      background: #00aaff;
-      color: white;
-      border: none;
-      padding: 0.75em;
-      cursor: pointer;
-    }
-    iframe {
-      margin-top: 2em;
-      width: 100%;
-      height: 400px;
-      border: 1px solid #333;
+      height: 100%;
     }
   </style>
 </head>
 <body>
-  <h1>🎬 Generador de Reproductor con Anuncios</h1>
+  <video id="myPlayer" class="video-js vjs-default-skin" controls autoplay playsinline></video>
 
-  <label for="adTag">📢 URL del Anuncio VAST XML (VAST Tag)</label>
-  <input type="text" id="adTag" placeholder="Ejemplo: https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/1234567/video_ads_samples/skippable&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url=https://www.example.com&correlator=" />
-
-  <label for="mainVideo">🎞️ URL del Video Principal (MP4 o M3U8)</label>
-  <input type="text" id="mainVideo" value=" https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8 " />
-
-  <label for="directLink">🔗 Enlace Directo después de Anuncios</label>
-  <input type="text" id="directLink" placeholder="Ejemplo: https://plusanime.com " />
-
-  <button onclick="generar()">🚀 Generar Reproductor</button>
-
-  <label for="embedCode">🔧 Código Embed</label>
-  <textarea id="embedCode" rows="5" readonly></textarea>
-
-  <iframe id="preview" allowfullscreen></iframe>
+  <!-- Librerías -->
+  <script src="https://vjs.zencdn.net/7.20.1/video.min.js "></script>
+  <!-- SDK de Google IMA -->
+  <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js "></script>
+  <!-- Plugin videojs-ima -->
+  <script src="https://cdn.jsdelivr.net/npm/videojs-ima @2.5.0/dist/videojs.ima.min.js"></script>
 
   <script>
-    function generar() {
-      const adTag = encodeURIComponent(document.getElementById('adTag').value.trim());
-      const main = encodeURIComponent(document.getElementById('mainVideo').value.trim());
-      const direct = encodeURIComponent(document.getElementById('directLink').value.trim());
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const adTagUrl = decodeURIComponent(params.get('adTag') || '');
+      const mainVideoUrl = decodeURIComponent(params.get('main') || '');
+      const directLink = decodeURIComponent(params.get('direct') || '');
 
-      // Validación básica
-      if (!adTag || !main) {
-        alert("Por favor completa todos los campos obligatorios.");
+      if (!mainVideoUrl) {
+        document.body.innerHTML = "<h2 style='color:red; text-align:center;'>❌ No se recibió un video principal.</h2>";
         return;
       }
 
-      const src = `player.html?adTag=${adTag}&main=${main}&direct=${direct}`;
-      document.getElementById('preview').src = src;
-      document.getElementById('embedCode').value = `<iframe src="${src}" width="100%" height="400" allowfullscreen frameborder="0"></iframe>`;
-    }
+      const player = videojs('myPlayer', {
+        html5: {
+          hls: {
+            overrideNative: true
+          },
+          nativeAudioTracks: false,
+          nativeVideoTracks: false
+        }
+      });
+
+      // Cargar HLS si es necesario
+      if (mainVideoUrl.endsWith('.m3u8')) {
+        window.videojs.HlsJs = window.videojs.getPlugin('hlsjs');
+        player.hlsjs();
+      }
+
+      player.src({
+        src: mainVideoUrl,
+        type: mainVideoUrl.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'
+      });
+
+      // Configurar IMA para anuncios VAST
+      if (adTagUrl) {
+        player.ima({
+          adTagUrl: adTagUrl,
+          debug: false,
+          requestMode: 'onPlay',
+          disableCustomPlaybackForIOS10Plus: true
+        });
+
+        player.ima.requestAds();
+      }
+
+      // Redirigir al finalizar el video si hay link
+      player.on('ended', () => {
+        if (directLink) {
+          window.location.href = directLink;
+        }
+      });
+    })();
   </script>
 </body>
 </html>

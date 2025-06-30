@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  VAST 3.0 con Pre-roll y Mid-roll
+  🎬 Videos de prueba incluidos
+  ⏩ Skip Ad a los 5 segundos
+  🖱️ Click lleva al sitio del anunciante
+-->
+
+<VAST version="3.0">
+
+  <!-- 🔹 PRE-ROLL (antes del video) -->
+  <Ad id="ad-preroll" sequence="1">
+    <InLine>
+      <AdSystem version="1.0">MiSistemaDeAnuncios</AdSystem>
+      <AdTitle>Prueba Pre-roll</AdTitle>
+
+      <!-- Tracking de impresión (puedes cambiarlo por el tuyo) -->
+      <Impression><![CDATA[https://example.com/track/impression-preroll]]></Impression>
+
+      <Creatives>
+        <Creative>
+          <Linear skipoffset="00:00:05"> <!-- ⏩ Se puede saltar tras 5 segundos -->
+            <Duration>00:00:15</Duration>
+
+            <TrackingEvents>
+              <Tracking event="start"><![CDATA[https://example.com/track/start-preroll]]></Tracking>
+              <Tracking event="complete"><![CDATA[https://example.com/track/complete-preroll]]></Tracking>
+            </TrackingEvents>
+
+            <VideoClicks>
+              <ClickThrough><![CDATA[https://www.apple.com/]]></ClickThrough>
+              <ClickTracking><![CDATA[https://example.com/track/click-preroll]]></ClickTracking>
+            </VideoClicks>
+
+            <MediaFiles>
+              <!-- 🎬 Video de prueba pre-roll (15s) -->
+              <MediaFile delivery="progressive" type="video/mp4" width="640" height="360">
+                <![CDATA[https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4]]>
+              </MediaFile>
+            </MediaFiles>
+          </Linear>
+        </Creative>
+      </Creatives>
+    </InLine>
+  </Ad>
+
+  <!-- 🔸 MID-ROLL (a los 15 segundos del video principal) -->
+  <Ad id="ad-midroll" sequence="2">
+    <InLine>
+      <AdSystem version="1.0">MiSistemaDeAnuncios</AdSystem>
+      <AdTitle>Prueba Mid-roll</AdTitle>
+
+      <Impression><![CDATA[https://example.com/track/impression-midroll]]></Impression>
+
+      <Creatives>
+        <Creative>
+          <Linear skipoffset="00:00:05"> <!-- ⏩ Se puede saltar tras 5 segundos -->
+            <Duration>00:00:20</Duration>
+
+            <TrackingEvents>
+              <Tracking event="start"><![CDATA[https://example.com/track/start-midroll]]></Tracking>
+              <Tracking event="complete"><![CDATA[https://example.com/track/complete-midroll]]></Tracking>
+            </TrackingEvents>
+
+            <VideoClicks>
+              <ClickThrough><![CDATA[https://www.microsoft.com/]]></ClickThrough>
+              <ClickTracking><![CDATA[https://example.com/track/click-midroll]]></ClickTracking>
+            </VideoClicks>
+
+            <MediaFiles>
+              <!-- 🎬 Video de prueba mid-roll (20s) -->
+              <MediaFile delivery="progressive" type="video/mp4" width="640" height="360">
+                <![CDATA[https://www.w3schools.com/html/mov_bbb.mp4]]>
+              </MediaFile>
+            </MediaFiles>
+          </Linear>
+        </Creative>
+      </Creatives>
+    </InLine>
+  </Ad>
+
+</VAST>

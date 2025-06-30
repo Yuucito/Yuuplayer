@@ -1,111 +1,43 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reproductor con Anuncios</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Player</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body, html {
-      width: 100%;
-      height: 100%;
-      background: #000;
-    }
-    #video-container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      background-color: black;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    .skip-btn {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      z-index: 1002;
-      display: none;
-    }
-    .ad-label {
-      position: absolute;
-      top: 0;
-      left: 0;
-      color: white;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 5px 10px;
-      font-size: 14px;
-      z-index: 1002;
-    }
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; text-align: center; padding: 2rem; }
+    input, button, textarea { padding: 0.5rem; margin: 0.5rem; width: 90%; max-width: 600px; }
+    iframe { width: 100%; height: 360px; margin-top: 1rem; border: none; }
   </style>
 </head>
 <body>
-  <div id="video-container">
-    <video id="adVideo" preload="auto" playsinline webkit-playsinline></video>
-    <div class="ad-label" id="adLabel">Ad 1/2</div>
-    <button class="skip-btn" id="skipBtn">Saltar anuncio</button>
-  </div>
+  <h2>🎥 Generador de Player con Anuncios</h2>
+  <input type="text" id="mainVideo" placeholder="URL del video MP4 principal">
+  <input type="text" id="ad1" placeholder="URL del primer anuncio MP4">
+  <input type="text" id="ad2" placeholder="URL del segundo anuncio MP4">
+  <input type="text" id="redirectUrl" placeholder="Enlace de redirección tras segundo anuncio">
+  <button onclick="generarIframe()">Generar reproductor</button>
+  <textarea id="embedCode" rows="4" readonly></textarea>
+  <iframe id="preview"></iframe>
 
   <script>
-    const ads = [
-      "https://amd-cdn-1.ffb7df5a878b59e42e257c042f54bed2.com/content/stream/agl/betwinner_latino_regions.mp4",
-      "https://amd.cdn.xxxx.com/fake-ad2.mp4"
-    ];
-    const mainVideo = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-    const redirectLink = "https://plusanime.com";
+    function generarIframe() {
+      const main = document.getElementById('mainVideo').value.trim();
+      const ad1 = document.getElementById('ad1').value.trim();
+      const ad2 = document.getElementById('ad2').value.trim();
+      const redirect = document.getElementById('redirectUrl').value.trim();
 
-    const video = document.getElementById("adVideo");
-    const skipBtn = document.getElementById("skipBtn");
-    const adLabel = document.getElementById("adLabel");
-    let currentAd = 0;
+      if (!main || !ad1 || !ad2 || !redirect) {
+        alert('Por favor completa todos los campos.');
+        return;
+      }
 
-    function playAd(index) {
-      video.src = ads[index];
-      video.play();
-      adLabel.textContent = `Ad ${index + 1}/2`;
-      skipBtn.style.display = "none";
-
-      setTimeout(() => {
-        skipBtn.style.display = "block";
-      }, 5000);
+      const url = `player.html?main=${encodeURIComponent(main)}&ad1=${encodeURIComponent(ad1)}&ad2=${encodeURIComponent(ad2)}&redirect=${encodeURIComponent(redirect)}`;
+      const embed = `<iframe src='${url}' width='100%' height='400' allowfullscreen></iframe>`;
+      document.getElementById('embedCode').value = embed;
+      document.getElementById('preview').src = url;
     }
-
-    skipBtn.onclick = () => {
-      if (currentAd === 0) {
-        currentAd++;
-        playAd(currentAd);
-      } else {
-        window.location.href = redirectLink;
-      }
-    };
-
-    video.onended = () => {
-      if (currentAd === 0) {
-        currentAd++;
-        playAd(currentAd);
-      } else {
-        video.src = mainVideo;
-        video.controls = true;
-        skipBtn.style.display = "none";
-        adLabel.style.display = "none";
-        video.play();
-      }
-    };
-
-    playAd(currentAd);
   </script>
 </body>
 </html>

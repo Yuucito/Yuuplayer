@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Generador de Reproductor</title>
   <style>
     body {
@@ -62,14 +62,30 @@
       const main = encodeURIComponent(document.getElementById('mainVideo').value.trim());
       const direct = encodeURIComponent(document.getElementById('directLink').value.trim());
 
+      // Validación básica
       if (!adTag || !main) {
         alert("Por favor completa todos los campos obligatorios.");
         return;
       }
 
+      // Asegúrate de que esta URL apunte correctamente a player.html
       const src = `player.html?adTag=${adTag}&main=${main}&direct=${direct}`;
-      document.getElementById('preview').src = src;
-      document.getElementById('embedCode').value = `<iframe src="${src}" width="100%" height="400" allowfullscreen frameborder="0"></iframe>`;
+
+      // Verifica que el archivo exista y sea accesible
+      fetch('player.html')
+        .then(response => {
+          if (response.status === 200 || response.status === 0) {
+            // Archivo existe (0 es válido si se carga localmente)
+            document.getElementById('preview').src = src;
+            document.getElementById('embedCode').value = `<iframe src="${src}" width="100%" height="400" allowfullscreen frameborder="0"></iframe>`;
+          } else {
+            alert("❌ No se encontró el archivo 'player.html'. Asegúrate de tenerlo en la misma carpeta.");
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          alert("❌ Error al cargar 'player.html'. Asegúrate de que exista y esté accesible.");
+        });
     }
   </script>
 </body>

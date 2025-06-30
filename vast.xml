@@ -19,7 +19,7 @@
 
       <Creatives>
         <Creative>
-          <Linear skipoffset="00:00:05"> <!-- ⏩ Se puede saltar tras 5 segundos -->
+          <Linear skipoffset="00:00:10"> <!-- ⏩ Se puede saltar tras 5 segundos -->
             <Duration>00:00:15</Duration>
 
             <TrackingEvents>
@@ -54,7 +54,7 @@
 
       <Creatives>
         <Creative>
-          <Linear skipoffset="00:00:05"> <!-- ⏩ Se puede saltar tras 5 segundos -->
+          <Linear skipoffset="00:00:10"> <!-- ⏩ Se puede saltar tras 5 segundos -->
             <Duration>00:00:20</Duration>
 
             <TrackingEvents>

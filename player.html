@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Generador de Reproductor</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1em;
+      background: #111;
+      color: #fff;
+    }
+    label, input, textarea, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 1em;
+    }
+    input, textarea {
+      padding: 0.5em;
+      background: #222;
+      border: 1px solid #555;
+      color: #fff;
+    }
+    button {
+      background: #00aaff;
+      color: white;
+      border: none;
+      padding: 0.75em;
+      cursor: pointer;
+    }
+    iframe {
+      margin-top: 2em;
+      width: 100%;
+      height: 400px;
+      border: 1px solid #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 Generador de Reproductor con Anuncios</h1>
+
+  <label for="adTag">📢 URL del Anuncio VAST XML (VAST Tag)</label>
+  <input type="text" id="adTag" placeholder="Ejemplo: https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/1234567/video_ads_samples/skippable&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=xml_vast2&unviewed_position_start=1&url=https://www.example.com&correlator=" />
+
+  <label for="mainVideo">🎞️ URL del Video Principal (MP4 o M3U8)</label>
+  <input type="text" id="mainVideo" value=" https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8 " />
+
+  <label for="directLink">🔗 Enlace Directo después de Anuncios</label>
+  <input type="text" id="directLink" placeholder="Ejemplo: https://plusanime.com " />
+
+  <button onclick="generar()">🚀 Generar Reproductor</button>
+
+  <label for="embedCode">🔧 Código Embed</label>
+  <textarea id="embedCode" rows="5" readonly></textarea>
+
+  <iframe id="preview" allowfullscreen></iframe>
+
+  <script>
+    function generar() {
+      const adTag = encodeURIComponent(document.getElementById('adTag').value.trim());
+      const main = encodeURIComponent(document.getElementById('mainVideo').value.trim());
+      const direct = encodeURIComponent(document.getElementById('directLink').value.trim());
+
+      // Validación básica
+      if (!adTag || !main) {
+        alert("Por favor completa todos los campos obligatorios.");
+        return;
+      }
+
+      const src = `player.html?adTag=${adTag}&main=${main}&direct=${direct}`;
+      document.getElementById('preview').src = src;
+      document.getElementById('embedCode').value = `<iframe src="${src}" width="100%" height="400" allowfullscreen frameborder="0"></iframe>`;
+    }
+  </script>
+</body>
+</html>

@@ -40,17 +40,14 @@
 <body>
   <h1>🎬 Generador de Reproductor con Anuncios</h1>
 
-  <label for="ad1">🎥 URL del Anuncio 1 (MP4)</label>
-  <input type="text" id="ad1" value="https://www.w3schools.com/html/mov_bbb.mp4" />
+  <label for="adTag">📢 URL del Anuncio VAST XML</label>
+  <input type="text" id="adTag" placeholder="Ejemplo: https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/1234567/video_ads_samples/skippable&..." />
 
-  <label for="ad2">🎥 URL del Anuncio 2 (MP4)</label>
-  <input type="text" id="ad2" value="https://www.w3schools.com/html/movie.mp4" />
+  <label for="mainVideo">🎞️ URL del Video Principal (MP4 o M3U8)</label>
+  <input type="text" id="mainVideo" value=" https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8 " />
 
-  <label for="main">🎞️ URL del Video Principal (MP4 o M3U8)</label>
-  <input type="text" id="main" value="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
-
-  <label for="direct">🔗 Enlace Directo después de Anuncios</label>
-  <input type="text" id="direct" value="https://plusanime.com" />
+  <label for="directLink">🔗 Enlace Directo después de Anuncios</label>
+  <input type="text" id="directLink" placeholder="Ejemplo: https://plusanime.com " />
 
   <button onclick="generar()">🚀 Generar Reproductor</button>
 
@@ -61,14 +58,18 @@
 
   <script>
     function generar() {
-      const ad1 = encodeURIComponent(document.getElementById('ad1').value);
-      const ad2 = encodeURIComponent(document.getElementById('ad2').value);
-      const main = encodeURIComponent(document.getElementById('main').value);
-      const direct = encodeURIComponent(document.getElementById('direct').value);
+      const adTag = encodeURIComponent(document.getElementById('adTag').value.trim());
+      const main = encodeURIComponent(document.getElementById('mainVideo').value.trim());
+      const direct = encodeURIComponent(document.getElementById('directLink').value.trim());
 
-      const src = `player.html?ad1=${ad1}&ad2=${ad2}&main=${main}&direct=${direct}`;
+      if (!adTag || !main) {
+        alert("Por favor completa todos los campos obligatorios.");
+        return;
+      }
+
+      const src = `player.html?adTag=${adTag}&main=${main}&direct=${direct}`;
       document.getElementById('preview').src = src;
-      document.getElementById('embedCode').value = `<iframe src=\"${src}\" width=\"100%\" height=\"400\" allowfullscreen frameborder=\"0\"></iframe>`;
+      document.getElementById('embedCode').value = `<iframe src="${src}" width="100%" height="400" allowfullscreen frameborder="0"></iframe>`;
     }
   </script>
 </body>

@@ -2,120 +2,110 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Generador Embed (.m3u8)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reproductor con Anuncios</title>
   <style>
-    body {
-      background: #111;
-      color: white;
-      font-family: sans-serif;
-      padding: 20px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    input, button, textarea, select {
+    body, html {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
+      height: 100%;
+      background: #000;
+    }
+    #video-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background-color: black;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .skip-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
       border: none;
-    }
-    input {
-      background: #222;
-      color: white;
-    }
-    button {
-      background: #4caf50;
-      color: white;
+      padding: 10px 15px;
+      border-radius: 20px;
       cursor: pointer;
+      font-size: 14px;
+      z-index: 1002;
+      display: none;
     }
-    iframe {
-      width: 100%;
-      height: 360px;
-      border: 1px solid #333;
-      margin-top: 20px;
-    }
-    pre {
-      background: #222;
-      color: #0f0;
-      padding: 1em;
-      margin-top: 10px;
-      overflow-x: auto;
+    .ad-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: white;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 5px 10px;
+      font-size: 14px;
+      z-index: 1002;
     }
   </style>
 </head>
 <body>
-  <h2>🎬 Generador Embed (.m3u8)</h2>
-
-  <label>URL del video (.m3u8):</label>
-  <input type="text" id="videoUrl" placeholder="https://tuservidor.com/video.m3u8" />
-
-  <label>Reproductor:</label>
-  <select id="playerType">
-    <option value="videojs-player.html">Video.js (Recomendado)</option>
-    <option value="fluid-player.html">Fluid Player</option>
-  </select>
-
-  <button onclick="generar()">🎥 Generar Embed</button>
-
-  <label>Embed generado:</label>
-  <textarea id="embedCode" readonly></textarea>
-
-  <h3>Vista previa:</h3>
-  <iframe id="preview" allowfullscreen></iframe>
-
-  <hr>
-  <h2>📦 Convertir JSON a servidores .m3u8 (Video.js + Fluid)</h2>
-  <textarea id="inputJson" placeholder="Pega aquí el JSON" rows="15"></textarea>
-  <button onclick="procesar()">Convertir JSON</button>
-  <pre id="outputJson"></pre>
+  <div id="video-container">
+    <video id="adVideo" preload="auto" playsinline webkit-playsinline></video>
+    <div class="ad-label" id="adLabel">Ad 1/2</div>
+    <button class="skip-btn" id="skipBtn">Saltar anuncio</button>
+  </div>
 
   <script>
-    function generar() {
-      const videoUrl = encodeURIComponent(document.getElementById('videoUrl').value);
-      const bannerUrl = encodeURIComponent("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNR--hfnu_326uvVE3R07IbLhlG2iDS7w1nxYePkRO6lp68gShbBFEaopRXjvhqjMf37Q9xH0-a_AdRZmcQ_53EqHL1OwYMaTKj60kmJoL5PDFNOwla5baOgaWow9tj0bm2DhOCRke7SygGCibwtEmiEamV8vzez27lzv33bFv3wBlQ3kSZXPNlGfEMRJ3/s1600/Untitled87_20250618205847.png");
-      const playerType = document.getElementById('playerType').value;
+    const ads = [
+      "https://amd-cdn-1.ffb7df5a878b59e42e257c042f54bed2.com/content/stream/agl/betwinner_latino_regions.mp4",
+      "https://amd.cdn.xxxx.com/fake-ad2.mp4"
+    ];
+    const mainVideo = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+    const redirectLink = "https://plusanime.com";
 
-      const embedSrc = `${playerType}?src=${videoUrl}&poster=${bannerUrl}`;
-      const embedCode = `<iframe src="${embedSrc}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
+    const video = document.getElementById("adVideo");
+    const skipBtn = document.getElementById("skipBtn");
+    const adLabel = document.getElementById("adLabel");
+    let currentAd = 0;
 
-      document.getElementById('embedCode').value = embedCode;
-      document.getElementById('preview').src = embedSrc;
+    function playAd(index) {
+      video.src = ads[index];
+      video.play();
+      adLabel.textContent = `Ad ${index + 1}/2`;
+      skipBtn.style.display = "none";
+
+      setTimeout(() => {
+        skipBtn.style.display = "block";
+      }, 5000);
     }
 
-    function convertirJSON(inputJsonText) {
-      const BASE_URL_VIDEOJS = "https://yuucito.github.io/Yuuplayer/videojs-player.html?src=";
-      const BASE_URL_FLUID   = "https://yuucito.github.io/Yuuplayer/fluid-player.html?src=";
-      let originalArray;
-      try {
-        originalArray = JSON.parse(inputJsonText);
-      } catch (e) {
-        return "❌ JSON inválido.";
+    skipBtn.onclick = () => {
+      if (currentAd === 0) {
+        currentAd++;
+        playAd(currentAd);
+      } else {
+        window.location.href = redirectLink;
       }
+    };
 
-      const banner = encodeURIComponent("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNR--hfnu_326uvVE3R07IbLhlG2iDS7w1nxYePkRO6lp68gShbBFEaopRXjvhqjMf37Q9xH0-a_AdRZmcQ_53EqHL1OwYMaTKj60kmJoL5PDFNOwla5baOgaWow9tj0bm2DhOCRke7SygGCibwtEmiEamV8vzez27lzv33bFv3wBlQ3kSZXPNlGfEMRJ3/s1600/Untitled87_20250618205847.png");
+    video.onended = () => {
+      if (currentAd === 0) {
+        currentAd++;
+        playAd(currentAd);
+      } else {
+        video.src = mainVideo;
+        video.controls = true;
+        skipBtn.style.display = "none";
+        adLabel.style.display = "none";
+        video.play();
+      }
+    };
 
-      const nuevoArray = originalArray.map(item => {
-        const episode = item.episode;
-        const playlist = item.servers?.[0]?.playlist;
-        if (!playlist || !playlist.endsWith(".m3u8")) return null;
-
-        const encodedSrc = encodeURIComponent(playlist);
-        return {
-          episode,
-          servers: [
-            { sub: "Yuuplayer", value: `${BASE_URL_VIDEOJS}${encodedSrc}&poster=${banner}` },
-            { sub: "Yuuplayer", value: `${BASE_URL_FLUID}${encodedSrc}&poster=${banner}` }
-          ]
-        };
-      }).filter(Boolean);
-
-      return JSON.stringify(nuevoArray, null, 2);
-    }
-
-    function procesar() {
-      const input = document.getElementById("inputJson").value;
-      const output = convertirJSON(input);
-      document.getElementById("outputJson").textContent = output;
-    }
+    playAd(currentAd);
   </script>
 </body>
 </html>

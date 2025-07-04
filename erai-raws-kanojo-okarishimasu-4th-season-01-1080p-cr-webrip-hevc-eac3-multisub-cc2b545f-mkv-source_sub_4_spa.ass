@@ -1,0 +1,516 @@
+﻿[Script Info]
+Title: [Erai-raws] Español (América Latina)
+ScaledBorderAndShadow: yes
+ScriptType: v4.00+
+PlayResX: 640
+PlayResY: 360
+LayoutResX: 640
+LayoutResY: 360
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Gen_Main,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,1,2,0010,0010,0018,1
+Style: Gen_Italics,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,-1,0,0,100,100,0,0,1,2,1,2,0010,0010,0018,1
+Style: Gen_Main_Up,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00090909,0,0,0,0,100,100,0,0,1,2,1,8,0010,0010,0018,1
+Style: Gen_Italics_top,Trebuchet MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,-1,0,0,100,100,0,0,1,2,1,8,0010,0010,0018,1
+Style: Cart_A_Tre,Trebuchet MS,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,2,0,8,0020,0020,0020,1
+Style: Cart_C_Tre,Trebuchet MS,20,&H00000000,&H000000FF,&H00FFFFFF,&H00FFFFFF,-1,0,0,0,100,100,0,0,1,2,0,8,0020,0020,0020,1
+Style: Cart_C_Tim,Times New Roman,24,&H00000000,&H000000FF,&H00FFFFFF,&H00FFFFFF,-1,0,0,0,100,100,0,0,1,2,0,8,0020,0020,0020,1
+Style: Cart_EpiTitle,Arial,20,&H00813ADE,&H000000FF,&H00FFFCEC,&HA6000000,-1,0,0,0,95,100,0,0,1,1,0,3,0030,0030,0010,0
+Style: Cart_A_Com,Comic Sans MS,24,&H0027224D,&H000000FF,&H00FFFFFF,&H00000000,-1,0,0,0,100,100,0,0,1,2,0,8,0030,0030,0010,0
+Style: Cart_A_Ari,Arial,24,&H00FFFFFF,&H000000FF,&H00000000,&H00303030,-1,0,0,0,100,100,0,0,1,2,0,8,0020,0020,0020,1
+Style: Cart_TitleSeries,Trebuchet MS,30,&H00000000,&H000000FF,&H00FFFFFF,&H00AC4F8A,-1,0,0,0,100,100,0,0,1,2,0,2,0010,0030,0010,1
+Style: Cart_A_Com_Nobord,Comic Sans MS,24,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,3,0,0,8,0030,0030,0010,0
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:03.69,0:00:06.61,Gen_Italics,KAZUYA,0000,0000,0000,,Seguro que solo iré para que me rechace.
+Dialogue: 0,0:00:07.53,0:00:10.23,Gen_Italics,KAZUYA,0000,0000,0000,,Seguro que moriré de dolor.
+Dialogue: 0,0:00:10.73,0:00:13.82,Gen_Italics,KAZUYA,0000,0000,0000,,Será muy duro. Y muy triste.
+Dialogue: 0,0:00:14.39,0:00:18.47,Gen_Italics,KAZUYA,0000,0000,0000,,Si esto iba a ser así,\Nsi iba a ser tan doloroso…
+Dialogue: 0,0:00:26.95,0:00:30.91,Gen_Italics,KAZUYA,0000,0000,0000,,Una parte de mí piensa
+Dialogue: 0,0:00:31.47,0:00:33.92,Gen_Italics,KAZUYA,0000,0000,0000,,que no debí alquilarte ese día.
+Dialogue: 0,0:00:39.98,0:00:42.04,Gen_Main,KAZUYA,0000,0000,0000,,Escucha, Mizuhara.
+Dialogue: 0,0:00:42.62,0:00:48.11,Cart_TitleSeries,CARTEL,0000,0000,0000,,{\c&H7019DB&\fad(200,1100)\an8}Rent-{\c&H14B3ED&}A{\c&H7019DB&}-Girl{\c&H14B3ED&}fri{\c&H7019DB&}end
+Dialogue: 0,0:00:48.86,0:00:51.99,Cart_EpiTitle,CARTEL,0000,0000,0000,,{\fad(500,0)\pos(582.15,300.31)}"{\c&H78AED5&}R{\c&H813ADE&}u{\c&H78AED5&}t{\c&H813ADE&}i{\c&H78AED5&}n{\c&H813ADE&}a {\c&H78AED5&}y{\c&H813ADE&} n{\c&H78AED5&}o{\c&H813ADE&}v{\c&H78AED5&}i{\c&H813ADE&}a{\c&H78AED5&}"{\c&H813ADE&} {\c&H78AED5&} {\c&H813ADE&} {\c&H78AED5&} {\c&H813ADE&} {\c&H78AED5&} {\c&H813ADE&}{\c&H78AED5&}
+Dialogue: 0,0:00:49.78,0:00:51.98,Gen_Italics,KAZUYA,0000,0000,0000,,Es 2 de octubre.
+Dialogue: 0,0:00:52.43,0:00:54.86,Gen_Italics,KAZUYA,0000,0000,0000,,Aunque ya pasó el calor sofocante,
+Dialogue: 0,0:00:55.29,0:00:57.18,Gen_Italics,KAZUYA,0000,0000,0000,,los árboles mantienen su verdor.
+Dialogue: 0,0:01:01.32,0:01:04.63,Gen_Italics,KAZUYA,0000,0000,0000,,Como una mezcla entre verano y otoño.
+Dialogue: 1,0:01:07.75,0:01:10.29,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HFFFFFF&\bord3\fs36\fnComic Sans MS\frz354\pos(447.47,192)}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 2,0:01:07.75,0:01:10.29,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HD6EEAB&\bord1\blur0.2\fs36\fnComic Sans MS\frz354\pos(447.47,192)}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 0,0:01:08.31,0:01:12.14,Gen_Italics_top,KAZUYA,0000,0000,0000,,Las parejas de la ciudad\Nempiezan a pensar en Halloween
+Dialogue: 0,0:01:12.29,0:01:15.33,Gen_Italics,KAZUYA,0000,0000,0000,,y se inclinan\Npor colores lilas y naranjas.
+Dialogue: 1,0:01:13.26,0:01:16.22,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HFFFFFF&\bord3\fs46\fnComic Sans MS\pos(395.2,82.13)\frz7.511}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 2,0:01:13.26,0:01:16.22,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HD6EEAB&\bord1\blur0.2\fs46\fnComic Sans MS\pos(395.2,82.13)\frz7.511}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 1,0:01:26.56,0:01:29.52,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HFFFFFF&\bord3\fs32\fnComic Sans MS\frz345.3\pos(510.93,103.47)}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 2,0:01:26.56,0:01:29.52,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HD6EEAB&\bord1\blur0.2\fs32\fnComic Sans MS\frz345.3\pos(510.93,103.47)}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 1,0:01:29.52,0:01:32.98,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HFFFFFF&\bord3\fs46\fnComic Sans MS\frz7.511\pos(513.07,156.27)}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 2,0:01:29.52,0:01:32.98,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HD6EEAB&\bord1\blur0.2\fs46\fnComic Sans MS\frz7.511\pos(513.07,156.27)}¡N{\c&H3019CD&}o {\c&H000000&}m{\c&H3019CD&}ires{\c&H000000&}!
+Dialogue: 0,0:01:42.25,0:01:45.07,Gen_Main,KAZUYA,0000,0000,0000,,Quiero una novia.
+Dialogue: 0,0:01:46.17,0:01:47.79,Gen_Main,CROWD A,0000,0000,0000,,¿Viste {\i1}Bachelorette{\i0}?
+Dialogue: 0,0:01:47.88,0:01:49.97,Gen_Main,CROWD B,0000,0000,0000,,La rosa final me hizo llorar.
+Dialogue: 0,0:01:50.05,0:01:51.75,Gen_Italics,KAZUYA,0000,0000,0000,,Hoy vuelvo a la universidad.
+Dialogue: 0,0:01:52.55,0:01:56.76,Gen_Italics,KAZUYA,0000,0000,0000,,La proyección del otro día marcó\Nel final de mis turbulentas vacaciones
+Dialogue: 0,0:01:57.10,0:01:58.73,Gen_Italics,KAZUYA,0000,0000,0000,,y el regreso a mi rutina diaria.
+Dialogue: 0,0:01:59.93,0:02:02.56,Gen_Italics,KAZUYA,0000,0000,0000,,Y vaya que fueron turbulentas.
+Dialogue: 0,0:02:05.36,0:02:06.98,Gen_Main,SHUN,0000,0000,0000,,Hola, Kazuya.
+Dialogue: 0,0:02:09.77,0:02:10.88,Gen_Main,KAZUYA,0000,0000,0000,,¿Quién eres?
+Dialogue: 0,0:02:11.02,0:02:14.19,Gen_Main,SHUN,0000,0000,0000,,Qué grosero.\NSoy yo, Kuribayashi.
+Dialogue: 0,0:02:14.33,0:02:15.65,Gen_Main,KAZUYA,0000,0000,0000,,¿Kuri? ¡Te quemaste!
+Dialogue: 0,0:02:16.12,0:02:20.36,Gen_Main,SHUN,0000,0000,0000,,Es que salí un montón.\NFui cinco veces a la playa.
+Dialogue: 0,0:02:20.83,0:02:22.83,Gen_Main,KAZUYA,0000,0000,0000,,Pero es que estás morenísimo.
+Dialogue: 0,0:02:23.12,0:02:28.79,Cart_C_Tre,CARTEL,0000,0000,0000,,{\fad(440,0)\c&H353056&\pos(297.07,24)}Temblando
+Dialogue: 0,0:02:23.12,0:02:28.79,Cart_C_Tre,CARTEL,0000,0000,0000,,{\fad(440,0)\c&H353056&\pos(136,208)}Temblando
+Dialogue: 0,0:02:23.32,0:02:26.06,Gen_Italics,KAZUYA,0000,0000,0000,,Mientras yo me partía el lomo, este…
+Dialogue: 0,0:02:26.13,0:02:28.79,Gen_Main,SHUN,0000,0000,0000,,Eres tú el que está paliducho.
+Dialogue: 0,0:02:26.13,0:02:28.79,Cart_C_Tre,CARTEL,0000,0000,0000,,{\fad(220,0)\c&H353056&\fs14\pos(340.8,173.33)}¿Estás bien?
+Dialogue: 0,0:02:26.13,0:02:28.79,Cart_C_Tre,CARTEL,0000,0000,0000,,{\fad(220,0)\c&H353056&\fs14\pos(519.47,156.27)}¿Sales de casa?
+Dialogue: 0,0:02:29.09,0:02:32.25,Cart_A_Com_Nobord,CARTEL,0000,0000,0000,,{\c&H1F1947&\fad(500,0)\fs28\frz17.53\pos(273.6,75.73)}(Zoom de la piel)\N{\fs22}¿Quién se pone una\Nsudadera blanca tras broncearse?
+Dialogue: 0,0:02:29.46,0:02:30.62,Gen_Main,KAZUYA,0000,0000,0000,,Oye, ¿y Kibe?
+Dialogue: 0,0:02:30.71,0:02:32.25,Gen_Main,SHUN,0000,0000,0000,,Parece que faltará.
+Dialogue: 0,0:02:32.34,0:02:34.64,Gen_Italics,KAZUYA,0000,0000,0000,,¿Desde el primer día?
+Dialogue: 0,0:02:32.55,0:02:35.20,Cart_C_Tre,CARTEL,0000,0000,0000,,{\fad(800,0)\fs30\bord2.5\c&H1D1742&\pos(473.07,26.13)}No tienen remedio
+Dialogue: 0,0:02:35.63,0:02:37.62,Gen_Main,YOKO,0000,0000,0000,,¿Un bar de terror?
+Dialogue: 0,0:02:38.76,0:02:43.82,Gen_Main,TAKESHI,0000,0000,0000,,Dicen que un profesional narra\Nhistorias de terror cada 45 minutos.
+Dialogue: 0,0:02:43.89,0:02:47.14,Gen_Main,YOKO,0000,0000,0000,,Luego no podrás dormir, Take.
+Dialogue: 0,0:02:47.23,0:02:48.78,Gen_Main,YOKO,0000,0000,0000,,No te gustan esas cosas.
+Dialogue: 0,0:02:49.45,0:02:52.23,Gen_Main,YOKO,0000,0000,0000,,No pienso acompañarte al baño, ¿eh?
+Dialogue: 0,0:02:52.45,0:02:55.14,Gen_Main,TAKESHI,0000,0000,0000,,Pero si igual vamos a desvelarnos.
+Dialogue: 0,0:02:55.24,0:02:57.48,Gen_Main,YOKO,0000,0000,0000,,No digas eso en el campus.
+Dialogue: 0,0:02:57.95,0:03:00.74,Gen_Main,SHUN,0000,0000,0000,,Sí, esos dos están saliendo.
+Dialogue: 0,0:03:01.74,0:03:04.77,Gen_Main,SHUN,0000,0000,0000,,Son una de esas parejas\Ncuriosas del verano.
+Dialogue: 0,0:03:03.70,0:03:07.66,Cart_A_Com,CARTEL,0000,0000,0000,,{\b0\frz15.84\pos(582.4,74.13)}Este es Sasa
+Dialogue: 0,0:03:04.87,0:03:06.37,Gen_Main,YOKO,0000,0000,0000,,Pero solo por esta vez, ¿sí?
+Dialogue: 0,0:03:05.25,0:03:07.66,Cart_A_Com,CARTEL,0000,0000,0000,,{\c&H27224D&\fad(220,0)\fs28\pos(497.07,291.73)}Bebimos una vez juntos
+Dialogue: 1,0:03:06.46,0:03:11.58,Gen_Italics,KAZUYA,0000,0000,0000,,¿Esa no es Shinbo, la amiga de Mizuhara?
+Dialogue: 1,0:03:12.21,0:03:13.88,Gen_Italics,KAZUYA,0000,0000,0000,,¿No pasará nada?
+Dialogue: 0,0:03:13.38,0:03:14.54,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\pos(485.33,327.47)}Por si filtra algo, digo
+Dialogue: 0,0:03:15.05,0:03:19.01,Gen_Italics,KAZUYA,0000,0000,0000,,Supongo que no.\NCreo que Mizuhara no ha dicho nada.
+Dialogue: 0,0:03:19.39,0:03:21.61,Gen_Main,SHUN,0000,0000,0000,,Oye, Kazuya, ¿todo bien?
+Dialogue: 0,0:03:22.18,0:03:25.81,Gen_Main,SHUN,0000,0000,0000,,¿Ya se resolvió lo de Chizuru?
+Dialogue: 0,0:03:22.56,0:03:25.04,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(850,0)\c&H353056&\fs26\frz10.84\pos(126.93,170.13)}Si quieres\Naclarar las cosas,\Nhazlo pronto…
+Dialogue: 0,0:03:25.89,0:03:28.02,Gen_Main,SHUN,0000,0000,0000,,Creo que Kibe aún no lo sabe.
+Dialogue: 0,0:03:28.56,0:03:31.24,Gen_Main,KAZUYA,0000,0000,0000,,¡Ya hablaremos de eso otro día!
+Dialogue: 0,0:03:28.56,0:03:35.48,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\c&H353056&\fs24\pos(289.6,9.07)}Han pasado muchas cosas,
+Dialogue: 0,0:03:29.06,0:03:35.48,Cart_A_Tre,CARTEL,0000,0000,0000,,{\fad(220,0)\3c&H27224D&\fs36\pos(395.2,27.73)}mi amigo del alma
+Dialogue: 0,0:03:31.32,0:03:35.48,Gen_Main,SHUN,0000,0000,0000,,¿Por qué te pones tan serio?\NYa me da miedo preguntar.
+Dialogue: 0,0:03:35.90,0:03:37.50,Gen_Main,MINI,0000,0000,0000,,¡Oh! ¡Maestro!
+Dialogue: 0,0:03:38.41,0:03:39.90,Gen_Main,KAZUYA,0000,0000,0000,,¿Yaemori?
+Dialogue: 0,0:03:40.32,0:03:43.27,Gen_Italics,KAZUYA,0000,0000,0000,,¿Es la primera vez\Nque coincide con Kuri?
+Dialogue: 0,0:03:44.70,0:03:46.38,Gen_Main,SHUN,0000,0000,0000,,¡Hola, Mini!
+Dialogue: 0,0:03:47.24,0:03:59.51,Cart_C_Tim,CARTEL,0000,0000,0000,,{\c&H7D7C78&\3c&HFBFCFA&\fay0.62\fax-0.1\an2\fs12\b1\move(318.93,65.6,293.86,65.6,28,12249)}Edificio número 2{\b1}
+Dialogue: 0,0:03:47.24,0:03:59.51,Cart_C_Tim,CARTEL,0000,0000,0000,,{\c&H7D7C78&\3c&HFBFCFA&\fay0.62\fax-0.1\an2\fs11\b1\move(424,131.73,398.93,131.73,28,12249)}Auditorio - Comedor
+Dialogue: 0,0:03:47.24,0:03:59.51,Cart_C_Tim,CARTEL,0000,0000,0000,,{\c&H54544F&\3c&HBABBA5&\fay-0.28\fax-0.2\fscx90\an2\fs10\b1\move(308.8,195.2,283.73,195.2,28,12249)}Laboratorio de investigación
+Dialogue: 0,0:03:47.33,0:03:49.09,Gen_Main,MINI,0000,0000,0000,,¡Kuri!
+Dialogue: 0,0:03:49.17,0:03:52.98,Gen_Main,KAZUYAMINI,0000,0000,0000,,-¿Se conocen?\N-Una amiga está en su mismo círculo.
+Dialogue: 0,0:03:53.05,0:03:55.23,Gen_Main,SHUN,0000,0000,0000,,No sabía que conocías a Mini.
+Dialogue: 0,0:03:55.30,0:03:57.39,Gen_Main,MINI,0000,0000,0000,,Somos vecinos.
+Dialogue: 0,0:03:57.47,0:03:59.51,Gen_Main,SHUN,0000,0000,0000,,¿En serio? Qué casualidad.
+Dialogue: 0,0:03:59.83,0:04:01.45,Gen_Main,SHUN,0000,0000,0000,,¿Y por qué te llama "maestro"?
+Dialogue: 0,0:04:01.55,0:04:03.45,Gen_Main,KAZUYA,0000,0000,0000,,Por nada.
+Dialogue: 0,0:04:03.51,0:04:04.93,Gen_Main,MINI,0000,0000,0000,,Estás muy bronceado, Kuri.
+Dialogue: 0,0:04:05.10,0:04:07.89,Cart_A_Com,CARTEL,0000,0000,0000,,{\pos(317.87,212.8)}Foto conmemorativa
+Dialogue: 0,0:04:05.18,0:04:07.89,Gen_Main_Up,SHUN-MINI,0000,0000,0000,,-¡Viva!\N-El mundo es un pañuelo.
+Dialogue: 0,0:04:07.94,0:04:19.86,Cart_A_Com,CARTEL,0000,0000,0000,,{\fs48\bord3\fad(220,0)}¡Enredo mental colosal!
+Dialogue: 0,0:04:08.23,0:04:12.61,Gen_Italics,KAZUYA,0000,0000,0000,,¿Kuri y Yaemori se conocen?\NNo sé si eso sea bueno.
+Dialogue: 0,0:04:12.69,0:04:16.41,Gen_Italics,KAZUYA,0000,0000,0000,,Ya saben lo de las novias de alquiler,\Nal menos eso me tranquiliza.
+Dialogue: 0,0:04:16.49,0:04:19.86,Gen_Italics,KAZUYA,0000,0000,0000,,Pero lo de Ruka debería ser secreto.
+Dialogue: 0,0:04:20.57,0:04:22.82,Gen_Italics,KAZUYA,0000,0000,0000,,Bueno, era de esperar.
+Dialogue: 0,0:04:23.17,0:04:26.19,Gen_Italics,KAZUYA,0000,0000,0000,,Llevo un año mintiendo con Mizuhara.
+Dialogue: 0,0:04:26.29,0:04:30.74,Gen_Italics,KAZUYA,0000,0000,0000,,Todos tienen sus vidas\Ny puede que interactúen entre sí.
+Dialogue: 0,0:04:30.83,0:04:35.75,Gen_Main_Up,MINI-SHUN,0000,0000,0000,,-¿Aún sigues con eso?\N-Pues claro.
+Dialogue: 0,0:04:32.42,0:04:35.75,Gen_Italics,KAZUYA,0000,0000,0000,,Con lo de la película\Nno me fijé en mucho más,
+Dialogue: 0,0:04:36.20,0:04:39.42,Gen_Italics,KAZUYA,0000,0000,0000,,pero todo va tan rápido\Nque no podemos mantener el {\i0}statu quo{\i1}.
+Dialogue: 0,0:04:36.76,0:04:39.42,Gen_Main_Up,MINI,0000,0000,0000,,¡Sabía que podría contar contigo!
+Dialogue: 0,0:04:40.75,0:04:45.68,Cart_A_Ari,CARTEL,0000,0000,0000,,{\3c&H525252&\an2\fay-0.178\bord1\fsp1\move(534.93,116.8,55.46,116.8,30,4910)}Aldea del Karaoke
+Dialogue: 0,0:04:41.39,0:04:45.21,Gen_Italics,KAZUYA,0000,0000,0000,,Soluciones, cambios…\NAlgo tiene que pasar.
+Dialogue: 0,0:04:46.06,0:04:47.83,Gen_Main,RUKA,0000,0000,0000,,Bienvenido,
+Dialogue: 0,0:04:49.18,0:04:50.64,Gen_Main,RUKA,0000,0000,0000,,querido amo.
+Dialogue: 0,0:04:53.69,0:04:55.74,Gen_Main,KAZUYA,0000,0000,0000,,¿Y esa ropa?
+Dialogue: 0,0:04:55.65,0:04:58.44,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(320,0)\bord1.6\pos(350.93,29.87)\3c&HFFFFFF&\3a&H37&}De sirvienta
+Dialogue: 0,0:04:55.82,0:04:58.44,Gen_Main,RUKA,0000,0000,0000,,Es un uniforme especial de temporada.
+Dialogue: 0,0:04:58.86,0:05:01.73,Gen_Main,RUKA,0000,0000,0000,,Es original de nuestro local.
+Dialogue: 0,0:05:01.82,0:05:02.90,Gen_Main,RUKA,0000,0000,0000,,¿No es bonito?
+Dialogue: 0,0:05:03.37,0:05:06.43,Gen_Main,KAZUYA,0000,0000,0000,,Solo son los gustos del gerente.
+Dialogue: 0,0:05:06.06,0:05:06.92,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(0,500)\fs60\bord3\pos(269.33,80)}Glups
+Dialogue: 0,0:05:07.16,0:05:08.44,Gen_Main,BOSS,0000,0000,0000,,¿Pasa algo?
+Dialogue: 0,0:05:07.95,0:05:09.74,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(400,0)\pos(178.67,44.8)}Sí, me gusta,\N¿y qué?
+Dialogue: 0,0:05:08.54,0:05:09.74,Gen_Main,KAZUYA,0000,0000,0000,,Qué miedo.
+Dialogue: 0,0:05:11.22,0:05:14.69,Gen_Main,RUKA,0000,0000,0000,,Vamos, te recuerdo\Nque estoy vestida de sirvienta.
+Dialogue: 0,0:05:14.79,0:05:17.17,Gen_Main,KAZUYA,0000,0000,0000,,Nos va a ver el gerente.
+Dialogue: 0,0:05:17.38,0:05:21.13,Gen_Main,RUKA,0000,0000,0000,,Dime, ¿no sientes nada?
+Dialogue: 0,0:05:21.43,0:05:23.09,Gen_Italics,KAZUYA,0000,0000,0000,,¡Qué cerca está!
+Dialogue: 0,0:05:23.33,0:05:27.21,Gen_Italics,KAZUYA,0000,0000,0000,,Sí, claro que siento algo.
+Dialogue: 0,0:05:27.42,0:05:29.14,Gen_Main,BOSS,0000,0000,0000,,Oye, Cacanoshita.
+Dialogue: 0,0:05:29.35,0:05:31.06,Gen_Main,KAZUYA,0000,0000,0000,,Soy Kinoshita, señor.
+Dialogue: 0,0:05:31.27,0:05:36.16,Gen_Main,BOSS,0000,0000,0000,,Limpia las salas de la 1 a la 15.\NY luego los baños.
+Dialogue: 0,0:05:36.23,0:05:39.69,Gen_Main,BOSS,0000,0000,0000,,Te adelanté el sueldo,\Nasí que trabaja.
+Dialogue: 0,0:05:40.01,0:05:41.53,Gen_Main,KAZUYA,0000,0000,0000,,Sí, señor.
+Dialogue: 0,0:05:42.17,0:05:44.60,Gen_Main,RUKA,0000,0000,0000,,¿Un adelanto? ¿Y eso?
+Dialogue: 0,0:05:44.70,0:05:47.53,Gen_Main,KAZUYA,0000,0000,0000,,Ah, después te cuento.
+Dialogue: 0,0:05:48.57,0:05:49.99,Gen_Main,RUKA,0000,0000,0000,,Ya veo.
+Dialogue: 0,0:05:50.28,0:05:52.42,Gen_Main,RUKA,0000,0000,0000,,Querías animarla\Ncon una cita de alquiler.
+Dialogue: 0,0:05:52.50,0:05:53.96,Gen_Main,KAZUYA,0000,0000,0000,,Sí.
+Dialogue: 0,0:05:54.46,0:05:58.29,Gen_Main,RUKA,0000,0000,0000,,Bueno, si la alquilaste,\Nme imagino que no pasó nada.
+Dialogue: 0,0:05:57.56,0:05:59.92,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(500,0)\fs18\pos(554.13,169.6)}Kazuya es un {\u1}cliente{\u0},\Nasí que es lo normal.
+Dialogue: 0,0:05:58.38,0:05:59.92,Gen_Main,RUKA,0000,0000,0000,,Sabia decisión.
+Dialogue: 0,0:06:00.76,0:06:02.83,Gen_Italics,KAZUYA,0000,0000,0000,,No puedo decirle lo que pasó.
+Dialogue: 0,0:06:03.41,0:06:06.28,Gen_Main,RUKA,0000,0000,0000,,¿Y conseguiste animar a Chizuru?
+Dialogue: 0,0:06:07.37,0:06:09.60,Gen_Main,KAZUYA,0000,0000,0000,,Sí, más o menos.
+Dialogue: 0,0:06:10.28,0:06:12.78,Gen_Main,RUKA,0000,0000,0000,,¿Sí? Me alegro.
+Dialogue: 0,0:06:13.10,0:06:15.19,Gen_Italics,KAZUYA,0000,0000,0000,,Ruka es muy buena.
+Dialogue: 0,0:06:15.52,0:06:19.38,Gen_Italics,KAZUYA,0000,0000,0000,,No me está regañando\Npor haber alquilado a Mizuhara
+Dialogue: 0,0:06:16.48,0:06:18.89,Gen_Main_Up,RUKA,0000,0000,0000,,Así que al final la ayudaste, ¿eh?
+Dialogue: 0,0:06:19.48,0:06:21.77,Gen_Italics,KAZUYA,0000,0000,0000,,y está teniendo en cuenta\Nsus sentimientos.
+Dialogue: 0,0:06:19.48,0:06:21.77,Gen_Main_Up,RUKA,0000,0000,0000,,Pues se acabó la tregua.
+Dialogue: 0,0:06:23.61,0:06:26.49,Gen_Main,RUKA,0000,0000,0000,,Volveré a ser la de siempre.
+Dialogue: 0,0:06:26.87,0:06:28.85,Gen_Main,KAZUYA,0000,0000,0000,,¿De qué estás hablando?
+Dialogue: 0,0:06:28.94,0:06:29.74,Cart_A_Tre,CARTEL,0000,0000,0000,,{\fad(240,0)\bord1\c&H1F39CE&\3c&H8CBFE6&\3a&H6F&\fs32\pos(337.6,249.07)}¿Qué hago?
+Dialogue: 0,0:06:28.95,0:06:32.74,Gen_Main,RUKA,0000,0000,0000,,Ya te dije que cedí un poco\Npor lo de su abuela,
+Dialogue: 0,0:06:33.16,0:06:36.13,Gen_Main,RUKA,0000,0000,0000,,pero no pienso dejar\Nque Chizuru se quede contigo.
+Dialogue: 0,0:06:36.41,0:06:38.33,Gen_Main,KAZUYA,0000,0000,0000,,Oye, espera…
+Dialogue: 0,0:06:39.17,0:06:43.29,Gen_Main,RUKA,0000,0000,0000,,Kazuya, ¿por qué no salimos de viaje?
+Dialogue: 0,0:06:43.67,0:06:45.25,Gen_Main,KAZUYA,0000,0000,0000,,¿De viaje?
+Dialogue: 0,0:06:45.56,0:06:47.42,Gen_Main,KAZUYA,0000,0000,0000,,¿Y eso por qué?
+Dialogue: 0,0:06:47.51,0:06:51.16,Gen_Main,RUKA,0000,0000,0000,,Es que a este paso\Nte acercarás más y más a Chizuru.
+Dialogue: 0,0:06:51.35,0:06:54.72,Gen_Main,RUKA,0000,0000,0000,,Como tu novia, tengo derecho\Na tener la misma oportunidad.
+Dialogue: 0,0:06:55.03,0:06:58.80,Gen_Main,RUKA,0000,0000,0000,,Y aún no te he perdonado\Npor irte con ella a filmar.
+Dialogue: 0,0:06:58.90,0:07:01.01,Gen_Main,RUKA,0000,0000,0000,,Prometiste no verla en secreto.
+Dialogue: 0,0:07:01.11,0:07:03.44,Gen_Main,KAZUYA,0000,0000,0000,,Eso fue una trampa de Yaemori.
+Dialogue: 0,0:07:03.67,0:07:05.25,Gen_Main,RUKA,0000,0000,0000,,¡No, no y no!
+Dialogue: 0,0:07:04.48,0:07:10.90,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(400,0)\frz40.97\move(83.2,82.67,82.2,150.4,27,6408)}¡Estamos\Ntrabajando!
+Dialogue: 0,0:07:05.32,0:07:10.19,Gen_Main,RUKA,0000,0000,0000,,¡Liberaré todo el estrés que acumulé\Nmientras Chizuru estaba deprimida!
+Dialogue: 0,0:07:10.28,0:07:11.49,Gen_Main,KAZUYA,0000,0000,0000,,¿El estrés?
+Dialogue: 0,0:07:11.58,0:07:12.87,Gen_Main,KAZUYA,0000,0000,0000,,¿Adónde pretendes ir?
+Dialogue: 0,0:07:14.37,0:07:16.58,Gen_Main,RUKA,0000,0000,0000,,¿A unos baños termales?
+Dialogue: 0,0:07:16.96,0:07:18.00,Gen_Main,KAZUYA,0000,0000,0000,,¿Unos ba…?
+Dialogue: 0,0:07:19.46,0:07:22.03,Gen_Main,KAZUYA,0000,0000,0000,,Pero no nos quedaríamos a dormir, ¿o sí?
+Dialogue: 0,0:07:33.89,0:07:36.60,Gen_Main,KAZUYA,0000,0000,0000,,Los baños termales no son buena idea.
+Dialogue: 0,0:07:36.69,0:07:39.57,Gen_Main,RUKA,0000,0000,0000,,¡Pero es que solo sales con Chizuru!
+Dialogue: 0,0:07:39.65,0:07:42.56,Gen_Main,RUKA,0000,0000,0000,,¡Eres mi novio! ¡Encárgate\Nde mis necesidades emocionales!
+Dialogue: 0,0:07:43.03,0:07:45.83,Gen_Italics,KAZUYA,0000,0000,0000,,Yo diría que ya lo hago.
+Dialogue: 0,0:07:43.73,0:07:46.32,Cart_A_Com,CARTEL,0000,0000,0000,,{\pos(246.4,116.27)\fs22\frz8.633}50 lives al día
+Dialogue: 0,0:07:44.49,0:07:46.32,Cart_A_Com,CARTEL,0000,0000,0000,,{\fs14\frz10.36\pos(48.53,171.2)}Llamada de buenas\Nnoches cada 2 días
+Dialogue: 0,0:07:44.86,0:07:46.32,Cart_A_Com,CARTEL,0000,0000,0000,,{\fs16\alpha&H66&\t(0,380,\alpha&H00&)\pos(206.4,221.87)\3c&HF1F1F1&\frz13.13}Zzz… ¿Eh?\NAh, sigo despierto.
+Dialogue: 1,0:07:46.32,0:07:50.32,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H79DFEC&\fay-0.13\fax0.09\an1\bord1\3c&H2F67BA&\pos(114.67,56)\3a&H58&}Top hits semanales
+Dialogue: 1,0:07:46.32,0:07:50.32,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\pos(221.87,124.27)\frz3.335}El aro de las dos
+Dialogue: 1,0:07:46.32,0:07:50.32,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\frz3.335\pos(226.13,166.4)}Preparatoria pública de ciencias Takahachi
+Dialogue: 1,0:07:46.32,0:07:50.32,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\pos(231.47,241.6)\frz4.62}Seitendon
+Dialogue: 1,0:07:46.32,0:07:50.32,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\pos(232.53,277.87)\frz5.767}Pescadería Onoyo
+Dialogue: 0,0:07:46.40,0:07:49.05,Gen_Main,KAZUYA,0000,0000,0000,,No podemos irnos de viaje.
+Dialogue: 2,0:07:46.61,0:07:50.32,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(520,0)\fs30\frz9.076\pos(483.2,26.67)}Eres menor\Nde edad, Ruka
+Dialogue: 0,0:07:49.11,0:07:50.32,Gen_Main,RUKA,0000,0000,0000,,¡Sí podemos!
+Dialogue: 0,0:07:50.60,0:07:52.86,Gen_Main,KAZUYA,0000,0000,0000,,¿Y qué es eso\Nde las necesidades emocionales?
+Dialogue: 1,0:07:54.32,0:07:56.95,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H79DFEC&\fay-0.13\fax0.09\an1\bord1\3c&H2F67BA&\pos(114.67,56)\3a&H58&}Top hits semanales
+Dialogue: 1,0:07:54.32,0:07:56.95,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\pos(221.87,124.27)\frz3.335}El aro de las dos
+Dialogue: 1,0:07:54.32,0:07:56.95,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\frz3.335\pos(226.13,166.4)}Preparatoria pública de ciencias Takahachi
+Dialogue: 1,0:07:54.32,0:07:56.95,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\pos(231.47,241.6)\frz4.62}Seitendon
+Dialogue: 1,0:07:54.32,0:07:56.95,Cart_C_Tre,CARTEL,0000,0000,0000,,{\c&H5B6265&\fay-0.13\bord0\fax-0.04\an7\3c&H2F67BA&\3a&H58&\fs12\pos(232.53,277.87)\frz5.767}Pescadería Onoyo
+Dialogue: 2,0:07:54.62,0:07:56.95,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\fs30\pos(489.45,-3.05)}¡Por eso no\Nconsigues novia!
+Dialogue: 0,0:07:54.75,0:07:56.95,Gen_Main,RUKA,0000,0000,0000,,¿Es que tengo que decirlo todo?
+Dialogue: 2,0:07:55.87,0:07:56.95,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\fs30\frz19.77\pos(82.67,91.73)}¡Déjame en paz!
+Dialogue: 0,0:07:57.24,0:07:58.60,Gen_Main,RUKA,0000,0000,0000,,Hay que hacer esto.
+Dialogue: 0,0:07:59.54,0:08:00.67,Gen_Main,RUKA,0000,0000,0000,,Y esto…
+Dialogue: 0,0:08:02.63,0:08:03.92,Gen_Main,RUKA,0000,0000,0000,,Y esto…
+Dialogue: 0,0:08:04.97,0:08:06.05,Gen_Main,RUKA,0000,0000,0000,,Mueve la mano.
+Dialogue: 0,0:08:11.18,0:08:13.01,Gen_Italics,KAZUYA,0000,0000,0000,,¿Qué está pasando?
+Dialogue: 0,0:08:13.56,0:08:16.97,Gen_Italics,KAZUYA,0000,0000,0000,,¡Con tantos roces me va a dar algo!
+Dialogue: 0,0:08:17.21,0:08:20.43,Gen_Italics,KAZUYA,0000,0000,0000,,¡Y la iluminación de la sala\Nde karaoke tampoco ayuda!
+Dialogue: 0,0:08:21.16,0:08:24.00,Gen_Main,RUKA,0000,0000,0000,,¡Aprende a hacer esto\Nsin que te lo digan!
+Dialogue: 0,0:08:21.98,0:08:26.40,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(400,0)\fs30\pos(257.6,173.73)\3c&HFFFFFF&\3a&H2C&}¡80 puntos!
+Dialogue: 0,0:08:21.98,0:08:26.40,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(400,0)\fs25\3c&HFFFFFF&\3a&H2C&\frz10.37\pos(553.07,203.73)}Toma la iniciativa
+Dialogue: 0,0:08:23.48,0:08:26.40,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(400,0)\fs25\3c&HFFFFFF&\3a&H2C&\pos(115.73,176)\frz18.32}¡Es una calificación alta!
+Dialogue: 0,0:08:24.11,0:08:26.40,Gen_Main,KAZUYA,0000,0000,0000,,¡No puedo! ¡No trabajo en un {\i1}host club{\i0}!
+Dialogue: 0,0:08:26.78,0:08:30.36,Gen_Italics,KAZUYA,0000,0000,0000,,También es verdad\Nque no quiero que Ruka estalle.
+Dialogue: 0,0:08:27.19,0:08:30.38,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(700,0)\fs25\3c&HFFFFFF&\3a&H2C&\frz18.63\pos(81.6,129.6)}Está disfrutando\Nlas caricias
+Dialogue: 0,0:08:30.45,0:08:33.76,Gen_Italics,KAZUYA,0000,0000,0000,,Y se lo debo por perdonarme\Nque alquilara a Mizuhara.
+Dialogue: 0,0:08:33.83,0:08:35.69,Gen_Main,KAZUYA,0000,0000,0000,,¿Y qué tal a Hisamatsu-yu?
+Dialogue: 0,0:08:36.79,0:08:38.29,Gen_Main,RUKA,0000,0000,0000,,¿Qué es eso?
+Dialogue: 0,0:08:36.87,0:08:41.29,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(520,0)\fs30\frz9.076\pos(495.47,12.27)}¿Quién es ese?
+Dialogue: 0,0:08:38.37,0:08:41.29,Gen_Main,KAZUYA,0000,0000,0000,,Son unos baños cerca de mi apartamento.
+Dialogue: 0,0:08:38.62,0:08:41.29,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(520,0)\fs30\frz16.12\pos(107.2,18.67)}No es una persona,\Nclaramente
+Dialogue: 0,0:08:42.25,0:08:45.36,Gen_Main,RUKA,0000,0000,0000,,Si está tan cerca, no es un viaje.
+Dialogue: 0,0:08:45.46,0:08:48.22,Gen_Main,KAZUYA,0000,0000,0000,,Sí, no se podría considerar un viaje.
+Dialogue: 0,0:08:52.72,0:08:57.18,Gen_Main,RUKA-KAZUYA,0000,0000,0000,,-Podría cambiar eso y eso otro…\N{\i1}-¿Qué está calculando?{\i0}
+Dialogue: 0,0:09:00.78,0:09:02.10,Gen_Main,KAZUYA,0000,0000,0000,,Bien.
+Dialogue: 0,0:09:03.15,0:09:05.06,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(520,0)\fs22\frz9.076\pos(464.53,12.8)}Podría venir el gerente,\Npero bueno…
+Dialogue: 0,0:09:16.44,0:09:17.67,Gen_Main,RUKA,0000,0000,0000,,Te perdono.
+Dialogue: 0,0:09:20.06,0:09:21.24,Gen_Main,KAZUYA,0000,0000,0000,,Qué bien.
+Dialogue: 0,0:09:24.84,0:09:27.04,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(720,0)\fs50\bord3\frz11.08\c&HFFFFFF&\3c&H364A74&\pos(446.93,90.67)}"Uhh"
+Dialogue: 0,0:09:24.84,0:09:27.04,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(720,0)\fs30\bord0\pos(460.27,131.73)\frz11.08}Con cinco significados,\Nmás o menos
+Dialogue: 1,0:09:27.04,0:09:31.55,Cart_A_Tre,CARTEL,0000,0000,0000,,{\p1\bord0\an7\pos(566.93,48)\c&HF3F5F5&\clip(562.13,38.93,621.33,145.6)}m 0 0 l 100 0 100 100 0 100{\p0}
+Dialogue: 2,0:09:27.04,0:09:31.55,Cart_C_Tre,CARTEL,0000,0000,0000,,{\bord0\an5\fs16\pos(590.4,92.8)}Al día\Nsiguiente
+Dialogue: 0,0:09:28.55,0:09:31.33,Gen_Main,KAZUYA,0000,0000,0000,,Qué dolor. Los baños\Ncon corriente son una locura.
+Dialogue: 0,0:09:31.59,0:09:33.30,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(480,480)\bord0\fs26\frz3.54\c&H5F5B6D&\blur0.4\pos(147.2,53.87)}Qué agradable
+Dialogue: 0,0:09:34.01,0:09:37.60,Gen_Italics,KAZUYA,0000,0000,0000,,¿De verdad no le importa\Nvenir a un baño público?
+Dialogue: 0,0:09:38.34,0:09:40.02,Gen_Main,RUKA,0000,0000,0000,,Nos vemos luego.
+Dialogue: 0,0:09:40.38,0:09:43.97,Gen_Italics,KAZUYA,0000,0000,0000,,Pero no podíamos irnos de viaje\Na unos baños mejores.
+Dialogue: 0,0:09:47.07,0:09:49.19,Gen_Main,MAN,0000,0000,0000,,¿Estás bien? Vamos.
+Dialogue: 0,0:09:49.61,0:09:53.03,Gen_Italics,KAZUYA,0000,0000,0000,,¿Qué estará haciendo Mizuhara ahora?
+Dialogue: 0,0:09:53.56,0:09:55.98,Gen_Italics,KAZUYA,0000,0000,0000,,Parecía estar mejor.
+Dialogue: 0,0:09:56.66,0:09:58.73,Gen_Italics,KAZUYA,0000,0000,0000,,Espero que no esté llorando en casa.
+Dialogue: 0,0:09:59.29,0:10:02.50,Gen_Italics,KAZUYA,0000,0000,0000,,Es más, espero que esté sonriendo.
+Dialogue: 0,0:10:03.69,0:10:06.68,Gen_Italics,KAZUYA,0000,0000,0000,,Ya estoy pensando en ella otra vez.
+Dialogue: 0,0:10:08.50,0:10:11.26,Gen_Italics,KAZUYA,0000,0000,0000,,No puedo seguir así.
+Dialogue: 0,0:10:20.27,0:10:23.43,Gen_Italics,KAZUYA,0000,0000,0000,,¡Quiero matarme\Npor pensar que se ve linda!
+Dialogue: 0,0:10:23.48,0:10:29.27,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(1240,0)\frz15.83\fs28\pos(205.87,106.13)}¡Di que estoy linda!
+Dialogue: 0,0:10:23.48,0:10:29.27,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(1240,0)\frz15.83\pos(168.53,182.93)}Son baños termales,\Npero al lado de casa.\N¡Es ridículo!\N\N{\fs16}¿Por qué te adornas con\Nuna flor al salir del baño?
+Dialogue: 0,0:10:24.06,0:10:26.91,Gen_Main,KAZUYA-RUKA,0000,0000,0000,,-¿De dónde sacaste eso?\N-Lo compré.
+Dialogue: 0,0:10:26.98,0:10:29.27,Gen_Main,RUKA,0000,0000,0000,,Está de moda. ¿No es bonito?
+Dialogue: 0,0:10:29.26,0:10:40.99,Cart_A_Com,CARTEL,0000,0000,0000,,{\c&H735518&\an7\fs30\pos(408,56)}Gúgul Maps
+Dialogue: 0,0:10:29.26,0:10:40.99,Cart_A_Com,CARTEL,0000,0000,0000,,{\c&H735518&\an8\fs20\xshad-0.5\yshad-0.5\bord0\c&H2500F8&\4c&H251D4F&\frz47.15\pos(141.33,191.47)}Ubicación actual
+Dialogue: 0,0:10:29.26,0:10:40.99,Cart_A_Com,CARTEL,0000,0000,0000,,{\c&H735518&\an8\fs20\xshad-0.5\yshad-0.5\bord0\c&H2500F8&\4c&H251D4F&\frz34.01\pos(583.47,154.13)}Apartamento
+Dialogue: 0,0:10:29.26,0:10:40.99,Cart_A_Com,CARTEL,0000,0000,0000,,{\c&HF3B10F&\an1\fs30\pos(14.93,288.53)}Tiempo requerido: 5 minutos
+Dialogue: 1,0:10:29.36,0:10:33.22,Gen_Main,KAZUYA,0000,0000,0000,,Aunque sean baños termales,\Nestán muy cerca de casa.
+Dialogue: 1,0:10:33.32,0:10:36.92,Gen_Main,RUKA,0000,0000,0000,,Dije lo de los baños termales para\Nponerme esto. ¡No me hagas decirlo!
+Dialogue: 1,0:10:36.99,0:10:40.99,Gen_Main,KAZUYA,0000,0000,0000,,¿Piensas ir a mi casa vestida así?\NSolo se tarda cinco minutos.
+Dialogue: 0,0:10:41.54,0:10:44.78,Gen_Main,RUKA,0000,0000,0000,,¡Sí! Que parezca que es\Nun festival de verano.
+Dialogue: 0,0:10:44.87,0:10:46.40,Gen_Main,RUKA,0000,0000,0000,,¡Vayamos también a eso!
+Dialogue: 0,0:10:46.50,0:10:48.50,Gen_Main,KAZUYA,0000,0000,0000,,¿Eso era lo que querías?
+Dialogue: 0,0:10:50.05,0:10:52.46,Gen_Main,RUKA,0000,0000,0000,,Los fuegos artificiales\Nestaban preciosos.
+Dialogue: 0,0:10:52.76,0:10:53.82,Gen_Main,KAZUYA,0000,0000,0000,,Aún es de día.
+Dialogue: 0,0:10:52.76,0:10:54.42,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(400,0)\pos(111.47,69.87)\frz11.37}Ni que estuviéramos\Nen un festival
+Dialogue: 0,0:10:55.09,0:10:58.63,Gen_Main,RUKA,0000,0000,0000,,No entiendes para nada a las mujeres.
+Dialogue: 0,0:10:58.72,0:11:00.00,Gen_Main,RUKA,0000,0000,0000,,Lo digo en serio.
+Dialogue: 1,0:10:59.05,0:11:02.58,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(360,0)\p1\c&HFFFFFF&\bord0\an5\fscy60\fscx170\blur4\pos(165.5,163)\frz19.16}m 0 0 s 100 0 100 100 0 100 c{\p0}
+Dialogue: 2,0:10:59.05,0:11:02.58,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(360,0)\bord0\fs36\an5\frz19.16\pos(165,160)}En serio
+Dialogue: 0,0:11:00.10,0:11:02.20,Gen_Main,KAZUYA,0000,0000,0000,,No hace falta enfatizarlo.
+Dialogue: 0,0:11:03.23,0:11:05.26,Gen_Main,RUKA,0000,0000,0000,,Las mujeres somos complicadas.
+Dialogue: 0,0:11:05.54,0:11:08.56,Gen_Main,RUKA,0000,0000,0000,,Queremos que nos mimen\Ny nos llamen bonitas.
+Dialogue: 0,0:11:08.85,0:11:11.18,Gen_Main,RUKA,0000,0000,0000,,Que nos digan lo que no hace falta
+Dialogue: 0,0:11:11.43,0:11:15.58,Gen_Main,RUKA,0000,0000,0000,,y nos digan lo que queremos oír\Nsin que lo pidamos.
+Dialogue: 0,0:11:15.90,0:11:17.63,Gen_Italics,KAZUYA,0000,0000,0000,,Qué complicado.
+Dialogue: 0,0:11:16.07,0:11:17.99,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(355,0)\frz14.22\pos(50.5,171)}No leo\Nla mente
+Dialogue: 0,0:11:18.37,0:11:21.00,Gen_Main,CHIZURU,0000,0000,0000,,La proyección es el domingo, ¿no?
+Dialogue: 0,0:11:21.08,0:11:25.33,Gen_Italics,KAZUYA,0000,0000,0000,,Ese día hice bien\Nen no mencionar aquello.
+Dialogue: 0,0:11:25.63,0:11:28.92,Gen_Italics,KAZUYA,0000,0000,0000,,Demonios, vuelvo a pensar en Mizuhara.
+Dialogue: 0,0:11:30.19,0:11:31.88,Gen_Main,KAZUYA,0000,0000,0000,,Eso te pasa por testaruda.
+Dialogue: 0,0:11:31.96,0:11:34.13,Gen_Main,RUKA,0000,0000,0000,,Para ser bella hay que ver estrellas.
+Dialogue: 0,0:11:34.97,0:11:35.71,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(180,0)\fs42\bord2.5\pos(102.5,28)}Estoy bien
+Dialogue: 0,0:11:42.22,0:11:45.01,Gen_Main,KAZUYA,0000,0000,0000,,No quiero que te resfríes.
+Dialogue: 0,0:11:48.10,0:11:49.51,Gen_Main,KAZUYA,0000,0000,0000,,¿Qué pasa?
+Dialogue: 0,0:11:49.94,0:11:51.21,Gen_Main,KAZUYA,0000,0000,0000,,Oye…
+Dialogue: 0,0:11:54.73,0:11:55.90,Gen_Main,RUKA,0000,0000,0000,,Aprobaste.
+Dialogue: 0,0:12:01.41,0:12:03.90,Gen_Main,RUKA,0000,0000,0000,,¿Qué haremos hasta que me vaya a casa?
+Dialogue: 0,0:12:02.12,0:12:03.58,Cart_A_Com,CARTEL,0000,0000,0000,,{\an2\fad(190,0)\fs36\frz18.57\move(160.5,93,160.5,180)}Jugaré algún videojuego
+Dialogue: 0,0:12:03.58,0:12:04.29,Cart_A_Com,CARTEL,0000,0000,0000,,{\an2\fad(0,0)\fs36\frz18.57\move(160.5,180,160.5,260)}Jugaré algún videojuego
+Dialogue: 1,0:12:03.99,0:12:05.32,Gen_Italics,KAZUYA,0000,0000,0000,,Está claro.
+Dialogue: 0,0:12:04.29,0:12:05.33,Cart_A_Com,CARTEL,0000,0000,0000,,{\an2\fad(0,0)\fs36\frz18.57\move(160.5,260,160.5,420)}Jugaré algún videojuego
+Dialogue: 0,0:12:05.79,0:12:08.26,Gen_Italics,KAZUYA,0000,0000,0000,,Ruka es demasiado buena.
+Dialogue: 0,0:12:08.33,0:12:13.23,Gen_Italics,KAZUYA,0000,0000,0000,,Intenta disfrutar la relación\Npese a lo complicada que es.
+Dialogue: 0,0:12:14.10,0:12:17.26,Gen_Italics,KAZUYA,0000,0000,0000,,Pero por eso mismo\Ntengo que cambiar las cosas.
+Dialogue: 0,0:12:18.30,0:12:21.78,Gen_Italics,KAZUYA,0000,0000,0000,,Porque lo que yo siento por Mizuhara…
+Dialogue: 0,0:12:23.22,0:12:25.14,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(440,0)\frz14.12\pos(105.5,50)}Se le olvidó\Nque ya se bañó\Ndos veces
+Dialogue: 0,0:12:26.48,0:12:29.10,Gen_Main,KAZUYA,0000,0000,0000,,Tengo que hacer algo.
+Dialogue: 0,0:12:29.56,0:12:35.11,Gen_Main,KAZUYA,0000,0000,0000,,Lo raro es que le guste\Na una chica tan atractiva.
+Dialogue: 0,0:12:35.65,0:12:39.36,Gen_Italics,KAZUYA,0000,0000,0000,,Tampoco sé lo que siente Mizuhara.
+Dialogue: 0,0:12:36.11,0:12:41.07,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(770,0)\fs28\pos(500.5,254.5)}Qué vasto es\Nel océano del amor
+Dialogue: 0,0:12:41.37,0:12:44.59,Gen_Italics,KAZUYA,0000,0000,0000,,Debo encontrar\Nuna solución, y rápido.
+Dialogue: 0,0:12:46.03,0:12:48.28,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H5D5A49&\bord0\fs20\fax-0.6\pos(324,46.5)\frz0.519}Chizuru Ichinose
+Dialogue: 0,0:12:46.03,0:12:48.28,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H5D5A49&\an7\bord0\fs18\fax-0.6\b0\pos(215,119)\frz0.598}¿Tienes libre un día de este fin de semana?{\b1}
+Dialogue: 0,0:12:54.00,0:12:56.00,Cart_TitleSeries,CARTEL,0000,0000,0000,,{\c&H7019DB&\fad(0,0)\an8\bord0\fs20\pos(126.44,203.46)}Rent-{\c&H14B3ED&}A{\c&H7019DB&}-Girl{\c&H14B3ED&}fri{\c&H7019DB&}end
+Dialogue: 0,0:13:00.42,0:13:04.51,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H5D5A49&\bord0\fs20\fax-0.6\pos(324,46.5)\frz0.519}Chizuru Ichinose
+Dialogue: 0,0:13:00.42,0:13:04.51,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H5D5A49&\an7\bord0\fs18\fax-0.6\b0\pos(215,119)\frz0.598}¿Tienes libre un día de este fin de semana?{\b1}
+Dialogue: 0,0:13:00.65,0:13:01.84,Gen_Italics,KAZUYA,0000,0000,0000,,¿Mizuhara?
+Dialogue: 0,0:13:01.93,0:13:04.51,Gen_Italics,KAZUYA,0000,0000,0000,,¿Mizuhara quiere saber\Nsi estoy disponible?
+Dialogue: 0,0:13:04.97,0:13:08.60,Gen_Italics,KAZUYA,0000,0000,0000,,¿Quiere algo de mí? ¿Esto es real?
+Dialogue: 0,0:13:09.10,0:13:11.06,Gen_Italics,KAZUYA,0000,0000,0000,,¿Tengo planes el fin de semana?
+Dialogue: 0,0:13:11.40,0:13:14.22,Gen_Italics,KAZUYA,0000,0000,0000,,El sábado me invitaron a beber
+Dialogue: 0,0:13:14.31,0:13:17.44,Gen_Italics,KAZUYA,0000,0000,0000,,y el domingo pensaba hacer tareas.
+Dialogue: 0,0:13:19.22,0:13:21.98,Cart_A_Com,CARTEL,0000,0000,0000,,{\frz338.7\pos(441,189)}Tengo tiempo, sí
+Dialogue: 0,0:13:19.32,0:13:21.98,Gen_Italics,KAZUYA,0000,0000,0000,,Pero tengo tiempo.\NTodo el tiempo del mundo.
+Dialogue: 0,0:13:22.07,0:13:26.30,Gen_Italics,KAZUYA,0000,0000,0000,,No hay nada que tenga más prioridad\Nque una invitación de Mizuhara.
+Dialogue: 0,0:13:26.37,0:13:27.95,Gen_Italics,KAZUYA,0000,0000,0000,,¡Todo lo demás puede esperar!
+Dialogue: 0,0:13:28.37,0:13:31.86,Gen_Italics,KAZUYA,0000,0000,0000,,¿Por qué me pregunta?\N¿Quiere que nos veamos?
+Dialogue: 0,0:13:31.50,0:13:33.96,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,220)\fs36\pos(481,22.5)}Podríamos\Nir al cine
+Dialogue: 0,0:13:31.96,0:13:34.44,Gen_Italics,KAZUYA,0000,0000,0000,,No, podría ser\Npara una llamada de teléfono
+Dialogue: 0,0:13:34.58,0:13:37.12,Gen_Italics,KAZUYA,0000,0000,0000,,o para recibir un paquete suyo.
+Dialogue: 0,0:13:37.20,0:13:47.35,Cart_A_Com,CARTEL,0000,0000,0000,,{\pos(517.5,12.5)}¿Buscando\Natención?
+Dialogue: 0,0:13:37.21,0:13:40.19,Gen_Italics,KAZUYA,0000,0000,0000,,¿Qué le respondo?
+Dialogue: 0,0:13:38.03,0:13:47.35,Cart_A_Com,CARTEL,0000,0000,0000,,{\frz13.51\pos(338,171.5)}Sueno\Ndesesperado
+Dialogue: 0,0:13:38.49,0:13:47.35,Cart_A_Com,CARTEL,0000,0000,0000,,{\pos(215,199)\frz13.51}Reconozco que\Nsí lo estoy
+Dialogue: 0,0:13:40.26,0:13:42.94,Gen_Italics,KAZUYA,0000,0000,0000,,Si respondo "sí, sí",\Nsonaré desesperado.
+Dialogue: 0,0:13:41.62,0:13:47.35,Cart_A_Com,CARTEL,0000,0000,0000,,{\frz0\fs20\pos(542.5,96)}El CI humano en estos\Nmomentos es de 310
+Dialogue: 0,0:13:43.01,0:13:47.34,Gen_Italics,KAZUYA,0000,0000,0000,,Pero si me hago el difícil\Ny se retracta, me muero.
+Dialogue: 0,0:13:45.75,0:13:47.35,Cart_A_Com,CARTEL,0000,0000,0000,,{\fs36\frz7.076\pos(97,275.5)}¡Me moriría!
+Dialogue: 0,0:13:47.35,0:13:48.47,Cart_A_Ari,CARTEL,0000,0000,0000,,{\3c&HA1937C&\an2\bord0\fad(0,100)\b0\c&HFCFCFA&\frx6\fry0\fs24\pos(177.5,109)\frz338.4}Chizuru Ichinose
+Dialogue: 0,0:13:47.35,0:13:48.47,Cart_A_Tre,CARTEL,0000,0000,0000,,{\3c&HA1937C&\fax-0.03\an7\bord0\fad(0,100)\b0\c&H57564E&\frx6\fry0\fs18\pos(94,161)\frz338.7}¿Tienes libre un día de este fin de semana?
+Dialogue: 0,0:13:47.35,0:13:48.47,Cart_C_Tre,CARTEL,0000,0000,0000,,{\3c&HA1937C&\fad(0,100)\b0\c&HFCFCFA&\frz339.4\pos(344.5,95)\frx6\fry0}Hoy{\b1}
+Dialogue: 0,0:13:49.10,0:13:50.30,Cart_A_Ari,CARTEL,0000,0000,0000,,{\3c&HA1937C&\fax-0.03\an9\bord0\fad(180,0)\b0\c&H57564E&\frx6\fry0\fs18\frz338.7\pos(386,73)}¿Tienes libre un día de este fin de semana?
+Dialogue: 0,0:13:49.10,0:13:50.30,Cart_A_Ari,CARTEL,0000,0000,0000,,{\3c&HA1937C&\fax-0.01\an7\bord0\fad(180,0)\b0\c&H57564E&\frx6\fry0\fs18\frz338.7\pos(301.5,168)}Tengo libres los dos. ¿Qué pasa?
+Dialogue: 0,0:13:50.79,0:13:53.14,Cart_A_Com,CARTEL,0000,0000,0000,,{\pos(536.5,76.5)}Hice cuanto pude
+Dialogue: 0,0:13:50.81,0:13:52.55,Gen_Main,KAZUYA,0000,0000,0000,,{\i1}This is perfect.{\i0}
+Dialogue: 0,0:13:53.23,0:13:55.93,Gen_Italics,KAZUYA,0000,0000,0000,,¡No, no! ¿Habré sonado demasiado frío?
+Dialogue: 0,0:13:54.56,0:13:58.12,Cart_A_Com,CARTEL,0000,0000,0000,,{\frz12.02\fad(500,0)\fs36\pos(501.5,127.5)}Es la primera vez\Nque me invita
+Dialogue: 0,0:13:56.02,0:13:59.38,Gen_Italics,KAZUYA,0000,0000,0000,,¿Habría preferido\Nque sonara más ilusionado?
+Dialogue: 0,0:13:59.44,0:14:02.11,Gen_Italics,KAZUYA,0000,0000,0000,,¡No puedo más! ¡Me voy a morir!
+Dialogue: 0,0:14:04.07,0:14:07.03,Cart_A_Ari,CARTEL,0000,0000,0000,,{\3c&HA1937C&\fax-0.03\an9\bord0\fad(0,100)\b0\c&H57564E&\frx6\fry0\fs18\frz338.7\pos(386,73)}¿Tienes libre un día de este fin de semana?
+Dialogue: 0,0:14:04.07,0:14:07.03,Cart_A_Ari,CARTEL,0000,0000,0000,,{\3c&HA1937C&\fax-0.01\an7\bord0\fad(0,0)\b0\c&H57564E&\frx6\fry0\fs18\frz338.7\pos(301.5,168)}Tengo libres los dos. ¿Qué pasa?
+Dialogue: 0,0:14:09.99,0:14:11.58,Cart_A_Ari,CARTEL,0000,0000,0000,,{\3c&HA1937C&\an7\bord0\fad(0,0)\b1\c&HFFFFFF&\frx6\fry0\fs28\pos(274.5,80.5)\frz345.5}Visto{\b0}
+Dialogue: 0,0:14:13.08,0:14:14.00,Cart_A_Ari,CARTEL,0000,0000,0000,,{\bord0\fax-0.1\an2\fad(200,0)\fs30\shad0.2\4c&H555555&\4a&H4D&\c&HF8F8ED&\pos(264.5,28.5)}Chizuru Ichinose
+Dialogue: 0,0:14:13.08,0:14:14.00,Cart_A_Ari,CARTEL,0000,0000,0000,,{\bord0\fax-0.1\an7\fad(200,0)\fs24\shad0\4c&H555555&\4a&H4D&\c&H59584F&\b1\pos(163,171)}Pues el sábado a mediodía{\b0}
+Dialogue: 0,0:14:14.94,0:14:15.33,Cart_A_Ari,CARTEL,0000,0000,0000,,{\bord0\fax-0.1\an2\fad(0,100)\fs30\shad0.2\4c&H555555&\4a&H4D&\c&HF8F8ED&\pos(264.5,28.5)}Chizuru Ichinose
+Dialogue: 0,0:14:14.94,0:14:15.33,Cart_A_Ari,CARTEL,0000,0000,0000,,{\bord0\fax-0.1\an7\fad(0,100)\fs24\shad0\4c&H555555&\4a&H4D&\c&H59584F&\b1\pos(163,171)}Pues el sábado a mediodía{\b0}
+Dialogue: 0,0:14:15.58,0:14:16.40,Cart_A_Ari,CARTEL,0000,0000,0000,,{\bord0\fax-0.1\an2\fad(200,0)\fs30\shad0.2\4c&H555555&\4a&H4D&\c&HF8F8ED&\pos(264.5,28.5)}Chizuru Ichinose
+Dialogue: 0,0:14:15.58,0:14:16.40,Cart_A_Ari,CARTEL,0000,0000,0000,,{\bord0\fax-0.1\an7\fad(200,0)\fs24\shad0\4c&H555555&\4a&H4D&\c&H59584F&\b1\pos(163,171)}¿Te parece bien a las 11:00?
+Dialogue: 0,0:14:20.36,0:14:23.04,Gen_Italics,KAZUYA,0000,0000,0000,,¿Eh? Sí, claro.
+Dialogue: 0,0:14:23.34,0:14:25.80,Gen_Italics,KAZUYA,0000,0000,0000,,Es perfecto, tengo el sábado libre.
+Dialogue: 0,0:14:25.89,0:14:29.01,Gen_Italics,KAZUYA,0000,0000,0000,,El sábado a las 11 me viene de perlas.
+Dialogue: 0,0:14:29.00,0:14:31.47,Cart_A_Ari,CARTEL,0000,0000,0000,,{\bord0\fax0\an7\fad(0,0)\fs36\shad0\4c&H555555&\4a&H4D&\c&H59584F&\b1\clip(325,48,560.5,359)\frz339.4\pos(125,119)}¿Te parece bien a las 11:00?
+Dialogue: 0,0:14:29.33,0:14:31.47,Gen_Italics,KAZUYA,0000,0000,0000,,¿Y qué vamos a hacer?
+Dialogue: 0,0:14:31.78,0:14:33.45,Gen_Italics,KAZUYA,0000,0000,0000,,¿Qué quiere?
+Dialogue: 0,0:14:35.17,0:14:36.39,Gen_Italics,KAZUYA,0000,0000,0000,,Dame…
+Dialogue: 0,0:14:39.00,0:14:41.85,Gen_Italics,KAZUYA,0000,0000,0000,,Dame más información.
+Dialogue: 0,0:14:42.78,0:14:44.24,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H7A7876&\bord0\an1\fad(100,0)\pos(129.5,18.5)\frz338.3}Caffé Ventuno
+Dialogue: 0,0:14:47.08,0:14:49.82,Cart_A_Ari,CARTEL,0000,0000,0000,,{\c&H676760&\an7\bord0\fay-0.32\fs30\fax-0.1\fscy110\pos(43,327)}¿Puedo robarte 30 minutos en Hikawadai?
+Dialogue: 0,0:14:58.59,0:15:01.05,Gen_Italics,KAZUYA,0000,0000,0000,,¡Vamos a vernos!
+Dialogue: 0,0:15:05.84,0:15:07.39,Gen_Main,CHIZURU,0000,0000,0000,,Hola, Kazuya.
+Dialogue: 0,0:15:06.00,0:15:08.12,Cart_A_Com,CARTEL,0000,0000,0000,,{\3c&HF7F7F7&\fad(500,100)\pos(557,31)}Esta parte no\Nla recuerda mucho
+Dialogue: 0,0:15:08.64,0:15:10.27,Gen_Main,KAZUYA,0000,0000,0000,,Hola. ¿Te hice esperar?
+Dialogue: 0,0:15:11.58,0:15:14.14,Gen_Main,CHIZURU,0000,0000,0000,,Siento que fuera tan repentino.
+Dialogue: 0,0:15:14.32,0:15:15.89,Gen_Main,KAZUYA,0000,0000,0000,,Descuida.
+Dialogue: 0,0:15:15.98,0:15:17.70,Gen_Main,KAZUYA,0000,0000,0000,,¿Qué pasa? ¿Necesitas algo?
+Dialogue: 0,0:15:17.70,0:15:22.92,Cart_A_Com,CARTEL,0000,0000,0000,,{\pos(225.6,10.44)}Esta parte no la recuerda mucho
+Dialogue: 0,0:15:18.31,0:15:22.90,Gen_Main,CHIZURU,0000,0000,0000,,Ah, no es nada especial. Bueno…
+Dialogue: 0,0:15:23.24,0:15:26.86,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(200,0)\pos(497.5,222)\fax0.1}Esta parte no\Nla recuerda mucho
+Dialogue: 0,0:15:23.49,0:15:26.86,Gen_Main,CHIZURU,0000,0000,0000,,De golpe me dieron ganas de verte.
+Dialogue: 0,0:15:27.07,0:15:28.32,Gen_Main,KAZUYA,0000,0000,0000,,Me gustas.
+Dialogue: 0,0:15:27.30,0:15:28.32,Cart_A_Com,CARTEL,0000,0000,0000,,{\pos(571,84)\bord0\fad(300,0)\c&H4C4573&}Copia y pega
+Dialogue: 0,0:15:28.58,0:15:29.70,Gen_Main,CHIZURU,0000,0000,0000,,Y tú a mí.
+Dialogue: 0,0:15:33.37,0:15:35.28,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\frz354.3\pos(234.5,124)}Se le han subido los humos
+Dialogue: 0,0:15:35.46,0:15:37.80,Cart_A_Tre,CARTEL,0000,0000,0000,,{\p1\bord2\fad(120,0)\an7\fscx88\fscy150\c&HF9FBFB&\pos(519,19.5)}m 0 0 l 100 0 100 100 0 100{\p0}
+Dialogue: 0,0:15:35.46,0:15:37.80,Cart_C_Tre,CARTEL,0000,0000,0000,,{\bord0\an5\fad(120,0)\fs20\pos(562.5,95.5)}El día en\Ncuestión
+Dialogue: 0,0:15:38.58,0:15:39.62,Cart_A_Com,CARTEL,0000,0000,0000,,{\fs48\fad(230,0)\bord0\pos(414.5,308)}Ojeras
+Dialogue: 0,0:15:39.71,0:15:43.63,Gen_Main,KAZUYA,0000,0000,0000,,No pude conciliar el sueño\Ny solo dormí cuatro horas.
+Dialogue: 0,0:15:40.67,0:15:43.63,Cart_A_Com,CARTEL,0000,0000,0000,,{\an2\fad(220,0)\frz13.21\move(124,61.5,109,128.5,19,2897)}Quería venir\Nen buen estado
+Dialogue: 0,0:15:40.67,0:15:43.63,Cart_A_Com,CARTEL,0000,0000,0000,,{\an4\fad(220,0)\frz13.21\move(475.5,73,487,134,19,2897)}Fue como\Nel día antes\Nde una excursión
+Dialogue: 0,0:15:44.30,0:15:48.18,Gen_Italics,KAZUYA,0000,0000,0000,,Por muchas vueltas que le dé,\Nno sé qué quiere.
+Dialogue: 0,0:15:48.38,0:15:50.55,Gen_Italics,KAZUYA,0000,0000,0000,,Es la primera vez que me invita a algo.
+Dialogue: 0,0:15:51.51,0:15:53.36,Gen_Italics,KAZUYA,0000,0000,0000,,Tiene que ser por eso.
+Dialogue: 0,0:15:53.77,0:15:57.76,Gen_Italics,KAZUYA,0000,0000,0000,,¡Nada de esto me da muchas esperanzas!
+Dialogue: 0,0:15:57.85,0:15:59.94,Gen_Main,CHIZURU,0000,0000,0000,,¡Olvida lo que pasó esa noche!
+Dialogue: 0,0:16:00.02,0:16:02.19,Gen_Italics,KAZUYA,0000,0000,0000,,¿Y si se enoja conmigo?
+Dialogue: 0,0:16:02.69,0:16:06.05,Gen_Italics,KAZUYA,0000,0000,0000,,Además, básicamente\Nle declaré lo que siento.
+Dialogue: 0,0:16:06.15,0:16:08.90,Gen_Italics,KAZUYA,0000,0000,0000,,Tal vez me pregunte\Na qué me refería.
+Dialogue: 0,0:16:08.99,0:16:11.86,Gen_Italics,KAZUYA,0000,0000,0000,,Sigo sin tener ninguna esperanza.
+Dialogue: 0,0:16:17.58,0:16:19.04,Gen_Main,CHIZURU,0000,0000,0000,,Hola.
+Dialogue: 0,0:16:20.48,0:16:22.82,Gen_Italics,KAZUYA,0000,0000,0000,,¡Está aquí! ¡No era una broma!
+Dialogue: 0,0:16:22.92,0:16:24.21,Gen_Main,KAZUYA,0000,0000,0000,,Hola.
+Dialogue: 0,0:16:24.32,0:16:26.48,Gen_Main,CHIZURU,0000,0000,0000,,Siento que fuera tan repentino.
+Dialogue: 0,0:16:26.55,0:16:28.55,Gen_Main,KAZUYA,0000,0000,0000,,Descuida. Tenía tiempo.
+Dialogue: 0,0:16:28.76,0:16:31.05,Gen_Main,CHIZURU,0000,0000,0000,,¿Nos vamos? La cafetería está cerca.
+Dialogue: 0,0:16:31.21,0:16:32.60,Gen_Main,KAZUYA,0000,0000,0000,,Claro.
+Dialogue: 0,0:16:35.29,0:16:36.54,Gen_Italics,KAZUYA,0000,0000,0000,,Está como siempre.
+Dialogue: 0,0:16:37.53,0:16:41.10,Gen_Italics,KAZUYA,0000,0000,0000,,Y hoy también está preciosa.
+Dialogue: 0,0:16:41.86,0:16:44.56,Gen_Italics,KAZUYA,0000,0000,0000,,La he visto\Nen sus días libres varias veces,
+Dialogue: 0,0:16:44.84,0:16:47.69,Gen_Italics,KAZUYA,0000,0000,0000,,pero hoy tiene un aire\Nmucho más informal.
+Dialogue: 0,0:16:48.10,0:16:51.16,Gen_Italics,KAZUYA,0000,0000,0000,,Aun así, cada vez\Nme da una impresión distinta.
+Dialogue: 0,0:16:52.04,0:16:55.07,Gen_Italics,KAZUYA,0000,0000,0000,,Lo peor es\Nque no lo hace conscientemente.
+Dialogue: 0,0:16:55.39,0:16:58.64,Gen_Italics,KAZUYA,0000,0000,0000,,Me pregunto qué me va a decir.
+Dialogue: 0,0:16:58.81,0:17:00.49,Gen_Italics,KAZUYA,0000,0000,0000,,Es muy linda, pero me aterra.
+Dialogue: 0,0:17:01.04,0:17:04.62,Gen_Main,MINI,0000,0000,0000,,Le gustas a mi maestro, Mizuhara.
+Dialogue: 0,0:17:04.90,0:17:06.67,Gen_Main,KAZUYA,0000,0000,0000,,Mi novia ideal es…
+Dialogue: 0,0:17:07.29,0:17:08.76,Gen_Main,KAZUYA,0000,0000,0000,,Una que cuando no espabilo,
+Dialogue: 0,0:17:09.02,0:17:11.07,Gen_Main,KAZUYA,0000,0000,0000,,me regaña si me lo merezco.
+Dialogue: 0,0:17:11.61,0:17:13.58,Gen_Main,KAZUYA,0000,0000,0000,,Que aunque lo esté pasando mal,
+Dialogue: 0,0:17:14.10,0:17:17.68,Gen_Main,KAZUYA,0000,0000,0000,,diga que hizo todo lo que pudo\Ny trate de ser positiva.
+Dialogue: 0,0:17:29.32,0:17:31.07,Gen_Main,CHIZURU,0000,0000,0000,,Quiero un café caliente.
+Dialogue: 0,0:17:31.32,0:17:32.40,Gen_Main,CHIZURU,0000,0000,0000,,¿Y tú?
+Dialogue: 0,0:17:32.49,0:17:34.01,Gen_Main,KAZUYA,0000,0000,0000,,Yo también.
+Dialogue: 0,0:17:34.18,0:17:35.53,Gen_Main,CHIZURU,0000,0000,0000,,Dos cafés, por favor.
+Dialogue: 0,0:17:35.86,0:17:37.19,Gen_Main,WAITRESS,0000,0000,0000,,Enseguida.
+Dialogue: 0,0:17:37.72,0:17:38.70,Gen_Main,CUSTOMER 1,0000,0000,0000,,Mira.
+Dialogue: 0,0:17:39.20,0:17:41.05,Gen_Main,CUSTOMER 2,0000,0000,0000,,Qué linda es.
+Dialogue: 0,0:17:42.12,0:17:44.62,Gen_Main,CUSTOMER 1,0000,0000,0000,,¿Vive gente así por aquí?
+Dialogue: 0,0:17:44.71,0:17:46.39,Gen_Main,CUSTOMER 2,0000,0000,0000,,Qué carita tan bonita.
+Dialogue: 0,0:17:46.57,0:17:49.59,Gen_Main,CUSTOMER 1,0000,0000,0000,,Qué envidia.\NYo también quiero una cita con ella.
+Dialogue: 0,0:17:49.98,0:17:51.67,Gen_Italics,KAZUYA,0000,0000,0000,,¿Eso parece, verdad?
+Dialogue: 0,0:17:52.15,0:17:54.72,Gen_Italics,KAZUYA,0000,0000,0000,,Esto es una cita, ¿no?
+Dialogue: 0,0:17:55.43,0:17:58.29,Gen_Italics,KAZUYA,0000,0000,0000,,Cuando fuimos al restaurante\Nfue más espontáneo,
+Dialogue: 1,0:17:55.43,0:18:02.10,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\pos(312.5,244.5)}Estamos haciendo lo mismo\Nque al alquilarla como novia
+Dialogue: 2,0:17:56.66,0:18:02.10,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\pos(99,248.5)\frz13.87}Y ella me invitó
+Dialogue: 0,0:17:58.56,0:18:02.10,Gen_Italics,KAZUYA,0000,0000,0000,,pero esta vez la cafetería\Nfue algo planificado.
+Dialogue: 0,0:18:02.14,0:18:04.08,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(400,0)\pos(151.5,143)}¿Somos "vecinos cercanos"?
+Dialogue: 0,0:18:02.64,0:18:06.02,Gen_Italics,KAZUYA,0000,0000,0000,,¿Unos simples vecinos harían algo así?
+Dialogue: 0,0:18:06.30,0:18:07.89,Gen_Main,CHIZURU,0000,0000,0000,,Oye…
+Dialogue: 0,0:18:07.98,0:18:08.98,Gen_Main,KAZUYA,0000,0000,0000,,¿Sí?
+Dialogue: 0,0:18:09.29,0:18:11.40,Gen_Main,CHIZURU,0000,0000,0000,,¿Cómo te va con Ruka?
+Dialogue: 0,0:18:11.61,0:18:12.94,Gen_Main,KAZUYA,0000,0000,0000,,¿Con Ruka?
+Dialogue: 0,0:18:13.41,0:18:16.90,Gen_Main,CHIZURU,0000,0000,0000,,¿Todo va bien después de aquello?
+Dialogue: 0,0:18:17.95,0:18:19.86,Gen_Main,KAZUYA,0000,0000,0000,,Supongo…
+Dialogue: 0,0:18:20.45,0:18:24.05,Gen_Main,CHIZURU,0000,0000,0000,,Pero últimamente ha pasado de todo.
+Dialogue: 0,0:18:24.50,0:18:27.83,Gen_Main,CHIZURU,0000,0000,0000,,Me preguntaba\Nsi habías cambiado de idea.
+Dialogue: 0,0:18:27.99,0:18:31.46,Gen_Main,KAZUYA,0000,0000,0000,,No. Creo que sigo\Nsin sentir nada por ella.
+Dialogue: 0,0:18:32.30,0:18:34.75,Gen_Italics,KAZUYA,0000,0000,0000,,¡Es de ti de quien estoy enamorado!
+Dialogue: 0,0:18:35.69,0:18:36.95,Gen_Main,CHIZURU,0000,0000,0000,,Entiendo.
+Dialogue: 0,0:18:52.61,0:18:55.57,Gen_Italics,KAZUYA,0000,0000,0000,,¿Qué? ¿Se acabó?
+Dialogue: 0,0:18:56.97,0:18:58.53,Gen_Italics,KAZUYA,0000,0000,0000,,¿Eh? ¿Ruka?
+Dialogue: 0,0:18:58.76,0:19:00.35,Gen_Italics,KAZUYA,0000,0000,0000,,¿Qué pasa con Ruka?
+Dialogue: 0,0:19:00.45,0:19:03.37,Gen_Italics,KAZUYA,0000,0000,0000,,¿Dije algo raro? ¿Por qué pregunta?
+Dialogue: 0,0:19:03.96,0:19:05.36,Gen_Italics,KAZUYA,0000,0000,0000,,¿Ruka?
+Dialogue: 0,0:19:07.67,0:19:11.40,Gen_Italics,KAZUYA,0000,0000,0000,,¡No puede ser solo eso!
+Dialogue: 0,0:19:11.46,0:19:14.76,Gen_Italics,KAZUYA,0000,0000,0000,,Podría habérmelo preguntado\Nen casa, sin vernos aquí.
+Dialogue: 0,0:19:16.38,0:19:19.66,Gen_Italics,KAZUYA,0000,0000,0000,,Pero si me lo está preguntando,
+Dialogue: 0,0:19:20.14,0:19:24.77,Gen_Italics,KAZUYA,0000,0000,0000,,significa que quiere apoyarnos\Npara que salgamos de verdad.
+Dialogue: 0,0:19:27.71,0:19:28.77,Gen_Italics,KAZUYA,0000,0000,0000,,Pero…
+Dialogue: 0,0:19:29.81,0:19:32.54,Gen_Italics,KAZUYA,0000,0000,0000,,A Mizuhara le pasa algo raro.
+Dialogue: 0,0:19:38.42,0:19:39.37,Gen_Main,CHIZURU,0000,0000,0000,,Oye…
+Dialogue: 0,0:19:42.01,0:19:43.11,Gen_Main,CHIZURU,0000,0000,0000,,Toma.
+Dialogue: 0,0:19:44.91,0:19:48.59,Gen_Main,CHIZURU,0000,0000,0000,,No es todo el dinero,\Npero quiero devolvértelo.
+Dialogue: 0,0:19:48.33,0:19:51.79,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\fs18\frz12.95\move(358.5,129,358.5,207.5,23,3443)}Ese día\Nya te hice\Ngastar bastante
+Dialogue: 0,0:19:49.04,0:19:51.79,Gen_Main,CHIZURU,0000,0000,0000,,Ya le pagué\Nlo que faltaba a la empresa.
+Dialogue: 0,0:19:53.34,0:19:55.46,Gen_Main,CHIZURU,0000,0000,0000,,Si llegaste a decirme aquello,
+Dialogue: 0,0:19:56.04,0:19:59.22,Gen_Main,CHIZURU,0000,0000,0000,,fue porque no pude ocultar nada\Ndurante nuestra cita.
+Dialogue: 0,0:19:59.61,0:20:03.38,Gen_Main,CHIZURU,0000,0000,0000,,No soy una buena profesional\Nsi hago eso en una cita pagada.
+Dialogue: 0,0:20:07.44,0:20:08.68,Gen_Main,KAZUYA,0000,0000,0000,,¡Tonta!
+Dialogue: 0,0:20:09.58,0:20:10.68,Gen_Main,CHIZURU,0000,0000,0000,,¿"Tonta"?
+Dialogue: 0,0:20:10.77,0:20:12.27,Gen_Main,KAZUYA,0000,0000,0000,,Perdón, se me salió.
+Dialogue: 0,0:20:12.98,0:20:15.36,Gen_Main,KAZUYA,0000,0000,0000,,¿Lo estás diciendo en serio?
+Dialogue: 0,0:20:16.82,0:20:19.61,Gen_Main,KAZUYA,0000,0000,0000,,Eres toda una profesional.
+Dialogue: 0,0:20:19.86,0:20:22.78,Gen_Main,KAZUYA,0000,0000,0000,,Ese día fuiste una novia perfecta.
+Dialogue: 0,0:20:23.79,0:20:28.25,Gen_Main,KAZUYA,0000,0000,0000,,De hecho, me preocupaba\Nel haberme excedido.
+Dialogue: 0,0:20:28.72,0:20:31.75,Gen_Main,KAZUYA,0000,0000,0000,,Al fin y al cabo, sé lo de tu abuela.
+Dialogue: 0,0:20:32.52,0:20:37.00,Gen_Main,KAZUYA,0000,0000,0000,,Quería hacer algo por ti,\Npero no se me ocurría nada.
+Dialogue: 0,0:20:37.84,0:20:42.74,Gen_Main,KAZUYA,0000,0000,0000,,Por eso me alegró sentir\Nque podía ayudarte un poco.
+Dialogue: 0,0:20:44.22,0:20:45.56,Gen_Main,CHIZURU,0000,0000,0000,,Baja la voz.
+Dialogue: 0,0:20:48.28,0:20:49.50,Gen_Main,KAZUYA,0000,0000,0000,,Perdón.
+Dialogue: 0,0:20:56.25,0:20:58.90,Gen_Main,CHIZURU,0000,0000,0000,,Me imaginaba que dirías algo así.
+Dialogue: 0,0:21:00.41,0:21:03.82,Gen_Main,CHIZURU,0000,0000,0000,,De poco sirve\Nhacerme la fuerte a estas alturas.
+Dialogue: 0,0:21:04.27,0:21:06.39,Gen_Main,CHIZURU,0000,0000,0000,,Puede que sea un poco débil.
+Dialogue: 0,0:21:11.97,0:21:13.71,Gen_Main,WAITRESS,0000,0000,0000,,Serán 440 yenes.
+Dialogue: 0,0:21:14.15,0:21:15.81,Gen_Main,CHIZURU,0000,0000,0000,,Al menos déjame pagar esto.
+Dialogue: 0,0:21:16.13,0:21:16.72,Cart_A_Com,CARTEL,0000,0000,0000,,{\fs36\bord2.5\an4\pos(72.5,30)\clip(64,12,80,47.5)\t(0,220,\clip(58.5,10,249,58.5))}¡¿Me invitas?!
+Dialogue: 0,0:21:16.80,0:21:18.26,Gen_Main,KAZUYA,0000,0000,0000,,Pero…
+Dialogue: 0,0:21:18.34,0:21:20.88,Gen_Main,CHIZURU,0000,0000,0000,,Lo siento, pero tengo que hacerlo.
+Dialogue: 0,0:21:21.34,0:21:23.29,Gen_Main,CHIZURU,0000,0000,0000,,Por mis lágrimas.
+Dialogue: 0,0:21:27.18,0:21:28.75,Gen_Main,WAITRESS,0000,0000,0000,,Muchas gracias.
+Dialogue: 0,0:21:29.18,0:21:34.94,Gen_Italics,KAZUYA,0000,0000,0000,,La sonrisa de Mizuhara no reflejó\Na una chica triste y sola en el mundo.
+Dialogue: 0,0:21:33.65,0:21:35.79,Gen_Main_Up,CHIZURU,0000,0000,0000,,Aquí sirven un café estupendo.
+Dialogue: 0,0:21:34.81,0:21:35.77,Cart_A_Com,CARTEL,0000,0000,0000,,{\fad(220,0)\an2\fs28\move(179,24.5,179,58.5,25,942)}Volveré…
+Dialogue: 0,0:21:36.33,0:21:38.73,Gen_Italics,KAZUYA,0000,0000,0000,,Pero sus emociones aquel día\Nfueron muy reales.
+Dialogue: 0,0:21:39.19,0:21:44.11,Gen_Main,SAYURI,0000,0000,0000,,Chizuru es un poco rara\Na la hora de aceptar su debilidad.
+Dialogue: 0,0:21:44.41,0:21:46.55,Gen_Main,CHIZURU,0000,0000,0000,,Puede que sea un poco débil.
+Dialogue: 0,0:21:48.49,0:21:51.62,Gen_Italics,KAZUYA,0000,0000,0000,,Estaba equivocada, señora Sayuri.
+Dialogue: 0,0:21:53.50,0:21:55.95,Gen_Main_Up,CHIZURU,0000,0000,0000,,Ojalá hiciera siempre esta temperatura.
+Dialogue: 0,0:21:53.50,0:21:58.58,Gen_Italics,KAZUYA,0000,0000,0000,,Mizuhara tiene mucha fuerza\Ny solo un poco de fragilidad.
+Dialogue: 0,0:21:59.34,0:22:03.14,Gen_Italics,KAZUYA,0000,0000,0000,,Es un 99 % fuerte y un 1 % débil.
+Dialogue: 0,0:22:03.99,0:22:08.83,Gen_Italics,KAZUYA,0000,0000,0000,,Y espero poder ser el pilar\Nen el que se apoye ese 1 %.
+Dialogue: 0,0:22:05.30,0:22:06.95,Gen_Main_Up,CHIZURU,0000,0000,0000,,Ya es mediodía.
+Dialogue: 0,0:22:10.22,0:22:11.51,Gen_Main,CHIZURU,0000,0000,0000,,Hasta otra.
+Dialogue: 0,0:22:14.35,0:22:16.06,Gen_Main,KAZUYA,0000,0000,0000,,¿Vamos a almorzar?
+Dialogue: 0,0:22:23.04,0:22:26.99,Cart_TitleSeries,CARTEL,0000,0000,0000,,{\c&H7019DB&\fad(500,0)\bord0\fscx70\an8\fs48\pos(430,138)}Rent-{\c&H14B3ED&}A{\c&H7019DB&}-Girl{\c&H14B3ED&}fri{\c&H7019DB&}end
+Dialogue: 0,0:23:53.24,0:23:57.00,Cart_C_Tre,CARTEL,0000,0000,0000,,{\fs18\fad(500,0)\be1}Traducción: Abraham Gayuvas
+Dialogue: 0,0:23:57.79,0:24:00.18,Gen_Main,KAZUYA,0000,0000,0000,,Regresó el anime de {\i1}Rent-A-Girlfriend.{\i0}
+Dialogue: 0,0:24:00.25,0:24:02.21,Gen_Main,CHIZURU,0000,0000,0000,,Todo gracias a nuestros espectadores.
+Dialogue: 0,0:24:02.30,0:24:05.38,Gen_Main,MINI-KAZUYA,0000,0000,0000,,-Vaya, ¿aquí se hacen los avances?\N-¿Yaemori?
+Dialogue: 0,0:24:05.47,0:24:07.80,Gen_Main,MINI,0000,0000,0000,,¿Se meten en este rinconcito\Npara grabar?
+Dialogue: 0,0:24:07.88,0:24:12.22,Gen_Main,MINI,0000,0000,0000,,Y aprovecharon este rato\Na solas para hacer cochinadas.
+Dialogue: 0,0:24:12.31,0:24:14.19,Gen_Main,KAZUYA,0000,0000,0000,,¿Podrías no decir idioteces?
+Dialogue: 0,0:24:14.68,0:24:16.61,Gen_Main,CHIZURU,0000,0000,0000,,¿Qué nos espera en {\i1}Rent-A-Girlfriend{\i0}?
+Dialogue: 0,0:24:16.68,0:24:18.09,Gen_Main,KAZUYA-CHIZURU,0000,0000,0000,,-"Un suspiro…\N-…y novia".
+Dialogue: 0,0:24:18.19,0:24:19.88,Gen_Main,MINI,0000,0000,0000,,¿Qué harás después, maestro?
+Dialogue: 0,0:24:19.98,0:24:23.87,Gen_Main,MINI-KAZUYA,0000,0000,0000,,-No, ¿con quién lo hiciste?\N-¡No hice nada con nadie!
+Dialogue: 0,0:24:23.52,0:24:30.03,Cart_EpiTitle,CHIZURU,0000,0000,0000,,{\fs35\bord0\c&H6BD7F8&\pos(439.57,144.31)}"{\c&HA5AB3F&}S{\c&H6BD7F8&}u{\c&HA5AB3F&}s{\c&H6BD7F8&}p{\c&HA5AB3F&}i{\c&H6BD7F8&}r{\c&HA5AB3F&}o{\c&H6BD7F8&} y {\c&HA5AB3F&}n{\c&H6BD7F8&}o{\c&HA5AB3F&}v{\c&H6BD7F8&}i{\c&HA5AB3F&}a{\c&H6BD7F8&}"
+Dialogue: 0,0:24:23.94,0:24:25.92,Gen_Main,CHIZURU,0000,0000,0000,,Qué mal avance.

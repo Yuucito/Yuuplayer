@@ -1,41 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador de Reproductor HLS</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 20px; }
-  label { display: block; margin-top: 10px; }
-  input { width: 100%; padding: 5px; }
-  textarea { width: 100%; height: 60px; }
-  #preview { margin-top: 20px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Reproductor Plyr</title>
+  <link href="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" rel="stylesheet" />
+  <link href="styles.css" rel="stylesheet" />
 </head>
 <body>
-<h1>Generador de reproductor HLS</h1>
-<label>URL .m3u8
-  <input id="hls" type="text" placeholder="https://example.com/stream.m3u8">
-</label>
-<label>URL del banner
-  <input id="banner" type="text" placeholder="https://example.com/banner.jpg">
-</label>
-<label>URL de VAST
-  <input id="vast" type="text" placeholder="https://example.com/vast.xml">
-</label>
-<button onclick="generate()">Generar iframe</button>
-<textarea id="code" readonly></textarea>
-<div id="preview"></div>
-<script>
-function generate() {
-  const hls = encodeURIComponent(document.getElementById('hls').value.trim());
-  const banner = encodeURIComponent(document.getElementById('banner').value.trim());
-  const vast = encodeURIComponent(document.getElementById('vast').value.trim());
-  const src = `player.html?src=${hls}&banner=${banner}&vast=${vast}`;
-  const iframe = `<iframe src="${src}" width="640" height="360" frameborder="0" allowfullscreen></iframe>`;
-  document.getElementById('code').value = iframe;
-  document.getElementById('preview').innerHTML = iframe;
-}
-</script>
+  <div class="container">
+    <h1>Generador de Reproductor Plyr con HLS (.m3u8)</h1>
+
+    <!-- Formularios para ingresar URL del video y banner -->
+    <input type="text" id="video-url" placeholder="Ingresa la URL del video (.m3u8)" />
+    <input type="text" id="banner-url" placeholder="Ingresa la URL del banner" />
+    <button id="generate-player">Generar Reproductor</button>
+
+    <h3>Iframe para insertar en otra web:</h3>
+    <textarea id="iframe-code" readonly rows="4"></textarea>
+
+    <!-- Contenedor donde se insertará el reproductor -->
+    <div id="reproductor"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.polyfilled.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@0.14.19/dist/hls.min.js"></script>
+  <script src="player.js"></script>
 </body>
 </html>

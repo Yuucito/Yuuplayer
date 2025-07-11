@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Generar el código iframe
-    const iframeHTML = `<iframe src="https://tu-usuario.github.io/tu-repo/index.html" width="600" height="400" frameborder="0" allowfullscreen></iframe>`;
+    const iframeHTML = `<iframe src="https://github.com/Yuucito/Yuuplayer/index.html" width="600" height="400" frameborder="0" allowfullscreen></iframe>`;
     iframeCodeTextArea.value = iframeHTML;
   }
 

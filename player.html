@@ -1,86 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Reproductor con Anuncios</title>
-  <!-- Video.js -->
-  <link href="https://vjs.zencdn.net/7.20.1/video-js.css " rel="stylesheet">
-  <!-- Video.js IMA Plugin CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/videojs-ima @2.5.0/dist/videojs.ima.css" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-    }
-    #myPlayer {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reproductor HLS</title>
+<style>
+  body { margin: 0; background: #000; display:flex; justify-content:center; align-items:center; height:100vh; }
+  #player-container { position: relative; width: 100%; max-width: 640px; }
+  video { width: 100%; height: auto; background: #000; }
+  #banner { position: absolute; bottom: 10px; right: 10px; width: 120px; height: 60px; background-size: contain; background-repeat: no-repeat; background-position: center; }
+  #vast { position: absolute; top: 10px; left: 10px; color: white; background: rgba(0,0,0,0.5); padding: 5px; }
+</style>
 </head>
 <body>
-  <video id="myPlayer" class="video-js vjs-default-skin" controls autoplay playsinline></video>
+<div id="player-container">
+  <video id="video" controls></video>
+  <a id="banner" target="_blank"></a>
+  <div id="vast" style="display:none">Publicidad...</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const src = params.get('src');
+  const bannerUrl = params.get('banner');
+  const vastUrl = params.get('vast');
 
-  <!-- Librerías -->
-  <script src="https://vjs.zencdn.net/7.20.1/video.min.js "></script>
-  <!-- SDK de Google IMA -->
-  <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js "></script>
-  <!-- Plugin videojs-ima -->
-  <script src="https://cdn.jsdelivr.net/npm/videojs-ima @2.5.0/dist/videojs.ima.min.js"></script>
+  const video = document.getElementById('video');
+  const banner = document.getElementById('banner');
+  const vast = document.getElementById('vast');
 
-  <script>
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const adTagUrl = decodeURIComponent(params.get('adTag') || '');
-      const mainVideoUrl = decodeURIComponent(params.get('main') || '');
-      const directLink = decodeURIComponent(params.get('direct') || '');
+  if (bannerUrl) {
+    banner.href = bannerUrl;
+    banner.style.backgroundImage = `url('${bannerUrl}')`;
+  } else {
+    banner.style.display = 'none';
+  }
 
-      if (!mainVideoUrl) {
-        document.body.innerHTML = "<h2 style='color:red; text-align:center;'>❌ No se recibió un video principal.</h2>";
-        return;
-      }
+  if (vastUrl) {
+    vast.textContent = 'VAST: ' + vastUrl;
+    vast.style.display = 'block';
+  }
 
-      const player = videojs('myPlayer', {
-        html5: {
-          hls: {
-            overrideNative: true
-          },
-          nativeAudioTracks: false,
-          nativeVideoTracks: false
-        }
-      });
-
-      // Cargar HLS si es necesario
-      if (mainVideoUrl.endsWith('.m3u8')) {
-        window.videojs.HlsJs = window.videojs.getPlugin('hlsjs');
-        player.hlsjs();
-      }
-
-      player.src({
-        src: mainVideoUrl,
-        type: mainVideoUrl.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'
-      });
-
-      // Configurar IMA para anuncios VAST
-      if (adTagUrl) {
-        player.ima({
-          adTagUrl: adTagUrl,
-          debug: false,
-          requestMode: 'onPlay',
-          disableCustomPlaybackForIOS10Plus: true
-        });
-
-        player.ima.requestAds();
-      }
-
-      // Redirigir al finalizar el video si hay link
-      player.on('ended', () => {
-        if (directLink) {
-          window.location.href = directLink;
-        }
-      });
-    })();
-  </script>
+  if (Hls.isSupported() && src) {
+    const hls = new Hls();
+    hls.loadSource(src);
+    hls.attachMedia(video);
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = src;
+  }
+})();
+</script>
 </body>
 </html>

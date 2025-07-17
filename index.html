@@ -200,6 +200,26 @@
         .instructions li {
             margin-bottom: 8px;
         }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .status.success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid #2ecc71;
+            display: block;
+        }
+        
+        .status.error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -216,6 +236,8 @@
                 <button id="loadBtn">Cargar Stream</button>
             </div>
             
+            <div id="statusMessage" class="status"></div>
+            
             <div class="player-container">
                 <div id="player"></div>
             </div>
@@ -227,6 +249,12 @@
                     <li>Haz clic en "Cargar Stream" para iniciar la reproducción</li>
                     <li>Utiliza el botón de configuración (engranaje) en el reproductor para cambiar la calidad</li>
                     <li>El anuncio VAST se reproducirá automáticamente al inicio</li>
+                    <li>Ejemplos de streams para probar:
+                        <ul>
+                            <li><code>https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8</code></li>
+                            <li><code>https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8</code></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -265,13 +293,13 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/artplayer@latest/dist/artplayer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/artplayer-plugin-hls@latest/dist/artplayer-plugin-hls.js"></script>
     <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/artplayer-plugin-vast@latest/dist/artplayer-plugin-vast.js"></script>
     
     <script>
         // Variables globales
         let art = null;
+        let hls = null;
         
         // URL VAST fija
         const VAST_URL = "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=";
@@ -281,6 +309,12 @@
             // Destruir el reproductor existente si hay uno
             if (art) {
                 art.destroy();
+            }
+            
+            // Si hay una instancia de HLS previa, destruirla
+            if (hls) {
+                hls.destroy();
+                hls = null;
             }
             
             // Crear nuevo reproductor
@@ -293,8 +327,27 @@
                 fullscreen: true,
                 fullscreenWeb: true,
                 setting: true,
+                type: 'm3u8',
+                customType: {
+                    m3u8: function(video, url) {
+                        if (Hls.isSupported()) {
+                            hls = new Hls();
+                            hls.loadSource(url);
+                            hls.attachMedia(video);
+                            
+                            // Manejar errores de HLS
+                            hls.on(Hls.Events.ERROR, function(event, data) {
+                                showStatus(`Error HLS: ${data.details}`, 'error');
+                                console.error('Error HLS:', data);
+                            });
+                        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                            video.src = url;
+                        } else {
+                            showStatus('HLS no soportado en este navegador', 'error');
+                        }
+                    }
+                },
                 plugins: [
-                    artplayerPluginHls,
                     artplayerPluginVast(({ playUrl }) => {
                         // Reproducir el anuncio VAST fijo al inicio
                         art.once('play', () => {
@@ -306,13 +359,29 @@
             
             // Manejar errores del VAST
             art.on('vast:error', (error) => {
-                console.error('Error en VAST:', error);
+                showStatus(`Error en VAST: ${error.message}`, 'error');
                 // Continuar con el contenido principal si hay error con el anuncio
                 art.play();
             });
             
+            // Manejar eventos de reproducción
+            art.on('ready', () => {
+                showStatus('Reproductor listo. Haga clic en play para comenzar...', 'success');
+            });
+            
+            art.on('play', () => {
+                showStatus('Reproduciendo contenido...', 'success');
+            });
+            
             // Actualizar el generador de iframe
             updateIframeGenerator(url);
+        }
+        
+        // Mostrar mensajes de estado
+        function showStatus(message, type) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = 'status ' + type;
         }
         
         // Actualizar el generador de código iframe
@@ -340,9 +409,14 @@
         document.getElementById('loadBtn').addEventListener('click', () => {
             const url = document.getElementById('streamUrl').value.trim();
             if (url) {
-                initPlayer(url);
+                if (url.endsWith('.m3u8')) {
+                    showStatus('Cargando stream, por favor espere...', 'success');
+                    initPlayer(url);
+                } else {
+                    showStatus('Error: La URL debe ser un archivo .m3u8', 'error');
+                }
             } else {
-                alert('Por favor ingresa una URL válida');
+                showStatus('Error: Por favor ingresa una URL válida', 'error');
             }
         });
         

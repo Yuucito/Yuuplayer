@@ -1,30 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <VAST version="4.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <Ad id="skippable_ad_15s">
+  <Ad id="midroll_pod">
     <InLine>
-      <AdSystem>Custom VAST Skippable</AdSystem>
-      <AdTitle>Skippable Ad after 15s</AdTitle>
-      <Description>Skippable advertisement that can be skipped after 15 seconds.</Description>
-      <Impression><![CDATA[https://example.com/track/impression]]></Impression>
+      <AdSystem>Custom Midroll Pod</AdSystem>
+      <AdTitle>Midroll Ad Pod with Skippable Ads</AdTitle>
+
       <Creatives>
-        <Creative id="main_video_creative" sequence="1">
+        <!-- === ANUNCIO 1: Skippable a los 15s === -->
+        <Creative id="ad1" sequence="1" adType="linear">
           <Linear skipoffset="00:00:15">
-            <Duration>00:00:30</Duration> <!-- Duración total del video (ajústala según tu video) -->
-            <TrackingEvents>
-              <Tracking event="start"><![CDATA[https://example.com/track/start]]></Tracking>
-              <Tracking event="firstQuartile"><![CDATA[https://example.com/track/firstQuartile]]></Tracking>
-              <Tracking event="midpoint"><![CDATA[https://example.com/track/midpoint]]></Tracking>
-              <Tracking event="thirdQuartile"><![CDATA[https://example.com/track/thirdQuartile]]></Tracking>
-              <Tracking event="complete"><![CDATA[https://example.com/track/complete]]></Tracking>
-              <Tracking event="skip"><![CDATA[https://example.com/track/skip]]></Tracking>
-            </TrackingEvents>
+            <Duration>00:00:30</Duration> <!-- Ajusta según tu video -->
             <VideoClicks>
-              <ClickThrough><![CDATA[https://tudominio.com/landing]]></ClickThrough>
-              <ClickTracking><![CDATA[https://example.com/track/click]]></ClickTracking>
+              <ClickThrough><![CDATA[https://ejemplo.com/landing1]]></ClickThrough>
             </VideoClicks>
             <MediaFiles>
-              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720" bitrate="1500" scalable="true" maintainAspectRatio="true">
+              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720" bitrate="1500">
                 <![CDATA[https://cdn4.videas.fr/a6f7b0356457433ca2151382933ece96/ocsdyfndeu0giofgl3was8ffyj0jc1ipfqcrpg-1-mp4-source.mp4]]>
+              </MediaFile>
+            </MediaFiles>
+          </Linear>
+        </Creative>
+
+        <!-- === ANUNCIO 2: Skippable a los 20s === -->
+        <Creative id="ad2" sequence="2" adType="linear">
+          <Linear skipoffset="00:00:20">
+            <Duration>00:00:30</Duration> <!-- Ajusta según tu video -->
+            <VideoClicks>
+              <ClickThrough><![CDATA[https://ejemplo.com/landing2]]></ClickThrough>
+            </VideoClicks>
+            <MediaFiles>
+              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720" bitrate="1500">
+                <![CDATA[https://cdn4.videas.fr/d58d79444731430688304b36231d5c81/ocytecgirjlfxezlrqqqje5riatop7byxt7bib-mp4-source.mp4]]>
               </MediaFile>
             </MediaFiles>
           </Linear>

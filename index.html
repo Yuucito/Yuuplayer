@@ -1,433 +1,155 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reproductor ArtPlayer con Calidad Ajustable</title>
-    <link href="https://cdn.jsdelivr.net/npm/artplayer@latest/dist/artplayer.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 20px 0;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .card-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .card-title i {
-            color: #4dabf7;
-        }
-        
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        input {
-            flex: 1;
-            padding: 12px 15px;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        
-        button {
-            background: linear-gradient(45deg, #2193b0, #6dd5ed);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-        
-        .player-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        }
-        
-        #player {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 15px;
-        }
-        
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .feature {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 20px;
-            border-radius: 10px;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.12);
-        }
-        
-        .feature h3 {
-            margin-bottom: 10px;
-            color: #6dd5ed;
-        }
-        
-        .iframe-generator {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .iframe-code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            word-break: break-all;
-            max-height: 120px;
-            overflow-y: auto;
-        }
-        
-        .copy-btn {
-            align-self: flex-start;
-            background: linear-gradient(45deg, #8e2de2, #4a00e0);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            margin-top: 30px;
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-        
-        @media (max-width: 768px) {
-            .input-group {
-                flex-direction: column;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-        }
-        
-        .instructions {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-        }
-        
-        .instructions ul {
-            padding-left: 20px;
-            margin-top: 10px;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
-        }
-        
-        .status {
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            text-align: center;
-            display: none;
-        }
-        
-        .status.success {
-            background: rgba(46, 204, 113, 0.2);
-            border: 1px solid #2ecc71;
-            display: block;
-        }
-        
-        .status.error {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid #e74c3c;
-            display: block;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Generador de Episodios - Reproductor</title>
+  <style>
+    :root{
+      --bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#22d3ee;--border:#1f2937;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;padding:20px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial;line-height:1.6}
+    .container{max-width:1200px;margin:0 auto}
+    h1{color:var(--accent);text-align:center;margin:0 0 24px}
+    .section{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+    .section h2{margin:0 0 12px;color:var(--accent);font-size:1.1rem}
+    .example{background:#1e293b;padding:12px;border-radius:8px;border-left:4px solid var(--accent);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap}
+    textarea{width:100%;min-height:220px;background:#0b1220;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
+    textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+    .button-group{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
+    button{background:var(--accent);color:#0f172a;border:none;padding:12px 18px;border-radius:8px;font-weight:700;cursor:pointer;transition:.2s}
+    button:hover{filter:brightness(1.05);transform:translateY(-1px)}
+    button:disabled{background:var(--muted);cursor:not-allowed;transform:none}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .output{background:#0b1220;border:1px solid var(--border);border-radius:8px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap;max-height:380px;overflow:auto}
+    .success{display:none;background:#10b981;color:white;padding:10px;border-radius:6px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Reproductor ArtPlayer con Calidad Ajustable</h1>
-            <p class="subtitle">Reproduce streams HLS (.m3u8) con calidad ajustable e integración de anuncios VAST</p>
-        </header>
-        
-        <div class="card">
-            <h2 class="card-title">Cargar Stream</h2>
-            <div class="input-group">
-                <input type="text" id="streamUrl" placeholder="Ingresa la URL de tu stream .m3u8" value="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">
-                <button id="loadBtn">Cargar Stream</button>
-            </div>
-            
-            <div id="statusMessage" class="status"></div>
-            
-            <div class="player-container">
-                <div id="player"></div>
-            </div>
-            
-            <div class="instructions">
-                <h3>Instrucciones:</h3>
-                <ul>
-                    <li>Ingresa una URL válida de un stream HLS (.m3u8)</li>
-                    <li>Haz clic en "Cargar Stream" para iniciar la reproducción</li>
-                    <li>Utiliza el botón de configuración (engranaje) en el reproductor para cambiar la calidad</li>
-                    <li>El anuncio VAST se reproducirá automáticamente al inicio</li>
-                    <li>Ejemplos de streams para probar:
-                        <ul>
-                            <li><code>https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8</code></li>
-                            <li><code>https://multiplatform-f.akamaihd.net/i/multi/will/bunny/big_buck_bunny_,640x360_400,640x360_700,640x360_1000,950x540_1500,.f4v.csmil/master.m3u8</code></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2 class="card-title">Generador de Iframe</h2>
-            <div class="iframe-generator">
-                <p>Utiliza este código para embeber el reproductor en otra web:</p>
-                <div class="iframe-code" id="iframeCode">
-                    &lt;iframe src="player.html?stream=URL_DEL_STREAM" width="800" height="450" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
-                </div>
-                <button class="copy-btn" id="copyBtn">Copiar Código</button>
-            </div>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>Calidad Ajustable</h3>
-                <p>Cambia entre diferentes calidades de video según estén disponibles en el stream HLS.</p>
-            </div>
-            <div class="feature">
-                <h3>Soporte HLS</h3>
-                <p>Reproduce streams .m3u8 con soporte para múltiples calidades y audio.</p>
-            </div>
-            <div class="feature">
-                <h3>Anuncios VAST</h3>
-                <p>Integración con anuncios VAST para pre-roll, mid-roll y post-roll.</p>
-            </div>
-        </div>
-        
-        <footer>
-            <p>Reproductor creado con ArtPlayer.js | Integración de anuncios VAST | Soporte para streams HLS</p>
-        </footer>
+  <div class="container">
+    <h1>🎬 Generador de Episodios para Reproductor</h1>
+
+    <div class="section">
+      <h2>📝 Formato de entrada esperado</h2>
+      <div class="example">🔍 Episodio 01:
+📹 Título: [Erai-raws] Dead Dead Demons Dededededestruction - 00 [1080p][Multiple Subtitle][FF73EE12].mp4
+🔗 M3U8: https://cdn.videas.fr/v-medias/s5/hlsv1/92/bb/92bb6899-c293-4613-a27e-44e0289e458b/playlist.m3u8
+⬇️ SD 480p: https://cdn4.videas.fr/9d24c19c2a174d8f978bb193ea252358/erai-raws-dead-dead-demons-dededededestruction-00-1080p-multiple-subtitle-ff73ee12-mp4-480p.mp4
+⬇️ FHD 1080p: https://cdn4.videas.fr/dc1069d6ade54551b2f633f0114fd89e/erai-raws-dead-dead-demons-dededededestruction-00-1080p-multiple-subtitle-ff73ee12-mp4-source.mp4</div>
     </div>
-    
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/artplayer@latest/dist/artplayer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/artplayer-plugin-vast@latest/dist/artplayer-plugin-vast.js"></script>
-    
-    <script>
-        // Variables globales
-        let art = null;
-        let hls = null;
-        
-        // URL VAST fija
-        const VAST_URL = "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=";
-        
-        // Inicializar el reproductor
-        function initPlayer(url) {
-            // Destruir el reproductor existente si hay uno
-            if (art) {
-                art.destroy();
-            }
-            
-            // Si hay una instancia de HLS previa, destruirla
-            if (hls) {
-                hls.destroy();
-                hls = null;
-            }
-            
-            // Crear nuevo reproductor
-            art = new Artplayer({
-                container: '#player',
-                url: url,
-                autoplay: true,
-                volume: 0.7,
-                autoSize: true,
-                fullscreen: true,
-                fullscreenWeb: true,
-                setting: true,
-                type: 'm3u8',
-                customType: {
-                    m3u8: function(video, url) {
-                        if (Hls.isSupported()) {
-                            hls = new Hls();
-                            hls.loadSource(url);
-                            hls.attachMedia(video);
-                            
-                            // Manejar errores de HLS
-                            hls.on(Hls.Events.ERROR, function(event, data) {
-                                showStatus(`Error HLS: ${data.details}`, 'error');
-                                console.error('Error HLS:', data);
-                            });
-                        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                            video.src = url;
-                        } else {
-                            showStatus('HLS no soportado en este navegador', 'error');
-                        }
-                    }
-                },
-                plugins: [
-                    artplayerPluginVast(({ playUrl }) => {
-                        // Reproducir el anuncio VAST fijo al inicio
-                        art.once('play', () => {
-                            playUrl(VAST_URL);
-                        });
-                    }),
-                ],
-            });
-            
-            // Manejar errores del VAST
-            art.on('vast:error', (error) => {
-                showStatus(`Error en VAST: ${error.message}`, 'error');
-                // Continuar con el contenido principal si hay error con el anuncio
-                art.play();
-            });
-            
-            // Manejar eventos de reproducción
-            art.on('ready', () => {
-                showStatus('Reproductor listo. Haga clic en play para comenzar...', 'success');
-            });
-            
-            art.on('play', () => {
-                showStatus('Reproduciendo contenido...', 'success');
-            });
-            
-            // Actualizar el generador de iframe
-            updateIframeGenerator(url);
+
+    <div class="section">
+      <h2>📥 Pega aquí los datos de tus episodios</h2>
+      <textarea id="inputText" placeholder="Pega aquí el texto con el formato de episodios..."></textarea>
+      <div class="button-group">
+        <button id="genBtn">🚀 Generar JSON</button>
+        <button id="clearBtn">🗑️ Limpiar todo</button>
+        <button id="copyBtn" disabled>📋 Copiar JSON</button>
+      </div>
+      <div id="successMsg" class="success">✅ JSON copiado al portapapeles</div>
+    </div>
+
+    <div class="grid">
+      <div class="section">
+        <h2>📊 Salida JSON</h2>
+        <div id="jsonOutput" class="output">El JSON aparecerá aquí...</div>
+      </div>
+      <div class="section">
+        <h2>🔗 Enlaces del reproductor</h2>
+        <div id="linksOutput" class="output">Los enlaces aparecerán aquí...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function parseEpisodes(text) {
+      const episodes = [];
+      const blocks = text.split(/(?=🔍\\s*Episodio)/g).filter(b => b.trim());
+
+      blocks.forEach(block => {
+        const lines = block.split('\\n').map(l => l.trim()).filter(Boolean);
+
+        let episodeNum = '';
+        let title = '';
+        let m3u8 = '';
+        let mp4_480 = '';
+        let mp4_1080 = '';
+
+        for (const line of lines) {
+          if (/^🔍\\s*Episodio/i.test(line)) {
+            const m = line.match(/Episodio\\s*(\\d+)/i);
+            episodeNum = m ? m[1].padStart(2,'0') : '';
+          } else if (/^📹\\s*Título:/i.test(line)) {
+            title = line.replace(/^📹\\s*Título:/i,'').trim();
+            // Si viene entre corchetes, no los removemos; se mantiene tal cual
+          } else if (/^🔗\\s*M3U8:/i.test(line)) {
+            const u = line.match(/https?:\\/\\/[^\\s\\)]*/i);
+            m3u8 = u ? u[0] : '';
+          } else if (/^⬇️\\s*SD\\s*480p:/i.test(line)) {
+            const u = line.match(/https?:\\/\\/[^\\s\\)]*/i);
+            mp4_480 = u ? u[0] : '';
+          } else if (/^⬇️\\s*FHD\\s*1080p:/i.test(line)) {
+            const u = line.match(/https?:\\/\\/[^\\s\\)]*/i);
+            mp4_1080 = u ? u[0] : '';
+          }
         }
-        
-        // Mostrar mensajes de estado
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('statusMessage');
-            statusElement.textContent = message;
-            statusElement.className = 'status ' + type;
+
+        if (episodeNum && m3u8) {
+          const playerData = { episode: episodeNum, title, m3u8, mp4_480, mp4_1080 };
+          const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(playerData))));
+          // IMPORTANTE: Reemplaza TU-USUARIO y TU-REPO por los tuyos
+          const playerLink = `https://TU-USUARIO.github.io/TU-REPO/player.html?data=${encodedData}`;
+
+          episodes.push({
+            episode: episodeNum,
+            servers: [{ sub: "Biplayer", value: playerLink }]
+          });
         }
-        
-        // Actualizar el generador de código iframe
-        function updateIframeGenerator(url) {
-            const iframeCode = document.getElementById('iframeCode');
-            const encodedUrl = encodeURIComponent(url);
-            iframeCode.textContent = `<iframe src="player.html?stream=${encodedUrl}" width="800" height="450" frameborder="0" allowfullscreen></iframe>`;
-        }
-        
-        // Copiar código al portapapeles
-        function copyToClipboard() {
-            const code = document.getElementById('iframeCode').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                const btn = document.getElementById('copyBtn');
-                const originalText = btn.textContent;
-                btn.textContent = '¡Copiado!';
-                
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            });
-        }
-        
-        // Event Listeners
-        document.getElementById('loadBtn').addEventListener('click', () => {
-            const url = document.getElementById('streamUrl').value.trim();
-            if (url) {
-                if (url.endsWith('.m3u8')) {
-                    showStatus('Cargando stream, por favor espere...', 'success');
-                    initPlayer(url);
-                } else {
-                    showStatus('Error: La URL debe ser un archivo .m3u8', 'error');
-                }
-            } else {
-                showStatus('Error: Por favor ingresa una URL válida', 'error');
-            }
-        });
-        
-        document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
-        
-        // Inicializar con un stream de ejemplo
-        window.addEventListener('DOMContentLoaded', () => {
-            const exampleUrl = 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-            document.getElementById('streamUrl').value = exampleUrl;
-            initPlayer(exampleUrl);
-        });
-    </script>
+      });
+
+      return episodes;
+    }
+
+    function generateJson() {
+      const inputText = document.getElementById('inputText').value.trim();
+      if (!inputText) { alert('⚠️ Pega el texto de los episodios primero'); return; }
+
+      const episodes = parseEpisodes(inputText);
+      if (!episodes.length) { alert('❌ No se detectaron episodios. Revisa el formato.'); return; }
+
+      document.getElementById('jsonOutput').textContent = JSON.stringify(episodes, null, 2);
+      document.getElementById('linksOutput').textContent = episodes.map(ep => `Episodio ${ep.episode}: ${ep.servers[0].value}`).join('\\n\\n');
+      document.getElementById('copyBtn').disabled = false;
+    }
+
+    async function copyOutput() {
+      const out = document.getElementById('jsonOutput').textContent;
+      if (out === 'El JSON aparecerá aquí...') { alert('⚠️ Genera el JSON primero'); return; }
+      try {
+        await navigator.clipboard.writeText(out);
+        const msg = document.getElementById('successMsg');
+        msg.style.display = 'block';
+        setTimeout(()=> msg.style.display='none', 2500);
+      } catch {
+        const ta = document.createElement('textarea'); ta.value = out; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        alert('📋 JSON copiado al portapapeles');
+      }
+    }
+
+    function clearAll() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('jsonOutput').textContent = 'El JSON aparecerá aquí...';
+      document.getElementById('linksOutput').textContent = 'Los enlaces aparecerán aquí...';
+      document.getElementById('copyBtn').disabled = true;
+      document.getElementById('successMsg').style.display = 'none';
+    }
+
+    document.getElementById('genBtn').addEventListener('click', generateJson);
+    document.getElementById('copyBtn').addEventListener('click', copyOutput);
+    document.getElementById('clearBtn').addEventListener('click', clearAll);
+  </script>
 </body>
 </html>

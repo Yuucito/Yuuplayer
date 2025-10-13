@@ -97,24 +97,22 @@
             title = line.replace(/^📹\s*Título:/i,'').trim();
           } else if(/^🔗\s*M3U8:/i.test(line)) {
             const u=line.match(/\[([^\]]+)\]/) || line.match(/https?:\/\/[^\s\]]+/);
-            m3u8 = u?u[1]||u[0]:'';
+            m3u8 = u? (u[1]||u[0]) : '';
           } else if(/^⬇️\s*SD\s*480p:/i.test(line)) {
             const u=line.match(/\[([^\]]+)\]/) || line.match(/https?:\/\/[^\s\]]+/);
-            mp4_480 = u?u[1]||u[0]:'';
+            mp4_480 = u? (u[1]||u[0]) : '';
           } else if(/^⬇️\s*FHD\s*1080p:/i.test(line)) {
             const u=line.match(/\[([^\]]+)\]/) || line.match(/https?:\/\/[^\s\]]+/);
-            mp4_1080 = u?u[1]||u[0]:'';
+            mp4_1080 = u? (u[1]||u[0]) : '';
           }
         });
 
         if(episodeNum && m3u8) {
           const data = { episode:episodeNum, title, m3u8, mp4_480, mp4_1080 };
           const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-          // URL dinámica al reproductor
           const origin = window.location.origin;
           const path = '/player.html';
           const link = `${origin}${path}?data=${encoded}`;
-
           episodes.push({ episode:episodeNum, servers:[{ sub:"Biplayer", value:link }] });
         }
       });
@@ -129,7 +127,7 @@
       if(!eps.length){ alert('❌ No se detectaron episodios. Revisa el formato.'); return; }
 
       document.getElementById('jsonOutput').textContent = JSON.stringify(eps,null,2);
-      document.getElementById('linksOutput').textContent = 
+      document.getElementById('linksOutput').textContent =
         eps.map(e=>`Episodio ${e.episode}: ${e.servers[0].value}`).join('\n\n');
       document.getElementById('copyBtn').disabled = false;
     }
@@ -143,9 +141,10 @@
         msg.style.display='block';
         setTimeout(()=>msg.style.display='none',2500);
       } catch {
-        const ta=document.createElement('textarea'); ta.value=out;
-        document.body.appendChild(ta); ta.select();
-        document.execCommand('copy'); document.body.removeChild(ta);
+        const ta=document.createElement('textarea');
+        ta.value=out; document.body.appendChild(ta);
+        ta.select(); document.execCommand('copy');
+        document.body.removeChild(ta);
         alert('📋 JSON copiado al portapapeles');
       }
     }

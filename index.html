@@ -3,153 +3,166 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Generador de Episodios - Reproductor</title>
+  <title>Reproductor de Episodios</title>
   <style>
-    :root{
-      --bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#22d3ee;--border:#1f2937;
-    }
+    :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#22d3ee;--border:#1f2937}
     *{box-sizing:border-box}
-    body{margin:0;padding:20px;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial;line-height:1.6}
-    .container{max-width:1200px;margin:0 auto}
-    h1{color:var(--accent);text-align:center;margin:0 0 24px}
-    .section{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
-    .section h2{margin:0 0 12px;color:var(--accent);font-size:1.1rem}
-    .example{background:#1e293b;padding:12px;border-radius:8px;border-left:4px solid var(--accent);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap}
-    textarea{width:100%;min-height:220px;background:#0b1220;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px}
-    textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
-    .button-group{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
-    button{background:var(--accent);color:#0f172a;border:none;padding:12px 18px;border-radius:8px;font-weight:700;cursor:pointer;transition:.2s}
-    button:hover{filter:brightness(1.05);transform:translateY(-1px)}
-    button:disabled{background:var(--muted);cursor:not-allowed;transform:none}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .output{background:#0b1220;border:1px solid var(--border);border-radius:8px;padding:14px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap;max-height:380px;overflow:auto}
-    .success{display:none;background:#10b981;color:white;padding:10px;border-radius:6px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial}
+    .container{max-width:1000px;margin:0 auto;padding:20px}
+    .header{text-align:center;margin:0 0 20px}
+    .header h1{color:var(--accent);margin:0}
+    .episode-info,.player{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .episode-info{margin-bottom:16px}
+    .episode-title{font-weight:700}
+    .episode-meta{color:var(--muted);font-size:.95rem;word-break:break-word;margin-top:4px}
+    video{width:100%;aspect-ratio:16/9;background:#000;border-radius:10px}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:12px}
+    .controls label{margin-right:6px}
+    select{background:#0b1220;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+    select:focus{outline:2px solid var(--accent);outline-offset:1px}
+    .status{margin-left:auto;color:var(--muted);font-size:.9rem}
+    @media(max-width:700px){.status{width:100%;margin-left:0}}
+    .error{background:var(--panel);border:1px solid #dc2626;color:#fecaca;border-radius:12px;padding:16px;text-align:center}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>🎬 Generador de Episodios para Reproductor</h1>
-
-    <div class="section">
-      <h2>📝 Formato de entrada esperado</h2>
-      <div class="example">🔍 Episodio 01:
-📹 Título: [Erai-raws] Dead Dead Demons Dededededestruction - 00 [1080p][Multiple Subtitle][FF73EE12].mp4
-🔗 M3U8: https://cdn.videas.fr/v-medias/s5/hlsv1/92/bb/92bb6899-c293-4613-a27e-44e0289e458b/playlist.m3u8
-⬇️ SD 480p: https://cdn4.videas.fr/9d24c19c2a174d8f978bb193ea252358/erai-raws-dead-dead-demons-dededededestruction-00-1080p-multiple-subtitle-ff73ee12-mp4-480p.mp4
-⬇️ FHD 1080p: https://cdn4.videas.fr/dc1069d6ade54551b2f633f0114fd89e/erai-raws-dead-dead-demons-dededededestruction-00-1080p-multiple-subtitle-ff73ee12-mp4-source.mp4</div>
-    </div>
-
-    <div class="section">
-      <h2>📥 Pega aquí los datos de tus episodios</h2>
-      <textarea id="inputText" placeholder="Pega aquí el texto con el formato de episodios..."></textarea>
-      <div class="button-group">
-        <button id="genBtn">🚀 Generar JSON</button>
-        <button id="clearBtn">🗑️ Limpiar todo</button>
-        <button id="copyBtn" disabled>📋 Copiar JSON</button>
-      </div>
-      <div id="successMsg" class="success">✅ JSON copiado al portapapeles</div>
-    </div>
-
-    <div class="grid">
-      <div class="section">
-        <h2>📊 Salida JSON</h2>
-        <div id="jsonOutput" class="output">El JSON aparecerá aquí...</div>
-      </div>
-      <div class="section">
-        <h2>🔗 Enlaces del reproductor</h2>
-        <div id="linksOutput" class="output">Los enlaces aparecerán aquí...</div>
-      </div>
-    </div>
+    <div class="header"><h1>🎬 Reproductor de Episodios</h1></div>
+    <div id="content"></div>
   </div>
 
   <script>
-    function parseEpisodes(text) {
-      const episodes = [];
-      const blocks = text.split(/(?=🔍\\s*Episodio)/g).filter(b => b.trim());
-
-      blocks.forEach(block => {
-        const lines = block.split('\\n').map(l => l.trim()).filter(Boolean);
-
-        let episodeNum = '';
-        let title = '';
-        let m3u8 = '';
-        let mp4_480 = '';
-        let mp4_1080 = '';
-
-        for (const line of lines) {
-          if (/^🔍\\s*Episodio/i.test(line)) {
-            const m = line.match(/Episodio\\s*(\\d+)/i);
-            episodeNum = m ? m[1].padStart(2,'0') : '';
-          } else if (/^📹\\s*Título:/i.test(line)) {
-            title = line.replace(/^📹\\s*Título:/i,'').trim();
-            // Si viene entre corchetes, no los removemos; se mantiene tal cual
-          } else if (/^🔗\\s*M3U8:/i.test(line)) {
-            const u = line.match(/https?:\\/\\/[^\\s\\)]*/i);
-            m3u8 = u ? u[0] : '';
-          } else if (/^⬇️\\s*SD\\s*480p:/i.test(line)) {
-            const u = line.match(/https?:\\/\\/[^\\s\\)]*/i);
-            mp4_480 = u ? u[0] : '';
-          } else if (/^⬇️\\s*FHD\\s*1080p:/i.test(line)) {
-            const u = line.match(/https?:\\/\\/[^\\s\\)]*/i);
-            mp4_1080 = u ? u[0] : '';
-          }
+    class EpisodePlayer {
+      constructor(){
+        this.hls=null; this.video=null; this.data=null;
+        this.init();
+      }
+      init(){
+        const qs = new URLSearchParams(location.search);
+        const dataParam = qs.get('data');
+        if(!dataParam){ return this.showError('No se encontraron datos del episodio en la URL'); }
+        try{
+          this.data = JSON.parse(decodeURIComponent(escape(atob(dataParam))));
+          this.render();
+          this.hook();
+          this.loadHLS(this.data.m3u8);
+        }catch(e){
+          this.showError('Error al decodificar los datos del episodio');
         }
+      }
+      render(){
+        const c = document.getElementById('content');
+        c.innerHTML = `
+          <div class="episode-info">
+            <div class="episode-title">🔍 Episodio ${this.data.episode || ''}</div>
+            <div class="episode-meta">📹 ${this.data.title || ''}</div>
+          </div>
+          <div class="player">
+            <video id="video" playsinline controls></video>
+            <div class="controls">
+              <div>
+                <label for="sourceType"><strong>Fuente:</strong></label>
+                <select id="sourceType">
+                  <option value="hls" selected>M3U8 (HLS)</option>
+                  ${this.data.mp4_480 ? '<option value="mp4-480">MP4 480p</option>' : ''}
+                  ${this.data.mp4_1080 ? '<option value="mp4-1080">MP4 1080p</option>' : ''}
+                </select>
+              </div>
+              <div id="qualityBlock" style="display:none">
+                <label for="qualityLevel"><strong>Calidad HLS:</strong></label>
+                <select id="qualityLevel">
+                  <option value="-1" selected>Auto</option>
+                </select>
+              </div>
+              <div class="status" id="statusText">Listo</div>
+            </div>
+          </div>`;
+      }
+      hook(){
+        this.video = document.getElementById('video');
+        this.sourceType = document.getElementById('sourceType');
+        this.qualityBlock = document.getElementById('qualityBlock');
+        this.qualityLevel = document.getElementById('qualityLevel');
+        this.statusText = document.getElementById('statusText');
 
-        if (episodeNum && m3u8) {
-          const playerData = { episode: episodeNum, title, m3u8, mp4_480, mp4_1080 };
-          const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(playerData))));
-          // IMPORTANTE: Reemplaza TU-USUARIO y TU-REPO por los tuyos
-          const playerLink = `https://TU-USUARIO.github.io/TU-REPO/player.html?data=${encodedData}`;
+        this.sourceType.addEventListener('change', ()=> this.onSourceChange());
+        this.qualityLevel.addEventListener('change', ()=> this.onQualityChange());
+      }
+      setStatus(msg){ this.statusText.textContent = msg; }
+      destroyHls(){ if(this.hls){ try{ this.hls.destroy(); }catch{} this.hls=null; } }
+      loadMP4(url){
+        if(!url){ return this.setStatus('URL MP4 no disponible'); }
+        this.destroyHls();
+        this.qualityBlock.style.display='none';
+        this.video.src = url;
+        this.video.type = 'video/mp4';
+        this.video.play().catch(()=>{});
+        this.setStatus('Reproduciendo MP4');
+      }
+      populateLevels(){
+        while(this.qualityLevel.options.length>1){ this.qualityLevel.remove(1); }
+        if(!this.hls) return;
+        (this.hls.levels||[]).forEach((lvl,i)=>{
+          const label = lvl.height ? `${lvl.height}p` : (lvl.bitrate?`${Math.round(lvl.bitrate/1000)} kbps`:`Nivel ${i}`);
+          const opt = document.createElement('option');
+          opt.value=String(i); opt.textContent=label; this.qualityLevel.appendChild(opt);
+        });
+      }
+      loadHLS(url){
+        if(!url){ return this.setStatus('URL M3U8 no disponible'); }
+        this.destroyHls();
+        this.qualityBlock.style.display='inline-flex';
+        this.qualityLevel.value='-1';
 
-          episodes.push({
-            episode: episodeNum,
-            servers: [{ sub: "Biplayer", value: playerLink }]
+        if(this.video.canPlayType('application/vnd.apple.mpegurl')){
+          this.video.src=url;
+          this.video.addEventListener('loadedmetadata',()=> this.setStatus('HLS (nativo) listo'),{once:true});
+          this.video.play().catch(()=>{});
+          return;
+        }
+        if(window.Hls && window.Hls.isSupported()){
+          this.hls = new Hls({ maxBufferLength:30, startLevel:-1, capLevelToPlayerSize:true });
+          this.hls.attachMedia(this.video);
+          this.hls.on(Hls.Events.MEDIA_ATTACHED, ()=>{ this.setStatus('Cargando manifiesto HLS…'); this.hls.loadSource(url); });
+          this.hls.on(Hls.Events.MANIFEST_PARSED, ()=>{ this.setStatus('HLS listo'); this.populateLevels(); this.video.play().catch(()=>{}); });
+          this.hls.on(Hls.Events.LEVEL_SWITCHED, (_,d)=>{ const lvl=this.hls.levels?.[d.level]; const label=lvl?.height?`${lvl.height}p`:`Nivel ${d.level}`; this.setStatus(`Calidad: ${label}`); });
+          this.hls.on(Hls.Events.ERROR, (_,data)=> {
+            console.warn('HLS error',data);
+            if(data.fatal){
+              switch(data.type){
+                case Hls.ErrorTypes.NETWORK_ERROR: this.setStatus('Error de red. Reintentando…'); this.hls.startLoad(); break;
+                case Hls.ErrorTypes.MEDIA_ERROR: this.setStatus('Error de medios. Recuperando…'); this.hls.recoverMediaError(); break;
+                default:
+                  this.setStatus('Error fatal. Cambiando a MP4');
+                  if(this.data.mp4_1080) this.loadMP4(this.data.mp4_1080);
+                  else if(this.data.mp4_480) this.loadMP4(this.data.mp4_480);
+              }
+            }
           });
+          return;
         }
-      });
-
-      return episodes;
-    }
-
-    function generateJson() {
-      const inputText = document.getElementById('inputText').value.trim();
-      if (!inputText) { alert('⚠️ Pega el texto de los episodios primero'); return; }
-
-      const episodes = parseEpisodes(inputText);
-      if (!episodes.length) { alert('❌ No se detectaron episodios. Revisa el formato.'); return; }
-
-      document.getElementById('jsonOutput').textContent = JSON.stringify(episodes, null, 2);
-      document.getElementById('linksOutput').textContent = episodes.map(ep => `Episodio ${ep.episode}: ${ep.servers[0].value}`).join('\\n\\n');
-      document.getElementById('copyBtn').disabled = false;
-    }
-
-    async function copyOutput() {
-      const out = document.getElementById('jsonOutput').textContent;
-      if (out === 'El JSON aparecerá aquí...') { alert('⚠️ Genera el JSON primero'); return; }
-      try {
-        await navigator.clipboard.writeText(out);
-        const msg = document.getElementById('successMsg');
-        msg.style.display = 'block';
-        setTimeout(()=> msg.style.display='none', 2500);
-      } catch {
-        const ta = document.createElement('textarea'); ta.value = out; document.body.appendChild(ta);
-        ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-        alert('📋 JSON copiado al portapapeles');
+        this.setStatus('HLS no soportado, usando MP4');
+        if(this.data.mp4_1080) this.loadMP4(this.data.mp4_1080);
+        else if(this.data.mp4_480) this.loadMP4(this.data.mp4_480);
+      }
+      onSourceChange(){
+        const v=this.sourceType.value;
+        if(v==='hls') this.loadHLS(this.data.m3u8);
+        else if(v==='mp4-480') this.loadMP4(this.data.mp4_480);
+        else if(v==='mp4-1080') this.loadMP4(this.data.mp4_1080);
+      }
+      onQualityChange(){
+        if(!this.hls){ this.qualityLevel.value='-1'; this.setStatus('HLS nativo: calidad automática'); return; }
+        const lvl=parseInt(this.qualityLevel.value,10);
+        if(lvl===-1){ this.hls.currentLevel=-1; this.setStatus('Calidad: Auto'); }
+        else{ this.hls.currentLevel=lvl; const info=this.hls.levels?.[lvl]; const label=info?.height?`${info.height}p`:`Nivel ${lvl}`; this.setStatus(`Calidad: ${label}`); }
+      }
+      showError(msg){
+        document.getElementById('content').innerHTML = `<div class="error"><h2>❌ Error</h2><p>${msg}</p><p>Verifica el enlace generado por el sistema.</p></div>`;
       }
     }
-
-    function clearAll() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('jsonOutput').textContent = 'El JSON aparecerá aquí...';
-      document.getElementById('linksOutput').textContent = 'Los enlaces aparecerán aquí...';
-      document.getElementById('copyBtn').disabled = true;
-      document.getElementById('successMsg').style.display = 'none';
-    }
-
-    document.getElementById('genBtn').addEventListener('click', generateJson);
-    document.getElementById('copyBtn').addEventListener('click', copyOutput);
-    document.getElementById('clearBtn').addEventListener('click', clearAll);
+    document.addEventListener('DOMContentLoaded',()=> new EpisodePlayer());
   </script>
 </body>
 </html>

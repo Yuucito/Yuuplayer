@@ -1,102 +1,168 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reproductor Embebido</title>
-    <link href="https://cdn.jsdelivr.net/npm/artplayer@latest/dist/artplayer.css" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-        }
-        #player {
-            width: 100%;
-            height: 100vh;
-        }
-        .error-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            text-align: center;
-            width: 80%;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reproductor de Episodios</title>
+  <style>
+    :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#22d3ee;--border:#1f2937}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial}
+    .container{max-width:1000px;margin:0 auto;padding:20px}
+    .header{text-align:center;margin:0 0 20px}
+    .header h1{color:var(--accent);margin:0}
+    .episode-info,.player{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px}
+    .episode-info{margin-bottom:16px}
+    .episode-title{font-weight:700}
+    .episode-meta{color:var(--muted);font-size:.95rem;word-break:break-word;margin-top:4px}
+    video{width:100%;aspect-ratio:16/9;background:#000;border-radius:10px}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:12px}
+    .controls label{margin-right:6px}
+    select{background:#0b1220;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+    select:focus{outline:2px solid var(--accent);outline-offset:1px}
+    .status{margin-left:auto;color:var(--muted);font-size:.9rem}
+    @media(max-width:700px){.status{width:100%;margin-left:0}}
+    .error{background:var(--panel);border:1px solid #dc2626;color:#fecaca;border-radius:12px;padding:16px;text-align:center}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
 </head>
 <body>
-    <div id="player"></div>
+  <div class="container">
+    <div class="header"><h1>🎬 Reproductor de Episodios</h1></div>
+    <div id="content"></div>
+  </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/artplayer@latest/dist/artplayer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/artplayer-plugin-vast@latest/dist/artplayer-plugin-vast.js"></script>
-    
-    <script>
-        // URL VAST fija
-        const VAST_URL = "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=";
-        
-        // Obtener parámetros de URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const streamUrl = urlParams.get('stream');
-        
-        // Variables
-        let art = null;
-        let hls = null;
-        
-        // Inicializar reproductor
-        if (streamUrl) {
-            const decodedUrl = decodeURIComponent(streamUrl);
-            
-            art = new Artplayer({
-                container: '#player',
-                url: decodedUrl,
-                autoplay: true,
-                fullscreen: true,
-                fullscreenWeb: true,
-                type: 'm3u8',
-                customType: {
-                    m3u8: function(video, url) {
-                        if (Hls.isSupported()) {
-                            hls = new Hls();
-                            hls.loadSource(url);
-                            hls.attachMedia(video);
-                            
-                            // Manejar errores de HLS
-                            hls.on(Hls.Events.ERROR, function(event, data) {
-                                showError(`Error HLS: ${data.details}`);
-                            });
-                        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                            video.src = url;
-                        } else {
-                            showError('HLS no soportado en este navegador');
-                        }
-                    }
-                },
-                plugins: [
-                    artplayerPluginVast(({ playUrl }) => {
-                        art.once('play', () => {
-                            playUrl(VAST_URL);
-                        });
-                    }),
-                ],
-            });
-            
-            art.on('vast:error', (error) => {
-                // Continuar con el contenido principal si hay error con el anuncio
-                art.play();
-            });
-        } else {
-            showError('No se proporcionó URL de stream. Ejemplo de uso: player.html?stream=URL_DEL_STREAM');
+  <script>
+    class EpisodePlayer {
+      constructor(){
+        this.hls=null; this.video=null; this.data=null;
+        this.init();
+      }
+      init(){
+        const qs = new URLSearchParams(location.search);
+        const dataParam = qs.get('data');
+        if(!dataParam){ return this.showError('No se encontraron datos del episodio en la URL'); }
+        try{
+          this.data = JSON.parse(decodeURIComponent(escape(atob(dataParam))));
+          this.render();
+          this.hook();
+          this.loadHLS(this.data.m3u8);
+        }catch(e){
+          this.showError('Error al decodificar los datos del episodio');
         }
-        
-        function showError(message) {
-            const playerEl = document.getElementById('player');
-            playerEl.innerHTML = `<div class="error-message"><h2>Error</h2><p>${message}</p></div>`;
+      }
+      render(){
+        const c = document.getElementById('content');
+        c.innerHTML = `
+          <div class="episode-info">
+            <div class="episode-title">🔍 Episodio ${this.data.episode || ''}</div>
+            <div class="episode-meta">📹 ${this.data.title || ''}</div>
+          </div>
+          <div class="player">
+            <video id="video" playsinline controls></video>
+            <div class="controls">
+              <div>
+                <label for="sourceType"><strong>Fuente:</strong></label>
+                <select id="sourceType">
+                  <option value="hls" selected>M3U8 (HLS)</option>
+                  ${this.data.mp4_480 ? '<option value="mp4-480">MP4 480p</option>' : ''}
+                  ${this.data.mp4_1080 ? '<option value="mp4-1080">MP4 1080p</option>' : ''}
+                </select>
+              </div>
+              <div id="qualityBlock" style="display:none">
+                <label for="qualityLevel"><strong>Calidad HLS:</strong></label>
+                <select id="qualityLevel">
+                  <option value="-1" selected>Auto</option>
+                </select>
+              </div>
+              <div class="status" id="statusText">Listo</div>
+            </div>
+          </div>`;
+      }
+      hook(){
+        this.video = document.getElementById('video');
+        this.sourceType = document.getElementById('sourceType');
+        this.qualityBlock = document.getElementById('qualityBlock');
+        this.qualityLevel = document.getElementById('qualityLevel');
+        this.statusText = document.getElementById('statusText');
+
+        this.sourceType.addEventListener('change', ()=> this.onSourceChange());
+        this.qualityLevel.addEventListener('change', ()=> this.onQualityChange());
+      }
+      setStatus(msg){ this.statusText.textContent = msg; }
+      destroyHls(){ if(this.hls){ try{ this.hls.destroy(); }catch{} this.hls=null; } }
+      loadMP4(url){
+        if(!url){ return this.setStatus('URL MP4 no disponible'); }
+        this.destroyHls();
+        this.qualityBlock.style.display='none';
+        this.video.src = url;
+        this.video.type = 'video/mp4';
+        this.video.play().catch(()=>{});
+        this.setStatus('Reproduciendo MP4');
+      }
+      populateLevels(){
+        while(this.qualityLevel.options.length>1){ this.qualityLevel.remove(1); }
+        if(!this.hls) return;
+        (this.hls.levels||[]).forEach((lvl,i)=>{
+          const label = lvl.height ? `${lvl.height}p` : (lvl.bitrate?`${Math.round(lvl.bitrate/1000)} kbps`:`Nivel ${i}`);
+          const opt = document.createElement('option');
+          opt.value=String(i); opt.textContent=label; this.qualityLevel.appendChild(opt);
+        });
+      }
+      loadHLS(url){
+        if(!url){ return this.setStatus('URL M3U8 no disponible'); }
+        this.destroyHls();
+        this.qualityBlock.style.display='inline-flex';
+        this.qualityLevel.value='-1';
+
+        if(this.video.canPlayType('application/vnd.apple.mpegurl')){
+          this.video.src=url;
+          this.video.addEventListener('loadedmetadata',()=> this.setStatus('HLS (nativo) listo'),{once:true});
+          this.video.play().catch(()=>{});
+          return;
         }
-    </script>
+        if(window.Hls && window.Hls.isSupported()){
+          this.hls = new Hls({ maxBufferLength:30, startLevel:-1, capLevelToPlayerSize:true });
+          this.hls.attachMedia(this.video);
+          this.hls.on(Hls.Events.MEDIA_ATTACHED, ()=>{ this.setStatus('Cargando manifiesto HLS…'); this.hls.loadSource(url); });
+          this.hls.on(Hls.Events.MANIFEST_PARSED, ()=>{ this.setStatus('HLS listo'); this.populateLevels(); this.video.play().catch(()=>{}); });
+          this.hls.on(Hls.Events.LEVEL_SWITCHED, (_,d)=>{ const lvl=this.hls.levels?.[d.level]; const label=lvl?.height?`${lvl.height}p`:`Nivel ${d.level}`; this.setStatus(`Calidad: ${label}`); });
+          this.hls.on(Hls.Events.ERROR, (_,data)=> {
+            console.warn('HLS error',data);
+            if(data.fatal){
+              switch(data.type){
+                case Hls.ErrorTypes.NETWORK_ERROR: this.setStatus('Error de red. Reintentando…'); this.hls.startLoad(); break;
+                case Hls.ErrorTypes.MEDIA_ERROR: this.setStatus('Error de medios. Recuperando…'); this.hls.recoverMediaError(); break;
+                default:
+                  this.setStatus('Error fatal. Cambiando a MP4');
+                  if(this.data.mp4_1080) this.loadMP4(this.data.mp4_1080);
+                  else if(this.data.mp4_480) this.loadMP4(this.data.mp4_480);
+              }
+            }
+          });
+          return;
+        }
+        this.setStatus('HLS no soportado, usando MP4');
+        if(this.data.mp4_1080) this.loadMP4(this.data.mp4_1080);
+        else if(this.data.mp4_480) this.loadMP4(this.data.mp4_480);
+      }
+      onSourceChange(){
+        const v=this.sourceType.value;
+        if(v==='hls') this.loadHLS(this.data.m3u8);
+        else if(v==='mp4-480') this.loadMP4(this.data.mp4_480);
+        else if(v==='mp4-1080') this.loadMP4(this.data.mp4_1080);
+      }
+      onQualityChange(){
+        if(!this.hls){ this.qualityLevel.value='-1'; this.setStatus('HLS nativo: calidad automática'); return; }
+        const lvl=parseInt(this.qualityLevel.value,10);
+        if(lvl===-1){ this.hls.currentLevel=-1; this.setStatus('Calidad: Auto'); }
+        else{ this.hls.currentLevel=lvl; const info=this.hls.levels?.[lvl]; const label=info?.height?`${info.height}p`:`Nivel ${lvl}`; this.setStatus(`Calidad: ${label}`); }
+      }
+      showError(msg){
+        document.getElementById('content').innerHTML = `<div class="error"><h2>❌ Error</h2><p>${msg}</p><p>Verifica el enlace generado por el sistema.</p></div>`;
+      }
+    }
+    document.addEventListener('DOMContentLoaded',()=> new EpisodePlayer());
+  </script>
 </body>
 </html>

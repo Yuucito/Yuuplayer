@@ -3,163 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Generador de Episodios - Reproductor</title>
+  <title>Generador de Iframes M3U8</title>
   <style>
-    :root{
-      --bg:#0f172a;--panel:#111827;--text:#e5e7eb;
-      --muted:#9ca3af;--accent:#22d3ee;--border:#1f2937;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;padding:20px;background:var(--bg);
-      color:var(--text);font-family:system-ui,-apple-system,
-      Segoe UI,Roboto,Ubuntu,Inter,Arial;line-height:1.6}
-    .container{max-width:1200px;margin:0 auto}
-    h1{color:var(--accent);text-align:center;margin-bottom:24px}
-    .section{background:var(--panel);border:1px solid var(--border);
-      border-radius:12px;padding:20px;margin-bottom:20px}
-    .section h2{margin:0 0 12px;color:var(--accent);font-size:1.1rem}
-    .example{background:#1e293b;padding:12px;border-radius:8px;
-      border-left:4px solid var(--accent);
-      font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;
-      white-space:pre-wrap}
-    textarea{width:100%;min-height:220px;background:#0b1220;
-      color:var(--text);border:1px solid var(--border);
-      border-radius:8px;padding:14px;
-      font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px}
-    textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
-    .button-group{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
-    button{background:var(--accent);color:#0f172a;border:none;
-      padding:12px 18px;border-radius:8px;font-weight:700;
-      cursor:pointer;transition:.2s}
-    button:hover{filter:brightness(1.05);transform:translateY(-1px)}
-    button:disabled{background:var(--muted);cursor:not-allowed}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .output{background:#0b1220;border:1px solid var(--border);
-      border-radius:8px;padding:14px;
-      font-family:ui-monospace,Menlo,Consolas,monospace;
-      font-size:13px;white-space:pre-wrap;
-      max-height:380px;overflow:auto}
-    .success{display:none;background:#10b981;color:white;
-      padding:10px;border-radius:6px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    body { margin:0; padding:20px; font-family: sans-serif; background:#1e1e2f; color:#eee; }
+    textarea { width:100%; height:150px; margin-bottom:10px; padding:10px; font-family: monospace; }
+    button { padding:10px 20px; font-size:1rem; }
+    .output { margin-top:20px; }
+    iframe { width:100%; height:360px; border:1px solid #444; margin-bottom:20px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎬 Generador de Episodios para Reproductor</h1>
+  <h1>🎬 Generador de Iframes para M3U8</h1>
+  <p>Pega una o varias URLs M3U8 (una por línea):</p>
+  <textarea id="m3u8List" placeholder="https://.../playlist.m3u8"></textarea>
+  <button id="genBtn">Generar Iframes</button>
 
-    <div class="section">
-      <h2>📝 Formato de entrada esperado</h2>
-      <div class="example">🔍 Episodio 01:
-📹 Título: AB!-1.mp4
-🔗 M3U8: [https://cdn.videas.fr/v-medias/s5/hlsv1/d7/12/d712f29a-5e48-4866-9f06-c63f1ec705d8/playlist.m3u8](https://cdn.videas.fr/v-medias/s5/hlsv1/d7/12/d712f29a-5e48-4866-9f06-c63f1ec705d8/playlist.m3u8)
-⬇️ SD 480p: [https://cdn4.videas.fr/f9c0ab21f62442e8825446f55f43fbee/ab-1-mp4-480p.mp4](https://cdn4.videas.fr/f9c0ab21f62442e8825446f55f43fbee/ab-1-mp4-480p.mp4)
-⬇️ FHD 1080p: [https://cdn4.videas.fr/8a93525b7d974288b964553b7a181bd7/ab-1-mp4-source.mp4](https://cdn4.videas.fr/8a93525b7d974288b964553b7a181bd7/ab-1-mp4-source.mp4)</div>
-    </div>
-
-    <div class="section">
-      <h2>📥 Pega aquí los datos de tus episodios</h2>
-      <textarea id="inputText" placeholder="Pega aquí el texto con el formato de episodios..."></textarea>
-      <div class="button-group">
-        <button id="genBtn">🚀 Generar JSON</button>
-        <button id="clearBtn">🗑️ Limpiar todo</button>
-        <button id="copyBtn" disabled>📋 Copiar JSON</button>
-      </div>
-      <div id="successMsg" class="success">✅ JSON copiado al portapapeles</div>
-    </div>
-
-    <div class="grid">
-      <div class="section">
-        <h2>📊 Salida JSON</h2>
-        <div id="jsonOutput" class="output">El JSON aparecerá aquí...</div>
-      </div>
-      <div class="section">
-        <h2>🔗 Enlaces del reproductor</h2>
-        <div id="linksOutput" class="output">Los enlaces aparecerán aquí...</div>
-      </div>
-    </div>
-  </div>
+  <div id="output" class="output"></div>
 
   <script>
-    function parseEpisodes(text) {
-      const episodes = [];
-      const blocks = text.split(/(?=🔍\s*Episodio)/g).filter(b=>b.trim());
-
-      blocks.forEach(block => {
-        const lines = block.split('\n').map(l=>l.trim()).filter(Boolean);
-        let episodeNum='', title='', m3u8='', mp4_480='', mp4_1080='';
-
-        lines.forEach(line => {
-          if(/^🔍\s*Episodio/i.test(line)) {
-            const m=line.match(/Episodio\s*(\d+)/i);
-            episodeNum = m?m[1].padStart(2,'0'):'';
-          } else if(/^📹\s*Título:/i.test(line)) {
-            title = line.replace(/^📹\s*Título:/i,'').trim();
-          } else if(/^🔗\s*M3U8:/i.test(line)) {
-            const u=line.match(/\[([^\]]+)\]/) || line.match(/https?:\/\/[^\s\]]+/);
-            m3u8 = u? (u[1]||u[0]) : '';
-          } else if(/^⬇️\s*SD\s*480p:/i.test(line)) {
-            const u=line.match(/\[([^\]]+)\]/) || line.match(/https?:\/\/[^\s\]]+/);
-            mp4_480 = u? (u[1]||u[0]) : '';
-          } else if(/^⬇️\s*FHD\s*1080p:/i.test(line)) {
-            const u=line.match(/\[([^\]]+)\]/) || line.match(/https?:\/\/[^\s\]]+/);
-            mp4_1080 = u? (u[1]||u[0]) : '';
-          }
-        });
-
-        if(episodeNum && m3u8) {
-          const data = { episode:episodeNum, title, m3u8, mp4_480, mp4_1080 };
-          const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
-          const origin = window.location.origin;
-          const path = '/player.html';
-          const link = `${origin}${path}?data=${encoded}`;
-          episodes.push({ episode:episodeNum, servers:[{ sub:"Biplayer", value:link }] });
-        }
+    document.getElementById('genBtn').addEventListener('click', () => {
+      const list = document.getElementById('m3u8List').value
+        .split('\n').map(s=>s.trim()).filter(Boolean);
+      const container = document.getElementById('output');
+      container.innerHTML = '';
+      const origin = window.location.origin;
+      const path = '/player.html?src=';
+      list.forEach(url => {
+        const iframe = document.createElement('iframe');
+        iframe.src = origin + path + encodeURIComponent(url);
+        iframe.allow = 'autoplay; fullscreen';
+        container.appendChild(iframe);
       });
-
-      return episodes;
-    }
-
-    function generateJson() {
-      const txt = document.getElementById('inputText').value.trim();
-      if(!txt){ alert('⚠️ Pega el texto de los episodios primero'); return; }
-      const eps = parseEpisodes(txt);
-      if(!eps.length){ alert('❌ No se detectaron episodios. Revisa el formato.'); return; }
-
-      document.getElementById('jsonOutput').textContent = JSON.stringify(eps,null,2);
-      document.getElementById('linksOutput').textContent =
-        eps.map(e=>`Episodio ${e.episode}: ${e.servers[0].value}`).join('\n\n');
-      document.getElementById('copyBtn').disabled = false;
-    }
-
-    async function copyOutput() {
-      const out = document.getElementById('jsonOutput').textContent;
-      if(out.includes('JSON aparecerá')){ alert('⚠️ Genera el JSON primero'); return; }
-      try {
-        await navigator.clipboard.writeText(out);
-        const msg = document.getElementById('successMsg');
-        msg.style.display='block';
-        setTimeout(()=>msg.style.display='none',2500);
-      } catch {
-        const ta=document.createElement('textarea');
-        ta.value=out; document.body.appendChild(ta);
-        ta.select(); document.execCommand('copy');
-        document.body.removeChild(ta);
-        alert('📋 JSON copiado al portapapeles');
-      }
-    }
-
-    function clearAll() {
-      document.getElementById('inputText').value='';
-      document.getElementById('jsonOutput').textContent='El JSON aparecerá aquí...';
-      document.getElementById('linksOutput').textContent='Los enlaces aparecerán aquí...';
-      document.getElementById('copyBtn').disabled=true;
-      document.getElementById('successMsg').style.display='none';
-    }
-
-    document.getElementById('genBtn').addEventListener('click',generateJson);
-    document.getElementById('copyBtn').addEventListener('click',copyOutput);
-    document.getElementById('clearBtn').addEventListener('click',clearAll);
+    });
   </script>
 </body>
 </html>

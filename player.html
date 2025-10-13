@@ -3,151 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Reproductor de Episodios</title>
+  <title>Reproductor M3U8</title>
   <style>
-    :root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;
-      --muted:#9ca3af;--accent:#22d3ee;--border:#1f2937}
-    *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Inter,Arial}
-    .container{max-width:1000px;margin:0 auto;padding:20px}
-    .header{text-align:center;margin-bottom:20px}
-    .header h1{color:var(--accent);margin:0}
-    .preview{background:var(--panel);border:1px solid var(--border);
-      border-radius:12px;padding:16px;margin-bottom:20px;
-      white-space:pre-wrap;overflow-x:auto;
-      font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
-    .episode-info,.player{background:var(--panel);
-      border:1px solid var(--border);border-radius:12px;
-      padding:16px;margin-bottom:16px}
-    .episode-title{font-weight:700}
-    .episode-meta{color:var(--muted);font-size:.95rem;
-      word-break:break-word;margin-top:4px}
-    video{width:100%;aspect-ratio:16/9;background:#000;
-      border-radius:10px}
-    .controls{display:flex;gap:12px;flex-wrap:wrap;
-      align-items:center;margin-top:12px}
-    select{background:#0b1220;color:var(--text);
-      border:1px solid var(--border);border-radius:8px;
-      padding:8px 10px}
-    select:focus{outline:2px solid var(--accent);
-      outline-offset:1px}
-    .status{margin-left:auto;color:var(--muted);
-      font-size:.9rem}
-    @media(max-width:700px){.status{width:100%;margin-left:0}}
-    .error{background:var(--panel);border:1px solid #dc2626;
-      color:#fecaca;border-radius:12px;padding:16px;
-      text-align:center}
+    body { margin:0; background:#000; display:flex; align-items:center; justify-content:center; height:100vh; }
+    #video { width:100%; max-width:100%; height:auto; }
+    .error { color:#f66; padding:20px; background:#111; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="header"><h1>🎬 Reproductor de Episodios</h1></div>
-    <div id="preview" class="preview"></div>
-    <div id="content"></div>
-  </div>
-
+  <video id="video" controls autoplay></video>
   <script>
-    class EpisodePlayer {
-      constructor(){
-        this.hls=null; this.video=null; this.data=null;
-        this.init();
-      }
-      init(){
-        const params=new URLSearchParams(location.search);
-        const d=params.get('data');
-        if(!d){ return this.showError('No se encontraron datos del episodio en la URL'); }
-        try {
-          this.data=JSON.parse(decodeURIComponent(escape(atob(d))));
-          document.getElementById('preview').textContent=JSON.stringify(this.data,null,2);
-          this.render(); this.hook(); this.loadHLS(this.data.m3u8);
-        } catch {
-          this.showError('Error al decodificar los datos del episodio');
+    const params = new URLSearchParams(window.location.search);
+    const src = params.get('src');
+    const video = document.getElementById('video');
+    if (!src) {
+      document.body.innerHTML = '<div class="error">❌ No se proporcionó parámetro src</div>';
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = src;
+    } else if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+        hls.loadSource(src);
+      });
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          document.body.innerHTML = '<div class="error">❌ Error al cargar HLS</div>';
         }
-      }
-      render(){
-        document.getElementById('content').innerHTML=`
-          <div class="episode-info">
-            <div class="episode-title">🔍 Episodio ${this.data.episode||''}</div>
-            <div class="episode-meta">📹 ${this.data.title||''}</div>
-          </div>
-          <div class="player">
-            <video id="video" playsinline controls></video>
-            <div class="controls">
-              <label for="sourceType"><strong>Fuente:</strong></label>
-              <select id="sourceType">
-                <option value="hls" selected>M3U8 (HLS)</option>
-                ${this.data.mp4_480?'<option value="mp4-480">MP4 480p</option>':''}
-                ${this.data.mp4_1080?'<option value="mp4-1080">MP4 1080p</option>':''}
-              </select>
-              <div id="qualityBlock" style="display:none">
-                <label for="qualityLevel"><strong>Calidad HLS:</strong></label>
-                <select id="qualityLevel"><option value="-1" selected>Auto</option></select>
-              </div>
-              <div class="status" id="statusText">Listo</div>
-            </div>
-          </div>`;
-      }
-      hook(){
-        this.video=document.getElementById('video');
-        this.sourceType=document.getElementById('sourceType');
-        this.qualityBlock=document.getElementById('qualityBlock');
-        this.qualityLevel=document.getElementById('qualityLevel');
-        this.statusText=document.getElementById('statusText');
-        this.sourceType.addEventListener('change',()=>this.onSourceChange());
-        this.qualityLevel.addEventListener('change',()=>this.onQualityChange());
-      }
-      setStatus(m){this.statusText.textContent=m;}
-      destroyHls(){if(this.hls){try{this.hls.destroy()}catch{}this.hls=null;}}
-      loadMP4(u){if(!u){return this.setStatus('URL MP4 no disponible');}
-        this.destroyHls();this.qualityBlock.style.display='none';
-        this.video.src=u;this.video.play().catch(()=>{});this.setStatus('Reproduciendo MP4');}
-      populateLevels(){
-        while(this.qualityLevel.options.length>1) this.qualityLevel.remove(1);
-        if(!this.hls) return;
-        (this.hls.levels||[]).forEach((l,i)=>{
-          const lbl=l.height?`${l.height}p`:`Nivel ${i}`;
-          const o=document.createElement('option');o.value=i;o.textContent=lbl;
-          this.qualityLevel.appendChild(o);
-        });
-      }
-      loadHLS(u){if(!u){return this.setStatus('URL M3U8 no disponible');}
-        this.destroyHls();this.qualityBlock.style.display='inline-flex';
-        this.qualityLevel.value='-1';
-        if(this.video.canPlayType('application/vnd.apple.mpegurl')){
-          this.video.src=u;this.video.addEventListener('loadedmetadata',
-            ()=>this.setStatus('HLS (nativo) listo'),{once:true});
-          this.video.play().catch(()=>{});return;
-        }
-        if(window.Hls&&Hls.isSupported()){
-          this.hls=new Hls({maxBufferLength:30,startLevel:-1,capLevelToPlayerSize:true});
-          this.hls.attachMedia(this.video);
-          this.hls.on(Hls.Events.MEDIA_ATTACHED,()=>{this.setStatus('Cargando HLS…');this.hls.loadSource(u);});
-          this.hls.on(Hls.Events.MANIFEST_PARSED,()=>{this.setStatus('HLS listo');this.populateLevels();this.video.play().catch(()=>{});});
-          this.hls.on(Hls.Events.LEVEL_SWITCHED,(_,e)=>{const l=this.hls.levels[e.level];this.setStatus(`${l.height||e.level}p`);});
-          this.hls.on(Hls.Events.ERROR,(_,e)=>{if(e.fatal){
-            if(e.type===Hls.ErrorTypes.NETWORK_ERROR){this.setStatus('Error de red. Reintentando…');this.hls.startLoad();}
-            else if(e.type===Hls.ErrorTypes.MEDIA_ERROR){this.setStatus('Error de medios. Recuperando…');this.hls.recoverMediaError();}
-            else{this.setStatus('Error fatal. Fallback MP4');this.loadMP4(this.data.mp4_1080||this.data.mp4_480);}
-          }});return;
-        }
-        this.setStatus('HLS no soportado, modo MP4');this.loadMP4(this.data.mp4_1080||this.data.mp4_480);
-      }
-      onSourceChange(){const v=this.sourceType.value;
-        if(v==='hls') this.loadHLS(this.data.m3u8);
-        else if(v==='mp4-480') this.loadMP4(this.data.mp4_480);
-        else if(v==='mp4-1080') this.loadMP4(this.data.mp4_1080);
-      }
-      onQualityChange(){if(!this.hls){this.setStatus('Auto');return;}
-        const lvl=parseInt(this.qualityLevel.value,10);
-        this.hls.currentLevel=lvl;this.setStatus(lvl<0?'Auto':`${this.hls.levels[lvl].height}p`);
-      }
-      showError(m){document.getElementById('content').innerHTML=`
-        <div class="error"><h2>❌ Error</h2><p>${m}</p></div>`;
-      }
+      });
+    } else {
+      document.body.innerHTML = '<div class="error">❌ Este navegador no soporta HLS</div>';
     }
-    document.addEventListener('DOMContentLoaded',()=>new EpisodePlayer());
   </script>
 </body>
 </html>

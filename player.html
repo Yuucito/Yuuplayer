@@ -13,6 +13,10 @@
     .container{max-width:1000px;margin:0 auto;padding:20px}
     .header{text-align:center;margin-bottom:20px}
     .header h1{color:var(--accent);margin:0}
+    .preview{background:var(--panel);border:1px solid var(--border);
+      border-radius:12px;padding:16px;margin-bottom:20px;
+      white-space:pre-wrap;overflow-x:auto;
+      font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px}
     .episode-info,.player{background:var(--panel);
       border:1px solid var(--border);border-radius:12px;
       padding:16px;margin-bottom:16px}
@@ -30,8 +34,7 @@
       outline-offset:1px}
     .status{margin-left:auto;color:var(--muted);
       font-size:.9rem}
-    @media(max-width:700px){.status{width:100%;
-      margin-left:0}}
+    @media(max-width:700px){.status{width:100%;margin-left:0}}
     .error{background:var(--panel);border:1px solid #dc2626;
       color:#fecaca;border-radius:12px;padding:16px;
       text-align:center}
@@ -41,6 +44,7 @@
 <body>
   <div class="container">
     <div class="header"><h1>🎬 Reproductor de Episodios</h1></div>
+    <div id="preview" class="preview"></div>
     <div id="content"></div>
   </div>
 
@@ -56,6 +60,7 @@
         if(!d){ return this.showError('No se encontraron datos del episodio en la URL'); }
         try {
           this.data=JSON.parse(decodeURIComponent(escape(atob(d))));
+          document.getElementById('preview').textContent=JSON.stringify(this.data,null,2);
           this.render(); this.hook(); this.loadHLS(this.data.m3u8);
         } catch {
           this.showError('Error al decodificar los datos del episodio');
@@ -103,31 +108,31 @@
         if(!this.hls) return;
         (this.hls.levels||[]).forEach((l,i)=>{
           const lbl=l.height?`${l.height}p`:`Nivel ${i}`;
-          const o=document.createElement('option');o.value=i; o.textContent=lbl;
+          const o=document.createElement('option');o.value=i;o.textContent=lbl;
           this.qualityLevel.appendChild(o);
         });
       }
       loadHLS(u){if(!u){return this.setStatus('URL M3U8 no disponible');}
-        this.destroyHls(); this.qualityBlock.style.display='inline-flex';
+        this.destroyHls();this.qualityBlock.style.display='inline-flex';
         this.qualityLevel.value='-1';
         if(this.video.canPlayType('application/vnd.apple.mpegurl')){
-          this.video.src=u; this.video.addEventListener('loadedmetadata',
+          this.video.src=u;this.video.addEventListener('loadedmetadata',
             ()=>this.setStatus('HLS (nativo) listo'),{once:true});
-          this.video.play().catch(()=>{}); return;
+          this.video.play().catch(()=>{});return;
         }
         if(window.Hls&&Hls.isSupported()){
           this.hls=new Hls({maxBufferLength:30,startLevel:-1,capLevelToPlayerSize:true});
           this.hls.attachMedia(this.video);
           this.hls.on(Hls.Events.MEDIA_ATTACHED,()=>{this.setStatus('Cargando HLS…');this.hls.loadSource(u);});
           this.hls.on(Hls.Events.MANIFEST_PARSED,()=>{this.setStatus('HLS listo');this.populateLevels();this.video.play().catch(()=>{});});
-          this.hls.on(Hls.Events.LEVEL_SWITCHED,(_,d)=>{const l=this.hls.levels[d.level];this.setStatus(`${l.height||d.level}p`);});
+          this.hls.on(Hls.Events.LEVEL_SWITCHED,(_,e)=>{const l=this.hls.levels[e.level];this.setStatus(`${l.height||e.level}p`);});
           this.hls.on(Hls.Events.ERROR,(_,e)=>{if(e.fatal){
-            if(e.type===Hls.ErrorTypes.NETWORK_ERROR){this.setStatus('Red. reintento');this.hls.startLoad();}
-            else if(e.type===Hls.ErrorTypes.MEDIA_ERROR){this.setStatus('Media. recuperando');this.hls.recoverMediaError();}
-            else{this.setStatus('Fatal. MP4');this.loadMP4(this.data.mp4_1080||this.data.mp4_480);}
-          }}); return;
+            if(e.type===Hls.ErrorTypes.NETWORK_ERROR){this.setStatus('Error de red. Reintentando…');this.hls.startLoad();}
+            else if(e.type===Hls.ErrorTypes.MEDIA_ERROR){this.setStatus('Error de medios. Recuperando…');this.hls.recoverMediaError();}
+            else{this.setStatus('Error fatal. Fallback MP4');this.loadMP4(this.data.mp4_1080||this.data.mp4_480);}
+          }});return;
         }
-        this.setStatus('HLS no soportado, MP4'); this.loadMP4(this.data.mp4_1080||this.data.mp4_480);
+        this.setStatus('HLS no soportado, modo MP4');this.loadMP4(this.data.mp4_1080||this.data.mp4_480);
       }
       onSourceChange(){const v=this.sourceType.value;
         if(v==='hls') this.loadHLS(this.data.m3u8);
@@ -136,10 +141,11 @@
       }
       onQualityChange(){if(!this.hls){this.setStatus('Auto');return;}
         const lvl=parseInt(this.qualityLevel.value,10);
-        this.hls.currentLevel=lvl; this.setStatus(lvl<0?'Auto':`${this.hls.levels[lvl].height}p`);
+        this.hls.currentLevel=lvl;this.setStatus(lvl<0?'Auto':`${this.hls.levels[lvl].height}p`);
       }
-      showError(m){document.getElementById('content').innerHTML=
-        `<div class="error"><h2>❌ Error</h2><p>${m}</p></div>`;}
+      showError(m){document.getElementById('content').innerHTML=`
+        <div class="error"><h2>❌ Error</h2><p>${m}</p></div>`;
+      }
     }
     document.addEventListener('DOMContentLoaded',()=>new EpisodePlayer());
   </script>

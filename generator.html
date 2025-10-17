@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MioPlayer - Generador de Enlaces</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: #667eea;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .output {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+            margin-top: 10px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            padding: 8px 20px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .example {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .result-section {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .success {
+            color: #28a745;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .iframe-preview {
+            margin-top: 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .preview-title {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 MioPlayer - Generador de Enlaces</h1>
+        <p class="subtitle">Pega tu JSON y genera el enlace del reproductor automáticamente</p>
+
+        <div class="section">
+            <label>Pega tu JSON aquí:</label>
+            <textarea id="jsonInput" rows="15" placeholder='[
+  {
+    "episode": "01",
+    "servers": [
+      {
+        "sub": "Plusplayer",
+        "value": "https://example.com/player1"
+      },
+      {
+        "download": "SD 480p",
+        "value": "https://example.com/video-480p.mp4"
+      },
+      {
+        "download": "FHD 1080p",
+        "value": "https://example.com/video-1080p.mp4"
+      }
+    ]
+  }
+]'></textarea>
+        </div>
+
+        <button onclick="generateLink()">Generar Enlaces</button>
+
+        <div id="result" style="display: none;">
+            <div class="result-section">
+                <p class="success">✓ Enlaces generados correctamente</p>
+                
+                <label>JSON actualizado (con MioPlayer incluido):</label>
+                <div class="output" id="updatedJson"></div>
+                <button class="copy-btn" onclick="copyToClipboard('updatedJson')">Copiar JSON</button>
+
+                <div style="margin-top: 20px;">
+                    <label>Enlace del reproductor MioPlayer:</label>
+                    <div class="output" id="playerLink"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('playerLink')">Copiar Enlace</button>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label>Código iframe para embeber:</label>
+                    <div class="output" id="iframeCode"></div>
+                    <button class="copy-btn" onclick="copyToClipboard('iframeCode')">Copiar Iframe</button>
+                </div>
+            </div>
+
+            <div class="iframe-preview">
+                <div class="preview-title">Vista previa del reproductor:</div>
+                <div id="iframePreview"></div>
+            </div>
+        </div>
+
+        <div class="example">
+            <div class="example-title">Formato JSON esperado:</div>
+            <pre>[
+  {
+    "episode": "01",
+    "servers": [
+      { "sub": "Plusplayer", "value": "url" },
+      { "download": "SD 480p", "value": "url_video_480p.mp4" },
+      { "download": "HD 720p", "value": "url_video_720p.mp4" },
+      { "download": "FHD 1080p", "value": "url_video_1080p.mp4" }
+    ]
+  }
+]</pre>
+        </div>
+    </div>
+
+    <script>
+        function generateLink() {
+            const input = document.getElementById('jsonInput').value;
+            
+            try {
+                const data = JSON.parse(input);
+                
+                if (!Array.isArray(data) || data.length === 0) {
+                    alert('El JSON debe ser un array con al menos un elemento');
+                    return;
+                }
+
+                const episode = data[0];
+                
+                // Generate MioPlayer link
+                const baseUrl = 'https://TU-USUARIO.github.io/mioplayer/';
+                const encodedData = encodeURIComponent(JSON.stringify(episode));
+                const playerLink = `${baseUrl}?data=${encodedData}`;
+
+                // Add MioPlayer to servers array
+                const updatedEpisode = JSON.parse(JSON.stringify(episode));
+                const mioPlayerEntry = {
+                    "sub": "MioPlayer",
+                    "value": playerLink
+                };
+
+                // Insert MioPlayer after other streaming servers but before downloads
+                const downloadIndex = updatedEpisode.servers.findIndex(s => s.download);
+                if (downloadIndex !== -1) {
+                    updatedEpisode.servers.splice(downloadIndex, 0, mioPlayerEntry);
+                } else {
+                    updatedEpisode.servers.push(mioPlayerEntry);
+                }
+
+                const updatedData = [updatedEpisode];
+
+                // Display results
+                document.getElementById('updatedJson').textContent = JSON.stringify(updatedData, null, 2);
+                document.getElementById('playerLink').textContent = playerLink;
+                
+                const iframeCode = `<iframe src="${playerLink}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>`;
+                document.getElementById('iframeCode').textContent = iframeCode;
+                
+                // Show preview
+                document.getElementById('iframePreview').innerHTML = iframeCode;
+                
+                document.getElementById('result').style.display = 'block';
+                
+            } catch (e) {
+                alert('Error al procesar el JSON: ' + e.message);
+            }
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('¡Copiado al portapapeles!');
+            });
+        }
+    </script>
+</body>
+</html>

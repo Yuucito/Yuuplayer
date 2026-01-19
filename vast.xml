@@ -1,1 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="3.0">
+  <Ad id="1">
+    <InLine>
+      <AdSystem>PlusAnime Ads</AdSystem>
+      <AdTitle>Anuncio de Video</AdTitle>
 
+      <Impression>
+        <![CDATA[
+        https://tusitio.com/impresion
+        ]]>
+      </Impression>
+
+      <Creatives>
+        <Creative sequence="1">
+          <Linear>
+            <Duration>00:00:15</Duration>
+
+            <TrackingEvents>
+              <Tracking event="start"><![CDATA[https://tusitio.com/start]]></Tracking>
+              <Tracking event="firstQuartile"><![CDATA[https://tusitio.com/25]]></Tracking>
+              <Tracking event="midpoint"><![CDATA[https://tusitio.com/50]]></Tracking>
+              <Tracking event="thirdQuartile"><![CDATA[https://tusitio.com/75]]></Tracking>
+              <Tracking event="complete"><![CDATA[https://tusitio.com/complete]]></Tracking>
+            </TrackingEvents>
+
+            <VideoClicks>
+              <ClickThrough>
+                <![CDATA[
+                https://link-directo-al-anunciante.com
+                ]]>
+              </ClickThrough>
+            </VideoClicks>
+
+            <MediaFiles>
+              <MediaFile
+                delivery="progressive"
+                type="video/mp4"
+                width="1280"
+                height="720"
+                scalable="true"
+                maintainAspectRatio="true">
+                <![CDATA[
+                https://cdn.videas.fr/v-medias/s5/a/64/85/6485f8bef7d0411bb048cdd7a005a7da/c5a5ca39c72c4b77a6ac8b05fc2d7c1c/17060128-fa5f-46e9-8a0b-66d95d602056.mp4
+                ]]>
+              </MediaFile>
+            </MediaFiles>
+
+          </Linear>
+        </Creative>
+      </Creatives>
+    </InLine>
+  </Ad>
+</VAST>

@@ -932,26 +932,33 @@ function initPlayer(videoUrl, vttUrl, assUrl, title) {
    4. HLS.JS — carga adaptativa del stream .m3u8
    Detecta soporte nativo (Safari) y usa HLS.js como fallback
 ────────────────────────────────────────────────────────── */
+
+// Guardamos referencia global para poder agregar el track VTT
+// DESPUÉS de que HLS haya adjuntado el media (evita que el navegador lo ignore)
+let _hlsReadyCallbacks = [];
+function onHlsReady(cb) { _hlsReadyCallbacks.push(cb); }
+
 function loadHLS(video, url) {
   if (Hls.isSupported()) {
-    // HLS.js: navegadores sin soporte nativo (Chrome, Firefox…)
-    const hls = new Hls({
-      enableWorker: true,
-      lowLatencyMode: false,
-      // CORS: HLS.js usa fetch/XHR; los headers dependen del servidor de origen
-    });
+    const hls = new Hls({ enableWorker: true, lowLatencyMode: false });
     hls.loadSource(url);
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play().catch(() => {}); // autoplay silencioso
+      video.play().catch(() => {});
+      // Disparar callbacks registrados (ej: agregar track VTT)
+      _hlsReadyCallbacks.forEach(cb => cb());
+      _hlsReadyCallbacks = [];
     });
     hls.on(Hls.Events.ERROR, (_, data) => {
       if (data.fatal) showError(`Error HLS: ${data.type}`);
     });
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    // Soporte nativo (Safari / iOS)
     video.src = url;
-    video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
+    video.addEventListener('loadedmetadata', () => {
+      video.play().catch(() => {});
+      _hlsReadyCallbacks.forEach(cb => cb());
+      _hlsReadyCallbacks = [];
+    });
   } else {
     showError('Tu navegador no soporta reproducción HLS.');
   }
@@ -977,16 +984,8 @@ function setupSubtitles(video, vttUrl, assUrl) {
   // Opción: desactivar
   items.push({ id: 'off', label: 'Sin subtítulos' });
 
-  // Opción .vtt
-  if (vttUrl) {
-    addVttTrack(video, vttUrl);
-    items.push({ id: 'vtt', label: 'Subtítulos (VTT)' });
-  }
-
-  // Opción .ass
-  if (assUrl) {
-    items.push({ id: 'ass', label: 'Subtítulos (ASS)' });
-  }
+  if (vttUrl)  items.push({ id: 'vtt', label: 'Subtítulos (VTT)' });
+  if (assUrl)  items.push({ id: 'ass', label: 'Subtítulos (ASS)' });
 
   // Construir menú
   buildSubMenu(subMenu, items, video, vttUrl, assUrl);
@@ -994,6 +993,23 @@ function setupSubtitles(video, vttUrl, assUrl) {
   // Si no hay subtítulos, ocultar botón
   if (!vttUrl && !assUrl) {
     document.getElementById('btn-subs').style.display = 'none';
+    return;
+  }
+
+  // Agregar el track VTT DESPUÉS de que HLS esté listo
+  // (si se agrega antes, algunos navegadores lo ignoran)
+  if (vttUrl) {
+    onHlsReady(() => {
+      addVttTrack(video, vttUrl);
+      // Activar VTT por defecto si no hay .ass o si .ass no está primero
+      const defaultSub = assUrl ? 'ass' : 'vtt';
+      selectSubtitle(defaultSub, video, vttUrl, assUrl, subMenu, items);
+    });
+  } else if (assUrl) {
+    // Solo .ass: activar cuando HLS esté listo
+    onHlsReady(() => {
+      selectSubtitle('ass', video, vttUrl, assUrl, subMenu, items);
+    });
   }
 }
 
@@ -1059,9 +1075,17 @@ function disableAllSubs(video) {
 }
 
 function enableVttSub(video) {
-  for (const track of video.textTracks) {
-    track.mode = 'showing';
-  }
+  // Pequeño delay para asegurar que el <track> está completamente cargado en el DOM
+  // antes de cambiar el modo — en algunos navegadores el cambio inmediato falla silenciosamente
+  const activate = () => {
+    for (const track of video.textTracks) {
+      if (track.kind === 'subtitles' || track.kind === 'captions') {
+        track.mode = 'showing';
+      }
+    }
+  };
+  activate(); // intento inmediato
+  setTimeout(activate, 300); // segundo intento por si el track aún cargaba
 }
 
 /* Carga lazy de SubtitlesOctopus (solo si se necesita .ass) */
@@ -1082,21 +1106,41 @@ function createOctopusInstance(video, assUrl) {
 
   try {
     SubState.octopus = new SubtitlesOctopus({
-      video:      video,
-      subUrl:     assUrl,
-      fonts:      [],
-      workerUrl:  'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
+      video:           video,
+      subUrl:          assUrl,
+      fonts:           [],
+      workerUrl:       'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
       legacyWorkerUrl: 'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker-legacy.js',
-      renderMode: 'wasm',
-      onReady:    () => console.log('[ASS] SubtitlesOctopus listo'),
+      renderMode:      'wasm',
+      onReady: () => {
+        console.log('[ASS] SubtitlesOctopus listo');
+        // SubtitlesOctopus inserta su canvas directamente en el body o junto al video.
+        // Usamos MutationObserver para detectarlo y moverlo a nuestro wrapper.
+        const observer = new MutationObserver(() => {
+          // Buscar canvas huérfano que Octopus haya insertado en el body / player-view
+          const playerView = document.getElementById('player-view');
+          const orphanCanvas = playerView.querySelector('canvas:not(#octopus-wrap canvas)');
+          if (orphanCanvas) {
+            wrap.appendChild(orphanCanvas);
+            // Forzar que el canvas llene el contenedor
+            orphanCanvas.style.cssText = 'position:absolute;inset:0;width:100%!important;height:100%!important;pointer-events:none;';
+            observer.disconnect();
+          }
+        });
+        observer.observe(document.getElementById('player-view'), { childList: true, subtree: true });
+
+        // También intentar moverlo de inmediato por si ya fue insertado
+        setTimeout(() => {
+          const playerView = document.getElementById('player-view');
+          const orphanCanvas = playerView.querySelector('canvas:not(#octopus-wrap canvas)');
+          if (orphanCanvas) {
+            wrap.appendChild(orphanCanvas);
+            orphanCanvas.style.cssText = 'position:absolute;inset:0;width:100%!important;height:100%!important;pointer-events:none;';
+            observer.disconnect();
+          }
+        }, 400);
+      },
     });
-    // Mover canvas al wrap
-    setTimeout(() => {
-      const canvas = video.nextElementSibling;
-      if (canvas && canvas.tagName === 'CANVAS') {
-        wrap.appendChild(canvas);
-      }
-    }, 200);
   } catch (err) {
     console.warn('[ASS] Error iniciando SubtitlesOctopus:', err);
   }

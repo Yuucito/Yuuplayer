@@ -3,18 +3,25 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>StreamForge — Generador de Reproductores</title>
+<title>StreamForge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
 <style>
-:root{--bg:#080b10;--surface:#0d1117;--panel:#111827;--border:rgba(255,255,255,.08);--accent:#e63946;--accent2:#f4a261;--glow:rgba(230,57,70,.4);--text:#e8eaf0;--muted:#6b7280;--r:12px;--fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;--ease:cubic-bezier(.22,1,.36,1)}
+:root{
+  --bg:#080b10;--surface:#0d1117;--panel:#111827;
+  --border:rgba(255,255,255,.08);--accent:#e63946;--accent2:#f4a261;
+  --glow:rgba(230,57,70,.4);--text:#e8eaf0;--muted:#6b7280;
+  --r:12px;--fh:'Syne',sans-serif;--fb:'DM Sans',sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1)
+}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5}
-#gen{max-width:860px;margin:0 auto;padding:60px 24px 100px}
+
+/* ══ GENERADOR ══ */
+#GEN{max-width:860px;margin:0 auto;padding:60px 24px 100px}
 .hdr{text-align:center;margin-bottom:52px}
 .badge{display:inline-flex;align-items:center;gap:8px;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.25);color:var(--accent);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;border-radius:99px;margin-bottom:18px}
 .badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
@@ -37,12 +44,12 @@ input::placeholder{color:var(--muted);opacity:.55}
 .bgen{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#c1121f);border:none;border-radius:var(--r);color:#fff;font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.06em;cursor:pointer;transition:transform .2s var(--ease),box-shadow .2s;box-shadow:0 4px 24px rgba(230,57,70,.3);margin-top:10px}
 .bgen:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(230,57,70,.45)}
 .bgen:active{transform:translateY(0)}
-#out{margin-top:36px;display:none}
-#out.on{display:block}
+
+/* Preview inline (sin iframe) */
+#PREV_WRAP{margin-top:36px;display:none}
+#PREV_WRAP.on{display:block}
 .divider{display:flex;align-items:center;gap:12px;margin-bottom:24px;color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.pw{position:relative;width:100%;padding-top:56.25%;background:#000;border-radius:var(--r);overflow:hidden;margin-bottom:20px;border:1px solid var(--border)}
-.pw iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
 .ob{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px;overflow:hidden}
 .oh{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--border);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
 .oh strong{color:var(--text)}
@@ -54,22 +61,26 @@ input::placeholder{color:var(--muted);opacity:.55}
 @keyframes fu{to{opacity:1;transform:translateY(0)}}
 .d1{animation-delay:.1s}.d2{animation-delay:.2s}
 
-/* ── PLAYER ── */
-#PV{display:none;position:fixed;inset:0;background:#000;z-index:100;overflow:hidden}
+/* ══ PLAYER OVERLAY (mismo documento, sin iframe) ══ */
+#PV{display:none;position:fixed;inset:0;background:#000;z-index:200;overflow:hidden}
 #PV.on{display:block}
 #vid{width:100%;height:100%;object-fit:contain;display:block;position:absolute;inset:0}
 
-/* Subtitle overlay propio – NO usa rendering nativo del browser */
+/* Subtitle overlay */
 #SL{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:20;text-align:center;pointer-events:none;width:92%;max-width:900px;display:flex;flex-direction:column;align-items:center;gap:3px}
 #SL p{display:inline-block;background:rgba(0,0,0,.82);color:#fff;font-family:var(--fb);font-size:clamp(13px,2.1vw,20px);font-weight:400;line-height:1.5;padding:3px 11px 4px;border-radius:4px;white-space:pre-wrap;max-width:100%}
 #SL p b,#SL p strong{font-weight:700}
 #SL p i,#SL p em{font-style:italic}
 
-/* Octopus canvas overlay */
 #OL{position:absolute;inset:0;pointer-events:none;z-index:21;overflow:hidden}
 #OL canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important}
 
 #PTB{position:absolute;top:0;left:0;right:0;z-index:30;padding:18px 22px;background:linear-gradient(to bottom,rgba(0,0,0,.8),transparent);font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.04em;color:#fff;pointer-events:none;transition:opacity .3s}
+/* Botón cerrar player */
+#BCLOSE{position:absolute;top:14px;right:16px;z-index:35;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}
+#BCLOSE:hover{background:rgba(230,57,70,.7)}
+#BCLOSE svg{width:16px;height:16px}
+
 #SP{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:25;display:none}
 #SP.on{display:block}
 .ring{width:44px;height:44px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
@@ -77,6 +88,7 @@ input::placeholder{color:var(--muted);opacity:.55}
 #ER{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(0,0,0,.75);font-size:14px;color:var(--muted);text-align:center;padding:24px;z-index:26}
 #ER.on{display:flex}
 #ER strong{color:var(--accent);font-size:17px}
+
 #CT{position:absolute;bottom:0;left:0;right:0;z-index:30;padding:0 18px 16px;background:linear-gradient(to top,rgba(0,0,0,.88),transparent);transition:opacity .3s,transform .3s var(--ease)}
 #CT.hide{opacity:0;transform:translateY(12px);pointer-events:none}
 #PB{position:relative;height:4px;background:rgba(255,255,255,.18);border-radius:99px;margin-bottom:12px;cursor:pointer;transition:height .15s}
@@ -101,18 +113,27 @@ input::placeholder{color:var(--muted);opacity:.55}
 .si.act{color:var(--accent)}
 .si .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0;opacity:0}
 .si.act .dot{opacity:1}
-@media(max-width:600px){#gen{padding:28px 12px 80px}.card{padding:20px 14px}#VS{display:none}.td{font-size:11px}#SL{bottom:68px}}
+
+/* Inline preview player (dentro del generador) */
+#INLINE_PV{position:relative;width:100%;padding-top:56.25%;background:#000;border-radius:var(--r);overflow:hidden;margin-bottom:20px;border:1px solid var(--border)}
+#INLINE_PV video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.play-btn-big{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,.4);transition:background .2s;z-index:5}
+.play-btn-big:hover{background:rgba(0,0,0,.2)}
+.play-btn-big svg{width:64px;height:64px;color:rgba(255,255,255,.9);filter:drop-shadow(0 2px 12px rgba(0,0,0,.5))}
+
+@media(max-width:600px){#GEN{padding:28px 12px 80px}.card{padding:20px 14px}#VS{display:none}.td{font-size:11px}#SL{bottom:68px}}
 </style>
 </head>
 <body>
 
-<!-- GENERADOR -->
-<div id="gen">
+<!-- ══════════════════ GENERADOR ══════════════════ -->
+<div id="GEN">
   <header class="hdr fu">
     <div class="badge">Reproductor Embebible</div>
     <h1>StreamForge</h1>
     <p>Genera reproductores HLS con subtítulos .vtt y .ass listos para incrustar en cualquier sitio.</p>
   </header>
+
   <div class="card fu d1">
     <div class="st">Fuente de video</div>
     <div class="field">
@@ -146,34 +167,46 @@ input::placeholder{color:var(--muted);opacity:.55}
     </div>
     <button class="bgen" id="BGEN">⚡ Generar Reproductor</button>
   </div>
-  <div id="out">
-    <div class="divider">Resultado</div>
-    <div class="pw"><iframe id="PIF" allowfullscreen allow="autoplay;fullscreen"></iframe></div>
-    <div class="ob fu">
-      <div class="oh"><strong>🔗 URL del reproductor</strong>
-        <button class="bcp" id="CPU" onclick="doCopy('CPU','UOUT')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar
-        </button>
+
+  <!-- Preview + código embed -->
+  <div id="PREV_WRAP">
+    <div class="divider">Vista previa</div>
+
+    <!-- Mini player inline (sin iframe) -->
+    <div id="INLINE_PV">
+      <video id="PREV_VID" playsinline preload="metadata" crossorigin="anonymous"></video>
+      <div class="play-btn-big" id="PBIG" onclick="openFullPlayer()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"/></svg>
       </div>
-      <div class="oc" id="UOUT"></div>
     </div>
-    <div class="ob fu d1">
-      <div class="oh"><strong>📋 Código iframe</strong>
+
+    <div class="ob fu">
+      <div class="oh"><strong>📋 Código iframe embebible</strong>
         <button class="bcp" id="CIF" onclick="doCopy('CIF','IOUT')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar
         </button>
       </div>
       <div class="oc" id="IOUT"></div>
     </div>
+
+    <div class="ob fu d1">
+      <div class="oh"><strong>ℹ️ Cómo embeber</strong></div>
+      <div class="oc" style="color:var(--muted);font-family:var(--fb);font-size:12px">
+        Descarga este archivo HTML y súbelo a tu servidor. El código iframe apuntará a esa URL con los parámetros del video.
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- REPRODUCTOR -->
+<!-- ══════════════════ PLAYER FULL (overlay, mismo doc) ══════════════════ -->
 <div id="PV">
   <video id="vid" playsinline preload="metadata" crossorigin="anonymous"></video>
   <div id="SL"></div>
   <div id="OL"></div>
   <div id="PTB"></div>
+  <button id="BCLOSE" title="Cerrar" onclick="closePlayer()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
   <div id="SP"><div class="ring"></div></div>
   <div id="ER"><strong>Error</strong><span id="EM">No se pudo cargar el stream.</span></div>
   <div id="TT"></div>
@@ -207,300 +240,407 @@ input::placeholder{color:var(--muted);opacity:.55}
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
-   StreamForge v3 — Subtítulos via fetch→Blob URL
-   
-   POR QUÉ ESTO FUNCIONA:
-   El problema histórico: el elemento <track src="URL_externa">
-   falla cross-origin cuando el video viene de otro dominio.
-   
-   La solución:
-   1. fetch() el archivo VTT desde JS (raw.github tiene CORS abierto ✓)
-   2. Crear un Blob con el texto → URL.createObjectURL()
-   3. Asignar esa blob:// URL al <track> → mismo origen que la página
-   4. Poner el track en modo 'hidden' → carga los TextTrackCues
-      sin renderizar el texto nativo (feo e incontrolable)
-   5. Loop con requestAnimationFrame que lee track.activeCues
-      y los muestra en nuestro propio div overlay
-═══════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   StreamForge v4 — arquitectura corregida
 
-const QS    = new URLSearchParams(location.search);
-const QVID  = QS.get('video');
-const QVTT  = QS.get('vtt');
-const QASS  = QS.get('ass');
-const QTTL  = QS.get('title') || '';
+   CAMBIO CLAVE vs versión anterior:
+   El player ya NO usa iframe. Antes, se generaba una
+   URL con ?video=... que apuntaba a sí mismo, pero eso
+   falla en cualquier entorno embebido (artifacts, localhost
+   sin servidor, file://, etc.).
 
-const $  = id => document.getElementById(id);
-const fmt= s  => { if(!isFinite(s))return'0:00'; return`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`; };
+   Ahora:
+   • El generador llena los campos y muestra un mini-preview
+     usando un <video> real dentro del mismo documento.
+   • Al hacer clic en "abrir", el overlay full-screen se activa
+     en el mismo documento.
+   • El código iframe embebible sigue funcionando cuando el
+     usuario descarga y sube el HTML a su propio servidor.
+   • Para reproducción directa desde esta página: funciona sin
+     servidor.
+═══════════════════════════════════════════ */
+
+const $ = id => document.getElementById(id);
+const fmt = s => {
+  if (!isFinite(s)) return '0:00';
+  return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+};
+
+/* ── Estado global ─────────────────────────────────── */
+let G = { vid:'', vtt:'', ass:'', title:'', hlsMain:null, hlsThumb:null };
+const S = { current:null, blobUrl:null, rafId:null, octopus:null, trackReady:false };
+
+/* ── Detección de modo: ¿params en URL? ─────────────── */
+const QS   = new URLSearchParams(location.search);
+const QVID = QS.get('video');
 
 if (QVID) {
-  $('gen').style.display = 'none';
-  $('PV').classList.add('on');
-  startPlayer(QVID, QVTT, QASS, QTTL);
+  /* Modo player standalone (cuando está hosteado y se accede via URL directa) */
+  $('GEN').style.display = 'none';
+  G = { vid: QVID, vtt: QS.get('vtt')||'', ass: QS.get('ass')||'', title: QS.get('title')||'' };
+  openFullPlayer(true);
 } else {
+  /* Modo generador */
   $('BGEN').onclick = generate;
-  $('IV').onkeydown = e => { if(e.key==='Enter') generate(); };
+  $('IV').onkeydown = e => { if (e.key === 'Enter') generate(); };
 }
 
-/* ─── GENERADOR ─────────────────────────────────────────── */
+/* ── GENERADOR ─────────────────────────────────────── */
 function generate() {
   const vid = $('IV').value.trim();
-  if (!vid) { flash('IV','Ingresa la URL del stream .m3u8'); return; }
-  const vtt = $('IVTT').value.trim(), ass = $('IASS').value.trim(), ttl = $('ITTL').value.trim();
-  const base = location.origin + location.pathname;
-  const p    = new URLSearchParams({video:vid});
-  if(vtt) p.set('vtt',vtt); if(ass) p.set('ass',ass); if(ttl) p.set('title',ttl);
-  const url = `${base}?${p}`;
-  const ifr = `<iframe src="${url}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay;fullscreen" style="aspect-ratio:16/9;border:none;border-radius:8px;"></iframe>`;
-  $('UOUT').textContent = url;
-  $('IOUT').textContent = ifr;
-  $('PIF').src = url;
-  $('out').classList.add('on');
-  setTimeout(()=>$('out').scrollIntoView({behavior:'smooth',block:'start'}),80);
+  if (!vid) { flash('IV', 'Ingresa la URL del stream .m3u8'); return; }
+  G.vid   = vid;
+  G.vtt   = $('IVTT').value.trim();
+  G.ass   = $('IASS').value.trim();
+  G.title = $('ITTL').value.trim();
+
+  /* Mini preview con HLS real */
+  loadHLS($('PREV_VID'), G.vid, 'thumb');
+
+  /* Código embebible (útil cuando el archivo está hosteado) */
+  const base = location.href.split('?')[0];
+  const p = new URLSearchParams({ video: G.vid });
+  if (G.vtt)   p.set('vtt', G.vtt);
+  if (G.ass)   p.set('ass', G.ass);
+  if (G.title) p.set('title', G.title);
+  const ifrCode = `<iframe src="${base}?${p}" width="100%" height="100%"\n  frameborder="0" allowfullscreen allow="autoplay;fullscreen"\n  style="aspect-ratio:16/9;border:none;border-radius:8px;"></iframe>`;
+  $('IOUT').textContent = ifrCode;
+
+  $('PREV_WRAP').classList.add('on');
+  setTimeout(() => $('PREV_WRAP').scrollIntoView({ behavior:'smooth', block:'start' }), 80);
 }
 
 function flash(id, msg) {
-  const el=$( id); const ph=el.placeholder;
-  el.style.borderColor='var(--accent)'; el.style.boxShadow='0 0 0 3px var(--glow)'; el.placeholder=msg;
-  setTimeout(()=>{el.style.borderColor='';el.style.boxShadow='';el.placeholder=ph;},2500);
+  const el = $(id); const ph = el.placeholder;
+  el.style.borderColor = 'var(--accent)'; el.style.boxShadow = '0 0 0 3px var(--glow)';
+  el.placeholder = msg;
+  setTimeout(() => { el.style.borderColor=''; el.style.boxShadow=''; el.placeholder=ph; }, 2500);
 }
 
 function doCopy(btnId, codeId) {
   const txt = $(codeId).textContent;
-  navigator.clipboard.writeText(txt).catch(()=>{const t=document.createElement('textarea');t.value=txt;t.style='position:fixed;opacity:0';document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();});
-  const b=$(btnId); b.classList.add('ok'); b.textContent='✓ Copiado';
-  setTimeout(()=>{b.classList.remove('ok');b.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar';},2500);
+  navigator.clipboard.writeText(txt).catch(() => {
+    const t = document.createElement('textarea'); t.value=txt; t.style='position:fixed;opacity:0';
+    document.body.appendChild(t); t.select(); document.execCommand('copy'); t.remove();
+  });
+  const b = $(btnId); b.classList.add('ok'); b.textContent='✓ Copiado';
+  setTimeout(() => {
+    b.classList.remove('ok');
+    b.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copiar';
+  }, 2500);
 }
 
-/* ─── PLAYER ─────────────────────────────────────────────── */
-const _onReady=[]; function onReady(fn){_onReady.push(fn);}
+/* ── ABRIR / CERRAR PLAYER ──────────────────────────── */
+function openFullPlayer(standalone = false) {
+  /* Pausar mini preview */
+  if (!standalone) {
+    try { $('PREV_VID').pause(); } catch(e){}
+    if (G.hlsThumb) { try { G.hlsThumb.stopLoad(); } catch(e){} }
+  }
 
-function startPlayer(vidUrl, vttUrl, assUrl, title) {
+  const pv = $('PV');
+  pv.classList.add('on');
+  document.body.style.overflow = 'hidden';
+
   const video = $('vid');
-  $('PTB').textContent = title;
+  $('PTB').textContent = G.title;
   spin(true);
-  video.addEventListener('playing', ()=>spin(false));
-  video.addEventListener('waiting', ()=>spin(true));
-  video.addEventListener('canplay', ()=>spin(false));
-  video.addEventListener('error',   ()=>showErr('Error al cargar el stream.'));
-  loadHLS(video, vidUrl);
+
+  video.addEventListener('playing', () => spin(false), { once: false });
+  video.addEventListener('waiting', () => spin(true),  { once: false });
+  video.addEventListener('canplay', () => spin(false), { once: false });
+  video.addEventListener('error',   () => showErr('Error al cargar el stream.'), { once: false });
+
+  loadHLS(video, G.vid, 'main');
   buildControls(video);
-  initSubs(video, vttUrl, assUrl);
+  initSubs(video, G.vtt, G.ass);
   autoHide();
 }
 
-/* ─── HLS ─────────────────────────────────────────────────── */
-function loadHLS(video, url) {
+function closePlayer() {
+  $('PV').classList.remove('on');
+  document.body.style.overflow = '';
+  const video = $('vid');
+  video.pause();
+  if (G.hlsMain) { try { G.hlsMain.destroy(); } catch(e){} G.hlsMain = null; }
+  video.src = '';
+  killSubs(video);
+  /* Resetear UI */
+  $('ER').classList.remove('on');
+  spin(false);
+  $('PF').style.width = '0%'; $('PT').style.left = '0%';
+  $('TC').textContent = '0:00'; $('TDU').textContent = '0:00';
+}
+
+/* ── HLS ────────────────────────────────────────────── */
+function loadHLS(video, url, slot) {
+  /* Carga HLS.js dinámicamente si no está disponible */
+  if (typeof Hls === 'undefined') {
+    loadJS('https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js', () => _doLoadHLS(video, url, slot));
+  } else {
+    _doLoadHLS(video, url, slot);
+  }
+}
+
+function _doLoadHLS(video, url, slot) {
   if (Hls.isSupported()) {
-    const hls = new Hls({enableWorker:true});
-    hls.loadSource(url); hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, ()=>{ video.play().catch(()=>{}); _onReady.forEach(f=>f()); _onReady.length=0; });
-    hls.on(Hls.Events.ERROR, (_,d)=>{ if(d.fatal) showErr('Error HLS: '+d.type); });
+    const hls = new Hls({ enableWorker: true });
+    if (slot === 'main') G.hlsMain = hls;
+    else                 G.hlsThumb = hls;
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play().catch(() => {});
+    });
+    hls.on(Hls.Events.ERROR, (_, d) => {
+      if (d.fatal && slot === 'main') showErr('Error HLS: ' + d.type);
+    });
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src=url; video.addEventListener('loadedmetadata',()=>{ video.play().catch(()=>{}); _onReady.forEach(f=>f()); _onReady.length=0; });
-  } else { showErr('Tu navegador no soporta HLS.'); }
+    video.src = url;
+    video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
+  } else {
+    if (slot === 'main') showErr('Tu navegador no soporta HLS.');
+  }
 }
 
-/* ─── SUBTÍTULOS ─────────────────────────────────────────── */
-const S={current:null,blobUrl:null,rafId:null,octopus:null,trackReady:false};
-
+/* ── SUBTÍTULOS ─────────────────────────────────────── */
 function initSubs(video, vttUrl, assUrl) {
-  const items=[{id:'off',label:'Sin subtítulos'}];
-  if(vttUrl) items.push({id:'vtt',label:'Subtítulos (VTT)'});
-  if(assUrl) items.push({id:'ass',label:'Subtítulos (ASS)'});
-  buildSubMenu(items,video,vttUrl,assUrl);
-  if(!vttUrl && !assUrl) return;
-  if(vttUrl) prefetchVTT(video,vttUrl);    // descargar en paralelo
-  onReady(()=>{
-    const def = vttUrl?'vtt':'ass';
-    setSub(def,video,vttUrl,assUrl,items);
-  });
+  const items = [{ id:'off', label:'Sin subtítulos' }];
+  if (vttUrl) items.push({ id:'vtt', label:'Subtítulos (VTT)' });
+  if (assUrl) items.push({ id:'ass', label:'Subtítulos (ASS)' });
+  buildSubMenu(items, video, vttUrl, assUrl);
+  if (!vttUrl && !assUrl) return;
+  if (vttUrl) prefetchVTT(video, vttUrl);
+  /* Activar subtítulo por defecto en cuanto el video esté listo */
+  const defSub = vttUrl ? 'vtt' : 'ass';
+  const waitAndSet = () => {
+    if (video.readyState >= 1) setSub(defSub, video, vttUrl, assUrl, items);
+    else video.addEventListener('loadedmetadata', () => setSub(defSub, video, vttUrl, assUrl, items), { once:true });
+  };
+  waitAndSet();
 }
 
-/* Descarga VTT → Blob URL → <track hidden> */
 async function prefetchVTT(video, url) {
   try {
     const res  = await fetch(url);
-    if(!res.ok) throw new Error('HTTP '+res.status);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
-    // Quitar BOM unicode si existe
-    const clean = text.replace(/^\uFEFF/,'');
-    const blob  = new Blob([clean],{type:'text/vtt'});
+    const clean = text.replace(/^\uFEFF/, '');
+    const blob  = new Blob([clean], { type:'text/vtt' });
     S.blobUrl   = URL.createObjectURL(blob);
 
-    const track   = document.createElement('track');
-    track.kind    = 'subtitles';
-    track.src     = S.blobUrl;   // blob:// URL → mismo origen → sin bloqueo
-    track.srclang = 'und';
-    track.label   = 'Subtítulos';
-    track.default = false;
+    const track    = document.createElement('track');
+    track.kind     = 'subtitles';
+    track.src      = S.blobUrl;
+    track.srclang  = 'und';
+    track.label    = 'Subtítulos';
+    track.default  = false;
     video.appendChild(track);
 
-    // El track puede tardar un momento en cargar los cues
-    track.addEventListener('load', ()=>{
+    track.addEventListener('load', () => {
       S.trackReady = true;
-      console.log('[VTT] Blob track cargado, cues:', video.textTracks[0]?.cues?.length??0);
-      // Si el sub VTT ya estaba activo cuando el track terminó de cargar, arrancar loop
-      if(S.current==='vtt') startVttLoop(video);
+      if (S.current === 'vtt') startVttLoop(video);
     });
-    track.addEventListener('error', e=>console.warn('[VTT] track error',e));
-
   } catch(err) {
-    console.warn('[VTT] prefetch falló:',err);
+    console.warn('[VTT] prefetch falló:', err);
   }
 }
 
-function buildSubMenu(items,video,vttUrl,assUrl){
-  const menu=$('SM'); menu.innerHTML='<div class="smt">Subtítulos</div>';
-  items.forEach(item=>{
-    const d=document.createElement('div');
-    d.className='si'+(item.id==='off'?' act':''); d.dataset.id=item.id;
-    d.innerHTML=`<span class="dot"></span>${item.label}`;
-    d.onclick=()=>setSub(item.id,video,vttUrl,assUrl,items);
+function buildSubMenu(items, video, vttUrl, assUrl) {
+  const menu = $('SM');
+  menu.innerHTML = '<div class="smt">Subtítulos</div>';
+  items.forEach(item => {
+    const d = document.createElement('div');
+    d.className = 'si' + (item.id==='off' ? ' act' : '');
+    d.dataset.id = item.id;
+    d.innerHTML = `<span class="dot"></span>${item.label}`;
+    d.onclick = () => setSub(item.id, video, vttUrl, assUrl, items);
     menu.appendChild(d);
   });
-  if(items.length>1) $('BSB').style.display='';
+  if (items.length > 1) $('BSB').style.display = '';
 }
 
-function setSub(id,video,vttUrl,assUrl,items){
-  document.querySelectorAll('.si').forEach(el=>el.classList.toggle('act',el.dataset.id===id));
+function setSub(id, video, vttUrl, assUrl, items) {
+  document.querySelectorAll('.si').forEach(el => el.classList.toggle('act', el.dataset.id === id));
   killSubs(video);
-  S.current=id;
-  if(id==='vtt'&&vttUrl) enableVtt(video);
-  else if(id==='ass'&&assUrl) enableAss(video,assUrl);
+  S.current = id;
+  if (id === 'vtt' && vttUrl) enableVtt(video);
+  else if (id === 'ass' && assUrl) enableAss(video, assUrl);
   $('SM').classList.remove('on');
 }
 
-function killSubs(video){
-  if(S.rafId){cancelAnimationFrame(S.rafId);S.rafId=null;}
-  $('SL').innerHTML='';
-  for(const t of video.textTracks) t.mode='disabled';
-  if(S.octopus){try{S.octopus.freeTrack();}catch(e){} S.octopus=null;}
-  $('OL').innerHTML='';
+function killSubs(video) {
+  if (S.rafId) { cancelAnimationFrame(S.rafId); S.rafId = null; }
+  $('SL').innerHTML = '';
+  for (const t of video.textTracks) t.mode = 'disabled';
+  if (S.octopus) { try { S.octopus.freeTrack(); } catch(e){} S.octopus = null; }
+  $('OL').innerHTML = '';
 }
 
-/* VTT: activar track en modo 'hidden' + iniciar loop de renderizado */
-function enableVtt(video){
-  // Poner todos los tracks en 'hidden': carga cues sin renderizar texto nativo
-  for(const t of video.textTracks){
-    if(t.kind==='subtitles'||t.kind==='captions') t.mode='hidden';
+function enableVtt(video) {
+  for (const t of video.textTracks) {
+    if (t.kind === 'subtitles' || t.kind === 'captions') t.mode = 'hidden';
   }
-  if(S.trackReady){
-    startVttLoop(video);
-  }
-  // Si el track aún no terminó de cargar, el listener 'load' arrancará el loop
+  if (S.trackReady) startVttLoop(video);
 }
 
-function startVttLoop(video){
-  if(S.current!=='vtt') return;
-  const layer=$('SL');
-  let lastHtml='';
-  function tick(){
-    if(S.current!=='vtt') return;
-    const track=video.textTracks[0];
-    let html='';
-    if(track && track.activeCues && track.activeCues.length){
-      html=Array.from(track.activeCues).map(cue=>{
-        let txt='';
-        // getCueAsHTML() convierte tags VTT a HTML estándar de forma fiable
-        if(typeof cue.getCueAsHTML==='function'){
-          const frag=cue.getCueAsHTML();
-          const tmp=document.createElement('div');
+function startVttLoop(video) {
+  if (S.current !== 'vtt') return;
+  const layer = $('SL');
+  let lastHtml = '';
+  function tick() {
+    if (S.current !== 'vtt') return;
+    const track = video.textTracks[0];
+    let html = '';
+    if (track && track.activeCues && track.activeCues.length) {
+      html = Array.from(track.activeCues).map(cue => {
+        let txt = '';
+        if (typeof cue.getCueAsHTML === 'function') {
+          const frag = cue.getCueAsHTML();
+          const tmp  = document.createElement('div');
           tmp.appendChild(frag);
-          txt=tmp.innerHTML;
+          txt = tmp.innerHTML;
         } else {
-          txt=cue.text.replace(/\n/g,'<br>');
+          txt = cue.text.replace(/\n/g, '<br>');
         }
-        // Limpiar tags de posición/color que el browser puede haber dejado
-        txt=txt.replace(/<\d+:\d+:\d+\.\d+>/g,'').replace(/<c\.[^>]+>/g,'').replace(/<\/c>/g,'');
+        txt = txt.replace(/<\d+:\d+:\d+\.\d+>/g,'').replace(/<c\.[^>]+>/g,'').replace(/<\/c>/g,'');
         return txt.trim() ? `<p>${txt}</p>` : '';
       }).join('');
     }
-    if(html!==lastHtml){ layer.innerHTML=html; lastHtml=html; }
-    S.rafId=requestAnimationFrame(tick);
+    if (html !== lastHtml) { layer.innerHTML = html; lastHtml = html; }
+    S.rafId = requestAnimationFrame(tick);
   }
-  S.rafId=requestAnimationFrame(tick);
+  S.rafId = requestAnimationFrame(tick);
 }
 
-/* ASS: SubtitlesOctopus lazy */
-function enableAss(video,assUrl){
-  if(typeof SubtitlesOctopus==='undefined'){
+function enableAss(video, assUrl) {
+  if (typeof SubtitlesOctopus === 'undefined') {
     loadJS('https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js',
-      ()=>createOctopus(video,assUrl));
-  } else createOctopus(video,assUrl);
+      () => createOctopus(video, assUrl));
+  } else {
+    createOctopus(video, assUrl);
+  }
 }
-function createOctopus(video,assUrl){
-  const wrap=$('OL'); wrap.innerHTML='';
-  const canvas=document.createElement('canvas'); wrap.appendChild(canvas);
-  try{
-    S.octopus=new SubtitlesOctopus({
-      video,subUrl:assUrl,canvas,
+
+function createOctopus(video, assUrl) {
+  const wrap = $('OL'); wrap.innerHTML = '';
+  const canvas = document.createElement('canvas'); wrap.appendChild(canvas);
+  try {
+    S.octopus = new SubtitlesOctopus({
+      video, subUrl: assUrl, canvas,
       workerUrl:'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
       legacyWorkerUrl:'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker-legacy.js',
-      onReady:()=>console.log('[ASS] Octopus listo'),
     });
-  }catch(e){console.warn('[ASS]',e);}
+  } catch(e) { console.warn('[ASS]', e); }
 }
 
-/* ─── CONTROLES ──────────────────────────────────────────── */
-function buildControls(video){
+/* ── CONTROLES ──────────────────────────────────────── */
+function buildControls(video) {
   const prog=$('PB'),fill=$('PF'),thumb=$('PT'),tc=$('TC'),tdu=$('TDU'),tip=$('TT'),vs=$('VS');
 
-  const play=()=>{video.paused?video.play():video.pause();};
-  $('BPL').onclick=play; video.onclick=play; video.ondblclick=toggleFS;
-  video.addEventListener('play', ()=>{$('IPL').style.display='none';$('IPA').style.display='';});
-  video.addEventListener('pause',()=>{$('IPL').style.display='';$('IPA').style.display='none';});
+  const play = () => { video.paused ? video.play() : video.pause(); };
+  $('BPL').onclick = play;
+  video.onclick    = play;
+  video.ondblclick = toggleFS;
 
-  vs.oninput=()=>{video.volume=+vs.value;video.muted=video.volume===0;updVol();};
-  $('BMU').onclick=()=>{video.muted=!video.muted;if(!video.muted&&video.volume===0)video.volume=.5;vs.value=video.muted?0:video.volume;updVol();};
-  function updVol(){const m=video.muted||video.volume===0;$('IVL').style.display=m?'none':'';$('IMU').style.display=m?'':'none';}
+  video.addEventListener('play',  () => { $('IPL').style.display='none'; $('IPA').style.display=''; });
+  video.addEventListener('pause', () => { $('IPL').style.display=''; $('IPA').style.display='none'; });
 
-  video.ontimeupdate=()=>{if(!video.duration)return;const p=video.currentTime/video.duration*100;fill.style.width=p+'%';thumb.style.left=p+'%';tc.textContent=fmt(video.currentTime);};
-  video.onloadedmetadata=()=>tdu.textContent=fmt(video.duration);
+  vs.oninput = () => { video.volume=+vs.value; video.muted=video.volume===0; updVol(); };
+  $('BMU').onclick = () => {
+    video.muted = !video.muted;
+    if (!video.muted && video.volume===0) video.volume=.5;
+    vs.value = video.muted ? 0 : video.volume;
+    updVol();
+  };
+  function updVol() {
+    const m = video.muted || video.volume===0;
+    $('IVL').style.display=m?'none':''; $('IMU').style.display=m?'':'none';
+  }
 
-  let drag=false;
-  const seek=e=>{const r=prog.getBoundingClientRect(),p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));if(video.duration)video.currentTime=p*video.duration;fill.style.width=p*100+'%';thumb.style.left=p*100+'%';};
-  prog.onmousedown=e=>{drag=true;seek(e);};
-  document.onmousemove=e=>{if(drag)seek(e);};
-  document.onmouseup=()=>drag=false;
-  prog.onmousemove=e=>{if(!video.duration)return;const r=prog.getBoundingClientRect(),p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));tip.style.display='block';tip.style.left=p*100+'%';tip.textContent=fmt(p*video.duration);};
-  prog.onmouseleave=()=>tip.style.display='none';
-  prog.addEventListener('touchstart',e=>{drag=true;const r=prog.getBoundingClientRect(),t=e.touches[0],p=Math.max(0,Math.min(1,(t.clientX-r.left)/r.width));if(video.duration)video.currentTime=p*video.duration;},{passive:true});
-  document.addEventListener('touchmove',e=>{if(!drag)return;const r=prog.getBoundingClientRect(),t=e.touches[0],p=Math.max(0,Math.min(1,(t.clientX-r.left)/r.width));if(video.duration)video.currentTime=p*video.duration;fill.style.width=p*100+'%';thumb.style.left=p*100+'%';},{passive:true});
-  document.addEventListener('touchend',()=>drag=false);
+  video.ontimeupdate = () => {
+    if (!video.duration) return;
+    const p = video.currentTime / video.duration * 100;
+    fill.style.width=p+'%'; thumb.style.left=p+'%';
+    tc.textContent = fmt(video.currentTime);
+  };
+  video.onloadedmetadata = () => tdu.textContent = fmt(video.duration);
 
-  $('BFS').onclick=toggleFS;
-  function toggleFS(){!document.fullscreenElement?$('PV').requestFullscreen():document.exitFullscreen();}
-  document.addEventListener('fullscreenchange',()=>{const f=!!document.fullscreenElement;$('IFS').style.display=f?'none':'';$('IEF').style.display=f?'':'none';});
+  let drag = false;
+  const seek = e => {
+    const r=prog.getBoundingClientRect(), p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+    if (video.duration) video.currentTime = p * video.duration;
+    fill.style.width=p*100+'%'; thumb.style.left=p*100+'%';
+  };
+  prog.onmousedown = e => { drag=true; seek(e); };
+  document.onmousemove = e => { if(drag) seek(e); };
+  document.onmouseup   = () => drag=false;
+  prog.onmousemove = e => {
+    if (!video.duration) return;
+    const r=prog.getBoundingClientRect(), p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+    tip.style.display='block'; tip.style.left=p*100+'%'; tip.textContent=fmt(p*video.duration);
+  };
+  prog.onmouseleave = () => tip.style.display='none';
 
-  $('BSB').onclick=e=>{e.stopPropagation();$('SM').classList.toggle('on');};
-  document.addEventListener('click',()=>$('SM').classList.remove('on'));
+  prog.addEventListener('touchstart', e => {
+    drag=true;
+    const r=prog.getBoundingClientRect(),t=e.touches[0],p=Math.max(0,Math.min(1,(t.clientX-r.left)/r.width));
+    if (video.duration) video.currentTime=p*video.duration;
+  }, {passive:true});
+  document.addEventListener('touchmove', e => {
+    if (!drag) return;
+    const r=prog.getBoundingClientRect(),t=e.touches[0],p=Math.max(0,Math.min(1,(t.clientX-r.left)/r.width));
+    if (video.duration) video.currentTime=p*video.duration;
+    fill.style.width=p*100+'%'; thumb.style.left=p*100+'%';
+  }, {passive:true});
+  document.addEventListener('touchend', () => drag=false);
 
-  document.addEventListener('keydown',e=>{
-    if(e.target.tagName==='INPUT')return;
-    if(e.code==='Space'){e.preventDefault();play();}
-    if(e.code==='ArrowRight')video.currentTime=Math.min(video.duration,video.currentTime+10);
-    if(e.code==='ArrowLeft') video.currentTime=Math.max(0,video.currentTime-10);
-    if(e.code==='ArrowUp')  {video.volume=Math.min(1,video.volume+.1);vs.value=video.volume;updVol();}
-    if(e.code==='ArrowDown'){video.volume=Math.max(0,video.volume-.1);vs.value=video.volume;updVol();}
-    if(e.code==='KeyF')toggleFS();
-    if(e.code==='KeyM')$('BMU').click();
+  $('BFS').onclick = toggleFS;
+  function toggleFS() {
+    !document.fullscreenElement ? $('PV').requestFullscreen() : document.exitFullscreen();
+  }
+  document.addEventListener('fullscreenchange', () => {
+    const f = !!document.fullscreenElement;
+    $('IFS').style.display=f?'none':''; $('IEF').style.display=f?'':'none';
+  });
+
+  $('BSB').onclick = e => { e.stopPropagation(); $('SM').classList.toggle('on'); };
+  document.addEventListener('click', () => $('SM').classList.remove('on'));
+
+  document.addEventListener('keydown', e => {
+    if (!$('PV').classList.contains('on')) return;
+    if (e.target.tagName==='INPUT') return;
+    if (e.code==='Space')      { e.preventDefault(); play(); }
+    if (e.code==='ArrowRight') video.currentTime=Math.min(video.duration,video.currentTime+10);
+    if (e.code==='ArrowLeft')  video.currentTime=Math.max(0,video.currentTime-10);
+    if (e.code==='ArrowUp')    { video.volume=Math.min(1,video.volume+.1); vs.value=video.volume; updVol(); }
+    if (e.code==='ArrowDown')  { video.volume=Math.max(0,video.volume-.1); vs.value=video.volume; updVol(); }
+    if (e.code==='KeyF')  toggleFS();
+    if (e.code==='KeyM')  $('BMU').click();
+    if (e.code==='Escape') closePlayer();
   });
 }
 
-function autoHide(){
-  const ctrl=$('CT'),ptb=$('PTB'),pv=$('PV'); let timer;
-  const show=()=>{ctrl.classList.remove('hide');ptb.style.opacity='1';pv.style.cursor='';clearTimeout(timer);timer=setTimeout(hide,3200);};
-  const hide=()=>{ctrl.classList.add('hide');ptb.style.opacity='0';pv.style.cursor='none';};
-  pv.addEventListener('mousemove',show);
-  pv.addEventListener('touchstart',show,{passive:true});
-  pv.addEventListener('mouseleave',hide);
+function autoHide() {
+  const ctrl=$('CT'), ptb=$('PTB'), pv=$('PV'); let timer;
+  const show = () => {
+    ctrl.classList.remove('hide'); ptb.style.opacity='1';
+    $('BCLOSE').style.opacity='1'; pv.style.cursor='';
+    clearTimeout(timer); timer=setTimeout(hide, 3200);
+  };
+  const hide = () => {
+    ctrl.classList.add('hide'); ptb.style.opacity='0';
+    $('BCLOSE').style.opacity='0'; pv.style.cursor='none';
+  };
+  pv.addEventListener('mousemove', show);
+  pv.addEventListener('touchstart', show, {passive:true});
+  pv.addEventListener('mouseleave', hide);
   show();
 }
 
-const spin   = on => $('SP').classList.toggle('on',on);
-const showErr= msg=>{ spin(false); $('EM').textContent=msg; $('ER').classList.add('on'); };
-const loadJS = (src,cb)=>{ const s=document.createElement('script');s.src=src;s.onload=cb;document.head.appendChild(s); };
+const spin    = on  => $('SP').classList.toggle('on', on);
+const showErr = msg => { spin(false); $('EM').textContent=msg; $('ER').classList.add('on'); };
+const loadJS  = (src, cb) => { const s=document.createElement('script'); s.src=src; s.onload=cb; document.head.appendChild(s); };
 </script>
 </body>
 </html>

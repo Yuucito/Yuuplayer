@@ -506,6 +506,21 @@
     }
     .sub-item.active .dot { opacity: 1; }
 
+    /* Quality menu */
+    #quality-menu {
+      position: absolute;
+      bottom: 56px; right: 120px;
+      background: rgba(12,15,20,.96);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-width: 150px;
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 12px 40px rgba(0,0,0,.6);
+      z-index: 40;
+    }
+    #quality-menu.open { display: block; }
+
     /* Overlay de SubtitlesOctopus */
     #octopus-wrap {
       position: absolute;
@@ -691,7 +706,7 @@
   <div id="player-title-bar" id="ptitle"></div>
 
   <!-- Video element -->
-  <video id="main-video" playsinline preload="metadata" crossorigin="anonymous"></video>
+  <video id="main-video" playsinline preload="metadata"></video>
 
   <!-- Contenedor para SubtitlesOctopus (.ass) -->
   <div id="octopus-wrap"></div>
@@ -712,7 +727,7 @@
   <div id="controls">
 
     <!-- Barra de progreso -->
-    <div id="progress-wrap">
+    <div id="progress-wrap" id="progress-wrap">
       <div id="progress-fill"></div>
       <div id="progress-thumb"></div>
     </div>
@@ -739,6 +754,11 @@
 
       <div class="ctrl-row-right">
 
+        <!-- Calidad -->
+        <button class="ctrl-btn" id="btn-quality" title="Calidad" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+        </button>
+
         <!-- Subtítulos -->
         <button class="ctrl-btn" id="btn-subs" title="Subtítulos">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M7 13h4"/><path d="M15 13h2"/><path d="M7 17h2"/><path d="M13 17h4"/></svg>
@@ -760,6 +780,12 @@
     <!-- Items se generan dinámicamente -->
   </div>
 
+  <!-- Menú de calidad -->
+  <div id="quality-menu">
+    <div class="sub-menu-title">Calidad</div>
+    <!-- Items se generan dinámicamente -->
+  </div>
+
 </div><!-- /player-view -->
 
 
@@ -768,7 +794,7 @@
    StreamForge — Lógica principal
 ══════════════════════════════════════════════════════════════ */
 
-/* ── 1. LECTURA DE PARÁMETROS ── */
+/* ── 1. PARÁMETROS URL ── */
 const params  = new URLSearchParams(window.location.search);
 const P_VIDEO = params.get('video');
 const P_VTT   = params.get('vtt');
@@ -783,7 +809,7 @@ if (P_VIDEO) {
   initGenerator();
 }
 
-/* ── 2. MODO GENERADOR ── */
+/* ── 2. GENERADOR ── */
 function initGenerator() {
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('inp-video').addEventListener('keydown', e => {
@@ -794,23 +820,18 @@ function initGenerator() {
 function handleGenerate() {
   const videoUrl = document.getElementById('inp-video').value.trim();
   if (!videoUrl) { showInputError('inp-video', 'Ingresa la URL del stream .m3u8'); return; }
-
   const vttUrl = document.getElementById('inp-vtt').value.trim();
   const assUrl = document.getElementById('inp-ass').value.trim();
   const title  = document.getElementById('inp-title').value.trim();
-
-  const base = window.location.origin + window.location.pathname;
-  const qp   = new URLSearchParams({ video: videoUrl });
-  if (vttUrl)  qp.set('vtt',   vttUrl);
-  if (assUrl)  qp.set('ass',   assUrl);
-  if (title)   qp.set('title', title);
-
+  const base   = window.location.origin + window.location.pathname;
+  const qp     = new URLSearchParams({ video: videoUrl });
+  if (vttUrl) qp.set('vtt',   vttUrl);
+  if (assUrl) qp.set('ass',   assUrl);
+  if (title)  qp.set('title', title);
   const playerUrl  = `${base}?${qp.toString()}`;
   const iframeCode = `<iframe src="${playerUrl}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; fullscreen" style="aspect-ratio:16/9;border:none;border-radius:8px;"></iframe>`;
-
   document.getElementById('url-code').textContent    = playerUrl;
   document.getElementById('iframe-code').textContent = iframeCode;
-
   const out = document.getElementById('output-section');
   out.classList.add('visible');
   renderInlinePreview(videoUrl, vttUrl, assUrl, title);
@@ -842,15 +863,13 @@ function renderInlinePreview(videoUrl, vttUrl, assUrl, title) {
   wrap.appendChild(iframe);
 }
 
-/* ── 3. MODO REPRODUCTOR ── */
+/* ── 3. REPRODUCTOR ── */
 function initPlayer(videoUrl, vttUrl, assUrl, title) {
   document.getElementById('player-view').classList.add('active');
   document.getElementById('player-title-bar').textContent = title || '';
-
   const video = document.getElementById('main-video');
   showSpinner(true);
 
-  // HLS: devuelve la instancia para leer subtitleTracks después
   const hlsInstance = loadHLS(video, videoUrl);
 
   video.addEventListener('playing', () => showSpinner(false));
@@ -858,11 +877,9 @@ function initPlayer(videoUrl, vttUrl, assUrl, title) {
   video.addEventListener('canplay', () => showSpinner(false));
   video.addEventListener('error',   () => showError('Error al cargar el stream. Verifica la URL y los permisos CORS.'));
 
-  initControls(video);
-
-  // setupSubtitles necesita la instancia HLS para leer pistas embebidas
+  initControls(video, hlsInstance);
   setupSubtitles(video, vttUrl, assUrl, hlsInstance);
-
+  setupQuality(hlsInstance);
   setupControlsAutoHide();
   setupTitleAutoHide(document.getElementById('player-title-bar'));
 }
@@ -883,7 +900,7 @@ function loadHLS(video, url) {
     hls.on(Hls.Events.ERROR, (_, data) => {
       if (data.fatal) showError(`Error HLS: ${data.type}`);
     });
-    return hls; // devolver para leer subtitleTracks
+    return hls;
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = url;
     video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
@@ -894,37 +911,120 @@ function loadHLS(video, url) {
   }
 }
 
-/* ── 5. SUBTÍTULOS ── */
+/* ── 5. CALIDAD ── */
+function setupQuality(hls) {
+  if (!hls) return;
+  const btn  = document.getElementById('btn-quality');
+  const menu = document.getElementById('quality-menu');
+
+  function buildQualityMenu() {
+    const levels = hls.levels || [];
+    if (levels.length <= 1) return; // sin opciones → no mostrar botón
+
+    btn.style.display = '';
+    menu.innerHTML = '<div class="sub-menu-title">Calidad</div>';
+
+    // Opción Auto
+    const autoDiv = document.createElement('div');
+    autoDiv.className  = 'sub-item active';
+    autoDiv.dataset.lvl = '-1';
+    autoDiv.innerHTML  = '<span class="dot"></span>Auto';
+    autoDiv.addEventListener('click', e => { e.stopPropagation(); setQuality(-1, menu); });
+    menu.appendChild(autoDiv);
+
+    // Una opción por nivel, de mayor a menor resolución
+    [...levels]
+      .map((l, i) => ({ ...l, idx: i }))
+      .sort((a, b) => (b.height || b.bitrate) - (a.height || a.bitrate))
+      .forEach(l => {
+        const div = document.createElement('div');
+        div.className   = 'sub-item';
+        div.dataset.lvl = l.idx;
+        const label = l.height ? `${l.height}p` : `${Math.round(l.bitrate / 1000)} kbps`;
+        div.innerHTML = `<span class="dot"></span>${label}`;
+        div.addEventListener('click', e => { e.stopPropagation(); setQuality(l.idx, menu); });
+        menu.appendChild(div);
+      });
+
+    // Actualizar dot cuando HLS cambia de nivel automáticamente
+    hls.on(Hls.Events.LEVEL_SWITCHED, (_, data) => {
+      if (hls.autoLevelEnabled) {
+        // En modo auto, resaltar el nivel activo con etiqueta distinta
+        menu.querySelectorAll('.sub-item').forEach(el => {
+          const isAuto = el.dataset.lvl === '-1';
+          el.classList.toggle('active', isAuto);
+          if (isAuto) {
+            const lvl = hls.levels[data.level];
+            const tag = lvl && lvl.height ? ` (${lvl.height}p)` : '';
+            el.innerHTML = `<span class="dot"></span>Auto${tag}`;
+          }
+        });
+      }
+    });
+  }
+
+  // Intentar construir inmediatamente (si MANIFEST ya se parseó)
+  if ((hls.levels || []).length > 0) {
+    buildQualityMenu();
+  } else {
+    hls.on(Hls.Events.MANIFEST_PARSED, buildQualityMenu);
+  }
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    // Cerrar menú de subs si está abierto
+    document.getElementById('sub-menu').classList.remove('open');
+    menu.classList.toggle('open');
+  });
+  document.addEventListener('click', () => menu.classList.remove('open'));
+}
+
+function setQuality(levelIdx, menu) {
+  const hls = window._hlsInstance; // guardado en initControls
+  if (!hls) return;
+
+  if (levelIdx === -1) {
+    hls.currentLevel    = -1; // -1 = auto
+    hls.autoLevelEnabled = true;
+  } else {
+    hls.autoLevelEnabled = false;
+    hls.currentLevel    = levelIdx;
+  }
+
+  menu.querySelectorAll('.sub-item').forEach(el => {
+    const match = parseInt(el.dataset.lvl, 10) === levelIdx;
+    el.classList.toggle('active', match);
+    // Restaurar label de Auto si se cambió
+    if (el.dataset.lvl === '-1' && levelIdx !== -1) {
+      el.innerHTML = '<span class="dot"></span>Auto';
+    }
+  });
+  menu.classList.remove('open');
+}
+
+/* ── 6. SUBTÍTULOS ── */
 const SubState = { current: null, octopus: null };
 
 function setupSubtitles(video, vttUrl, assUrl, hlsInstance) {
   const subMenu = document.getElementById('sub-menu');
   const items   = [{ id: 'off', label: 'Sin subtítulos' }];
 
-  // Pista VTT externa
   if (vttUrl) {
     addVttTrack(video, vttUrl, 'ext', 'Subtítulos (VTT)');
     items.push({ id: 'vtt:ext', label: 'Subtítulos (VTT)' });
   }
 
-  // Pistas embebidas en el .m3u8 — se leen cuando HLS.js ya parseó el manifiesto
   if (hlsInstance) {
     const applyHlsSubs = () => {
       const tracks = hlsInstance.subtitleTracks || [];
       tracks.forEach((t, i) => {
-        const trackId = `hls:${i}`;
-        const label   = t.name || t.lang || `Pista ${i + 1}`;
-        // Añadir <track> nativo ligado a HLS.js
-        items.push({ id: trackId, label: `${label} (M3U8)` });
+        items.push({ id: `hls:${i}`, label: `${t.name || t.lang || 'Pista ' + (i+1)} (M3U8)` });
       });
-      // Si hay pistas HLS, reconstruir menú ahora
       if (tracks.length > 0) {
         buildSubMenu(subMenu, items, video, vttUrl, assUrl, hlsInstance);
         document.getElementById('btn-subs').style.display = '';
       }
     };
-
-    // MANIFEST_PARSED puede ya haber disparado; verificar inmediatamente
     if ((hlsInstance.subtitleTracks || []).length > 0) {
       applyHlsSubs();
     } else {
@@ -932,21 +1032,13 @@ function setupSubtitles(video, vttUrl, assUrl, hlsInstance) {
     }
   }
 
-  // Pista ASS externa
-  if (assUrl) {
-    items.push({ id: 'ass', label: 'Subtítulos (ASS)' });
-  }
+  if (assUrl) items.push({ id: 'ass', label: 'Subtítulos (ASS)' });
 
   buildSubMenu(subMenu, items, video, vttUrl, assUrl, hlsInstance);
-
-  if (!vttUrl && !assUrl) {
-    // El botón se mostrará si hay pistas HLS; ocultarlo provisionalmente
-    document.getElementById('btn-subs').style.display = 'none';
-  }
+  if (!vttUrl && !assUrl) document.getElementById('btn-subs').style.display = 'none';
 }
 
 function addVttTrack(video, src, id, label) {
-  // Eliminar track anterior con mismo id si existe
   [...video.querySelectorAll('track')].forEach(t => { if (t.dataset.tid === id) t.remove(); });
   const track = document.createElement('track');
   track.kind    = 'subtitles';
@@ -975,84 +1067,66 @@ function buildSubMenu(menu, items, video, vttUrl, assUrl, hlsInstance) {
 }
 
 function selectSubtitle(id, video, vttUrl, assUrl, menu, hlsInstance) {
-  menu.querySelectorAll('.sub-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.id === id);
-  });
+  menu.querySelectorAll('.sub-item').forEach(el => el.classList.toggle('active', el.dataset.id === id));
   disableAllSubs(video, hlsInstance);
   SubState.current = id;
-
-  if (id === 'vtt:ext' && vttUrl) {
-    enableVttSub(video, 'ext');
-  } else if (id.startsWith('hls:')) {
+  if (id === 'vtt:ext' && vttUrl) enableVttSub(video, 'ext');
+  else if (id.startsWith('hls:')) {
     const idx = parseInt(id.split(':')[1], 10);
-    if (hlsInstance) {
-      hlsInstance.subtitleTrack = idx;
-    }
-  } else if (id === 'ass' && assUrl) {
-    enableAssSub(video, assUrl);
-  }
-
+    if (hlsInstance) hlsInstance.subtitleTrack = idx;
+  } else if (id === 'ass' && assUrl) enableAssSub(video, assUrl);
   menu.classList.remove('open');
 }
 
 function disableAllSubs(video, hlsInstance) {
-  for (const track of video.textTracks) track.mode = 'disabled';
+  for (const t of video.textTracks) t.mode = 'disabled';
   if (hlsInstance) hlsInstance.subtitleTrack = -1;
-  if (SubState.octopus) {
-    try { SubState.octopus.freeTrack(); } catch(e) {}
-    SubState.octopus = null;
-  }
-  const wrap = document.getElementById('octopus-wrap');
-  wrap.innerHTML = '';
+  if (SubState.octopus) { try { SubState.octopus.freeTrack(); } catch(e) {} SubState.octopus = null; }
+  document.getElementById('octopus-wrap').innerHTML = '';
 }
 
 function enableVttSub(video, tid) {
-  for (const track of video.textTracks) {
-    // Activar solo el track con el data-tid correcto
-    const el = [...video.querySelectorAll('track')].find(t => t.dataset.tid === tid);
-    if (el && track.label === el.label) {
-      track.mode = 'showing';
-    }
+  const el = [...video.querySelectorAll('track')].find(t => t.dataset.tid === tid);
+  if (!el) return;
+  for (const t of video.textTracks) {
+    if (t.label === el.label) t.mode = 'showing';
   }
 }
 
 function enableAssSub(video, assUrl) {
   if (typeof SubtitlesOctopus === 'undefined') {
-    loadScript('https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js', () => {
-      createOctopusInstance(video, assUrl);
-    });
+    loadScript('https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js', () => createOctopusInstance(video, assUrl));
   } else {
     createOctopusInstance(video, assUrl);
   }
 }
 
 function createOctopusInstance(video, assUrl) {
-  const wrap = document.getElementById('octopus-wrap');
+  const wrap   = document.getElementById('octopus-wrap');
   wrap.innerHTML = '';
   const canvas = document.createElement('canvas');
   wrap.appendChild(canvas);
   try {
     SubState.octopus = new SubtitlesOctopus({
-      video,
-      subUrl:  assUrl,
-      canvas,
-      fonts:   [],
+      video, subUrl: assUrl, canvas, fonts: [],
       workerUrl:       'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
       legacyWorkerUrl: 'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker-legacy.js',
       renderMode: 'wasm',
-      onReady: () => console.log('[ASS] SubtitlesOctopus listo'),
+      onReady: () => console.log('[ASS] listo'),
     });
-  } catch (err) {
-    console.warn('[ASS] Error iniciando SubtitlesOctopus:', err);
-  }
+  } catch (err) { console.warn('[ASS] Error:', err); }
 }
 
-/* ── 6. CONTROLES ── */
-function initControls(video) {
+/* ── 7. CONTROLES ── */
+function initControls(video, hlsInstance) {
+  // Guardar instancia HLS globalmente para setQuality
+  window._hlsInstance = hlsInstance;
+
   const btnPlay       = document.getElementById('btn-play');
   const btnMute       = document.getElementById('btn-mute');
   const btnFs         = document.getElementById('btn-fs');
   const btnSubs       = document.getElementById('btn-subs');
+  const btnQuality    = document.getElementById('btn-quality');
   const volSlider     = document.getElementById('vol-slider');
   const progressWrap  = document.getElementById('progress-wrap');
   const progressFill  = document.getElementById('progress-fill');
@@ -1061,13 +1135,14 @@ function initControls(video) {
   const timeTotal     = document.getElementById('time-total');
   const timeTooltip   = document.getElementById('time-tooltip');
   const subMenu       = document.getElementById('sub-menu');
+  const qualityMenu   = document.getElementById('quality-menu');
   const playerView    = document.getElementById('player-view');
 
-  /* Play / Pause */
+  /* Play/Pause */
   function togglePlay() { video.paused ? video.play() : video.pause(); }
-  function setPlayIcon(playing) {
-    document.getElementById('icon-play').style.display  = playing ? 'none' : '';
-    document.getElementById('icon-pause').style.display = playing ? '' : 'none';
+  function setPlayIcon(p) {
+    document.getElementById('icon-play').style.display  = p ? 'none' : '';
+    document.getElementById('icon-pause').style.display = p ? '' : 'none';
   }
   btnPlay.addEventListener('click', e => { e.stopPropagation(); togglePlay(); });
   video.addEventListener('click', togglePlay);
@@ -1115,7 +1190,6 @@ function initControls(video) {
   progressWrap.addEventListener('mousedown', e => { e.stopPropagation(); isDragging = true; seekFromX(e.clientX); });
   document.addEventListener('mousemove', e => { if (isDragging) seekFromX(e.clientX); });
   document.addEventListener('mouseup',   () => { isDragging = false; });
-
   progressWrap.addEventListener('mousemove', e => {
     if (!video.duration) return;
     const rect = progressWrap.getBoundingClientRect();
@@ -1125,8 +1199,6 @@ function initControls(video) {
     timeTooltip.textContent   = formatTime(pct * video.duration);
   });
   progressWrap.addEventListener('mouseleave', () => { timeTooltip.style.display = 'none'; });
-
-  // Touch seek
   progressWrap.addEventListener('touchstart', e => { isDragging = true; seekFromX(e.touches[0].clientX); }, { passive: true });
   document.addEventListener('touchmove', e => { if (isDragging) seekFromX(e.touches[0].clientX); }, { passive: true });
   document.addEventListener('touchend', () => { isDragging = false; });
@@ -1149,12 +1221,21 @@ function initControls(video) {
   document.addEventListener('fullscreenchange', updateFsIcon);
   document.addEventListener('webkitfullscreenchange', updateFsIcon);
 
-  /* Menú de subs */
+  /* Menús — cerrar el otro al abrir uno */
   btnSubs.addEventListener('click', e => {
     e.stopPropagation();
+    qualityMenu.classList.remove('open');
     subMenu.classList.toggle('open');
   });
-  document.addEventListener('click', () => subMenu.classList.remove('open'));
+  btnQuality.addEventListener('click', e => {
+    e.stopPropagation();
+    subMenu.classList.remove('open');
+    qualityMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', () => {
+    subMenu.classList.remove('open');
+    qualityMenu.classList.remove('open');
+  });
 
   /* Teclado */
   document.addEventListener('keydown', e => {
@@ -1173,20 +1254,22 @@ function initControls(video) {
 function setupControlsAutoHide() {
   const controls = document.getElementById('controls');
   const player   = document.getElementById('player-view');
-  let timer;
-  let mouseInControls = false;
+  let timer, mouseInControls = false;
 
   function show() {
     controls.classList.remove('hidden');
     player.style.cursor = '';
     clearTimeout(timer);
-    // No ocultar si el ratón está sobre los controles o el menú abierto
-    if (!mouseInControls) {
-      timer = setTimeout(hide, 3000);
-    }
+    if (!mouseInControls) timer = setTimeout(hide, 3000);
   }
   function hide() {
     if (mouseInControls) return;
+    // No ocultar si algún menú está abierto
+    if (document.getElementById('sub-menu').classList.contains('open') ||
+        document.getElementById('quality-menu').classList.contains('open')) {
+      timer = setTimeout(hide, 3000);
+      return;
+    }
     controls.classList.add('hidden');
     player.style.cursor = 'none';
   }
@@ -1195,11 +1278,9 @@ function setupControlsAutoHide() {
   player.addEventListener('touchstart', show, { passive: true });
   player.addEventListener('mouseleave', () => { clearTimeout(timer); hide(); });
 
-  // Mantener visibles si el cursor está sobre los controles
   controls.addEventListener('mouseenter', () => { mouseInControls = true; clearTimeout(timer); controls.classList.remove('hidden'); player.style.cursor = ''; });
-  controls.addEventListener('mouseleave', () => { mouseInControls = false; clearTimeout(timer); timer = setTimeout(hide, 3000); });
+  controls.addEventListener('mouseleave', () => { mouseInControls = false; timer = setTimeout(hide, 3000); });
 
-  // Pausa → mostrar controles permanentemente hasta que se reanude
   const video = document.getElementById('main-video');
   video.addEventListener('pause', () => { clearTimeout(timer); controls.classList.remove('hidden'); player.style.cursor = ''; });
   video.addEventListener('play',  () => { timer = setTimeout(hide, 3000); });
@@ -1209,17 +1290,15 @@ function setupControlsAutoHide() {
 
 function setupTitleAutoHide(titleBar) {
   const controls = document.getElementById('controls');
-  const obs = new MutationObserver(() => {
+  new MutationObserver(() => {
     titleBar.style.opacity = controls.classList.contains('hidden') ? '0' : '1';
-  });
-  obs.observe(controls, { attributes: true, attributeFilter: ['class'] });
+  }).observe(controls, { attributes: true, attributeFilter: ['class'] });
 }
 
-/* ── 7. UTILIDADES ── */
+/* ── 8. UTILIDADES ── */
 function formatTime(sec) {
   if (!isFinite(sec)) return '0:00';
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
+  const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 function showSpinner(show) {
@@ -1232,8 +1311,7 @@ function showError(msg) {
 }
 function loadScript(src, cb) {
   const s = document.createElement('script');
-  s.src    = src;
-  s.onload = cb;
+  s.src = src; s.onload = cb;
   s.onerror = () => console.warn('[loadScript] Error:', src);
   document.head.appendChild(s);
 }

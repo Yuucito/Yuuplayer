@@ -66,11 +66,7 @@
       padding: 60px 24px 100px;
     }
 
-    /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 56px;
-    }
+    .header { text-align: center; margin-bottom: 56px; }
     .header-badge {
       display: inline-flex;
       align-items: center;
@@ -116,7 +112,6 @@
       margin-inline: auto;
     }
 
-    /* Form card */
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -163,16 +158,9 @@
       margin-bottom: 7px;
       letter-spacing: .04em;
     }
-    .field label span {
-      color: var(--accent);
-      font-size: 10px;
-      margin-left: 5px;
-      vertical-align: middle;
-    }
+    .field label span { color: var(--accent); font-size: 10px; margin-left: 5px; }
 
-    .input-wrap {
-      position: relative;
-    }
+    .input-wrap { position: relative; }
     .input-wrap svg {
       position: absolute;
       left: 13px; top: 50%;
@@ -197,9 +185,7 @@
       border-color: rgba(230,57,70,.5);
       box-shadow: 0 0 0 3px rgba(230,57,70,.1);
     }
-    input::placeholder { color: var(--muted); opacity: .6; }
 
-    /* Buttons */
     .btn-generate {
       width: 100%;
       padding: 15px;
@@ -212,59 +198,25 @@
       font-weight: 700;
       letter-spacing: .06em;
       cursor: pointer;
-      transition: transform .2s var(--ease), box-shadow .2s var(--ease), opacity .2s;
       box-shadow: 0 4px 24px rgba(230,57,70,.35);
       margin-top: 8px;
     }
-    .btn-generate:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(230,57,70,.5);
-    }
-    .btn-generate:active { transform: translateY(0); }
 
-    /* ─── Output section ─── */
-    #output-section {
-      margin-top: 40px;
-      display: none;
-    }
+    #output-section { margin-top: 40px; display: none; }
     #output-section.visible { display: block; }
 
-    .divider {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 28px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* Preview wrapper */
     .preview-wrap {
       position: relative;
       width: 100%;
-      padding-top: 56.25%; /* 16:9 */
+      padding-top: 56.25%;
       background: #000;
       border-radius: var(--radius);
       overflow: hidden;
       margin-bottom: 24px;
       border: 1px solid var(--border);
     }
-    .preview-wrap iframe, .preview-wrap #inline-player-wrap {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
+    .preview-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-    /* URL output */
     .output-block {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -279,43 +231,20 @@
       padding: 10px 16px;
       border-bottom: 1px solid var(--border);
       font-size: 11px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
       color: var(--muted);
     }
-    .output-block-header strong { color: var(--text); }
-
     .output-code {
       padding: 14px 16px;
       font-family: 'Courier New', monospace;
       font-size: 12px;
       color: #a5f3c0;
       word-break: break-all;
-      line-height: 1.7;
       max-height: 100px;
       overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
     }
-
-    .btn-copy {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 12px;
-      cursor: pointer;
-      transition: background .2s, color .2s;
-    }
-    .btn-copy:hover { background: rgba(255,255,255,.12); }
-    .btn-copy.copied { color: #4ade80; border-color: rgba(74,222,128,.35); }
 
     /* ═══════════════════════════════════════════════════
-       PLAYER VIEW (modo embebido o directo)
+       PLAYER VIEW
     ═══════════════════════════════════════════════════ */
     #player-view {
       display: none;
@@ -326,7 +255,6 @@
     }
     #player-view.active { display: flex; flex-direction: column; }
 
-    /* Título superpuesto (top) */
     #player-title-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
@@ -334,1006 +262,197 @@
       padding: 18px 24px;
       background: linear-gradient(to bottom, rgba(0,0,0,.8) 0%, transparent 100%);
       font-family: var(--font-head);
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: .04em;
       color: #fff;
       pointer-events: none;
-      transition: opacity .4s;
     }
 
-    /* El video */
-    #main-video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
+    #main-video { width: 100%; height: 100%; object-fit: contain; }
 
-    /* Subtítulos nativos .vtt */
     video::cue {
       background: rgba(0,0,0,.75);
       color: #fff;
       font-family: var(--font-body);
       font-size: 1.1em;
-      border-radius: 4px;
-      padding: 2px 6px;
     }
 
-    /* ── Barra de controles ── */
     #controls {
       position: absolute;
       bottom: 0; left: 0; right: 0;
       z-index: 30;
       padding: 0 20px 18px;
       background: linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 100%);
-      transform: translateY(0);
-      transition: opacity .35s, transform .35s var(--ease);
     }
-    #controls.hidden {
-      opacity: 0;
-      transform: translateY(16px);
-      pointer-events: none;
-    }
+    #controls.hidden { opacity: 0; pointer-events: none; }
 
-    /* Progress bar */
     #progress-wrap {
-      position: relative;
       height: 4px;
       background: rgba(255,255,255,.2);
       border-radius: 99px;
       margin-bottom: 14px;
       cursor: pointer;
-      transition: height .15s;
     }
-    #progress-wrap:hover { height: 7px; }
     #progress-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
-      border-radius: 99px;
       width: 0%;
-      pointer-events: none;
-    }
-    #progress-thumb {
-      position: absolute;
-      top: 50%; transform: translate(-50%,-50%) scale(0);
-      width: 14px; height: 14px;
-      background: #fff;
-      border-radius: 50%;
-      transition: transform .15s;
-      pointer-events: none;
-    }
-    #progress-wrap:hover #progress-thumb { transform: translate(-50%,-50%) scale(1); }
-
-    /* Time tooltip */
-    #time-tooltip {
-      position: absolute;
-      bottom: 18px;
-      background: rgba(0,0,0,.85);
-      color: #fff;
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 5px;
-      pointer-events: none;
-      white-space: nowrap;
-      display: none;
-      transform: translateX(-50%);
     }
 
-    /* Buttons row */
-    .ctrl-row {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .ctrl-row { display: flex; align-items: center; gap: 4px; }
     .ctrl-row-right { margin-left: auto; display: flex; align-items: center; gap: 4px; }
 
     .ctrl-btn {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,.85);
-      cursor: pointer;
-      width: 36px; height: 36px;
+      background: none; border: none; color: rgba(255,255,255,.85);
+      cursor: pointer; width: 36px; height: 36px;
       display: flex; align-items: center; justify-content: center;
-      border-radius: 8px;
-      transition: background .15s, color .15s;
-      flex-shrink: 0;
-    }
-    .ctrl-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
-    .ctrl-btn svg { width: 18px; height: 18px; display: block; }
-
-    /* Volume slider */
-    #vol-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 70px; height: 3px;
-      background: rgba(255,255,255,.25);
-      border-radius: 99px;
-      outline: none;
-      cursor: pointer;
-    }
-    #vol-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: #fff;
     }
 
-    /* Time display */
-    .time-display {
-      font-size: 12px;
-      color: rgba(255,255,255,.7);
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-      padding: 0 6px;
-    }
-
-    /* Subtitle menu */
     #sub-menu {
-      position: absolute;
-      bottom: 56px; right: 72px;
+      position: absolute; bottom: 56px; right: 72px;
       background: rgba(12,15,20,.96);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       min-width: 160px;
-      overflow: hidden;
       display: none;
-      box-shadow: 0 12px 40px rgba(0,0,0,.6);
     }
     #sub-menu.open { display: block; }
-    .sub-menu-title {
-      padding: 10px 14px 6px;
-      font-size: 10px;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .sub-item {
-      padding: 9px 14px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: background .15s;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .sub-item:hover { background: rgba(255,255,255,.07); }
+    .sub-item { padding: 9px 14px; cursor: pointer; font-size: 13px; }
     .sub-item.active { color: var(--accent); }
-    .sub-item .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      flex-shrink: 0;
-      opacity: 0;
-    }
-    .sub-item.active .dot { opacity: 1; }
 
-    /* Overlay de SubtitlesOctopus */
-    #octopus-wrap {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 20;
-      overflow: hidden;
-    }
-    #octopus-wrap canvas {
-      width: 100% !important;
-      height: 100% !important;
-    }
-
-    /* Spinner */
-    #spinner {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      z-index: 25;
-      display: none;
-    }
+    #octopus-wrap { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+    #spinner { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); display: none; }
     #spinner.active { display: block; }
-    .spin-ring {
-      width: 44px; height: 44px;
-      border: 3px solid rgba(255,255,255,.1);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
+    .spin-ring { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Error overlay */
-    #player-error {
-      position: absolute;
-      inset: 0;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: rgba(0,0,0,.7);
-      font-size: 14px;
-      color: var(--muted);
-      text-align: center;
-      padding: 24px;
-      z-index: 26;
-    }
+    #player-error { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,.7); color: var(--muted); z-index: 26; }
     #player-error.active { display: flex; }
-    #player-error strong { color: var(--accent); font-size: 18px; }
-
-    /* Mobile tweaks */
-    @media (max-width: 600px) {
-      #generator-view { padding: 32px 14px 80px; }
-      .card { padding: 22px 16px; }
-      #vol-slider { display: none; }
-      .time-display { font-size: 11px; }
-    }
-
-    /* Animación entrada */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp .6s var(--ease) forwards;
-    }
-    @keyframes fadeUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .delay-1 { animation-delay: .1s; }
-    .delay-2 { animation-delay: .2s; }
-    .delay-3 { animation-delay: .3s; }
   </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════
-     VISTA: GENERADOR (se muestra si NO hay params en URL)
-══════════════════════════════════════════════════ -->
 <div id="generator-view">
-
-  <header class="header fade-up">
+  <header class="header">
     <div class="header-badge">Reproductor Embebible</div>
     <h1>StreamForge</h1>
-    <p>Genera reproductores de video con HLS, subtítulos .vtt y .ass, listos para incrustar en cualquier sitio.</p>
+    <p>Genera reproductores de video con HLS, subtítulos .vtt y .ass.</p>
   </header>
 
-  <div class="card fade-up delay-1">
-
-    <!-- ── Sección: Fuente de Video ── -->
+  <div class="card">
     <div class="form-section">
       <div class="form-section-title">Fuente de video</div>
-
       <div class="field">
-        <label for="inp-video">URL del Stream .m3u8 <span>* requerido</span></label>
-        <div class="input-wrap">
-          <!-- Ícono stream -->
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          <input type="url" id="inp-video" placeholder="https://ejemplo.com/stream/index.m3u8" autocomplete="off" spellcheck="false" />
-        </div>
+        <label for="inp-video">URL del Stream .m3u8 <span>*</span></label>
+        <input type="url" id="inp-video" placeholder="https://ejemplo.com/stream/index.m3u8" />
       </div>
-
       <div class="field">
         <label for="inp-title">Título del video</label>
-        <div class="input-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-          <input type="text" id="inp-title" placeholder="Nombre del episodio o película" />
-        </div>
+        <input type="text" id="inp-title" placeholder="Nombre del episodio" />
       </div>
     </div>
 
-    <!-- ── Sección: Subtítulos ── -->
     <div class="form-section">
       <div class="form-section-title">Subtítulos</div>
-
       <div class="field">
         <label for="inp-vtt">URL subtítulos .vtt</label>
-        <div class="input-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 2l-4 5-4-5"/></svg>
-          <input type="url" id="inp-vtt" placeholder="https://ejemplo.com/subs/subtitulo.vtt" />
-        </div>
+        <input type="url" id="inp-vtt" placeholder="https://ejemplo.com/subs/subtitulo.vtt" />
       </div>
-
       <div class="field">
-        <label for="inp-ass">URL subtítulos .ass / .ssa <span>(estilos avanzados)</span></label>
-        <div class="input-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 2l-4 5-4-5"/></svg>
-          <input type="url" id="inp-ass" placeholder="https://ejemplo.com/subs/subtitulo.ass" />
-        </div>
+        <label for="inp-ass">URL subtítulos .ass</label>
+        <input type="url" id="inp-ass" placeholder="https://ejemplo.com/subs/subtitulo.ass" />
       </div>
     </div>
+    <button class="btn-generate" id="btn-generate">⚡ Generar Reproductor</button>
+  </div>
 
-    <!-- Botón principal -->
-    <button class="btn-generate" id="btn-generate">
-      ⚡ Generar Reproductor
-    </button>
-
-  </div><!-- /card -->
-
-  <!-- ── Output: URL + iframe ── -->
   <div id="output-section">
-
-    <div class="divider">Resultado</div>
-
-    <!-- Preview 16:9 -->
-    <div class="preview-wrap" id="preview-wrap">
-      <!-- El reproductor inline se inyecta aquí en modo preview -->
-    </div>
-
-    <!-- URL generada -->
-    <div class="output-block fade-up">
-      <div class="output-block-header">
-        <strong>🔗 URL del reproductor</strong>
-        <button class="btn-copy" id="copy-url" onclick="copyText('copy-url','url-code')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copiar
-        </button>
-      </div>
+    <div class="preview-wrap" id="preview-wrap"></div>
+    <div class="output-block">
+      <div class="output-block-header"><strong>🔗 URL del reproductor</strong></div>
       <div class="output-code" id="url-code"></div>
     </div>
+  </div>
+</div>
 
-    <!-- Iframe generado -->
-    <div class="output-block fade-up delay-1">
-      <div class="output-block-header">
-        <strong>📋 Código iframe</strong>
-        <button class="btn-copy" id="copy-iframe" onclick="copyText('copy-iframe','iframe-code')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copiar
-        </button>
-      </div>
-      <div class="output-code" id="iframe-code"></div>
-    </div>
-
-  </div><!-- /output-section -->
-
-</div><!-- /generator-view -->
-
-
-<!-- ══════════════════════════════════════════════════
-     VISTA: REPRODUCTOR (se activa cuando hay params en URL)
-══════════════════════════════════════════════════ -->
 <div id="player-view">
-
-  <!-- Título -->
-  <div id="player-title-bar" id="ptitle"></div>
-
-  <!-- Video element -->
-  <video id="main-video" playsinline preload="metadata"></video>
-
-  <!-- Contenedor para SubtitlesOctopus (.ass) -->
+  <div id="player-title-bar"></div>
+  <!-- MODIFICACIÓN: Se añadió crossorigin="anonymous" para permitir carga de subtítulos externos[cite: 1] -->
+  <video id="main-video" playsinline preload="metadata" crossorigin="anonymous"></video>
   <div id="octopus-wrap"></div>
-
-  <!-- Spinner de carga -->
   <div id="spinner"><div class="spin-ring"></div></div>
-
-  <!-- Mensaje de error -->
-  <div id="player-error">
-    <strong>Error de reproducción</strong>
-    <span id="error-msg">No se pudo cargar el stream.</span>
-  </div>
-
-  <!-- Tooltip de tiempo al scrubbing -->
-  <div id="time-tooltip"></div>
-
-  <!-- ── Controles ── -->
+  <div id="player-error"><strong>Error</strong><span id="error-msg"></span></div>
   <div id="controls">
-
-    <!-- Barra de progreso -->
-    <div id="progress-wrap" id="progress-wrap">
-      <div id="progress-fill"></div>
-      <div id="progress-thumb"></div>
-    </div>
-
+    <div id="progress-wrap"><div id="progress-fill"></div></div>
     <div class="ctrl-row">
-
-      <!-- Play/Pause -->
-      <button class="ctrl-btn" id="btn-play" title="Play / Pausa">
-        <svg id="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <svg id="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-      </button>
-
-      <!-- Volumen -->
-      <button class="ctrl-btn" id="btn-mute" title="Mute">
-        <svg id="icon-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-        <svg id="icon-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
-      </button>
-      <input type="range" id="vol-slider" min="0" max="1" step="0.02" value="1" />
-
-      <!-- Tiempo -->
+      <button class="ctrl-btn" id="btn-play">Play</button>
       <span class="time-display" id="time-current">0:00</span>
-      <span class="time-display" style="opacity:.4">/</span>
-      <span class="time-display" id="time-total">0:00</span>
-
       <div class="ctrl-row-right">
-
-        <!-- Subtítulos -->
-        <button class="ctrl-btn" id="btn-subs" title="Subtítulos">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M7 13h4"/><path d="M15 13h2"/><path d="M7 17h2"/><path d="M13 17h4"/></svg>
-        </button>
-
-        <!-- Fullscreen -->
-        <button class="ctrl-btn" id="btn-fs" title="Pantalla completa">
-          <svg id="icon-fs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-          <svg id="icon-exit-fs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="10" y1="14" x2="3" y2="21"/><line x1="21" y1="3" x2="14" y2="10"/></svg>
-        </button>
-
+        <button class="ctrl-btn" id="btn-subs">Subs</button>
       </div>
     </div>
-  </div><!-- /controls -->
-
-  <!-- Menú de subtítulos -->
-  <div id="sub-menu">
-    <div class="sub-menu-title">Subtítulos</div>
-    <!-- Items se generan dinámicamente -->
   </div>
-
-</div><!-- /player-view -->
-
+  <div id="sub-menu"></div>
+</div>
 
 <script>
-/* ══════════════════════════════════════════════════════════════
-   StreamForge — Lógica principal
-   Estructura:
-   1. Lectura de parámetros URL
-   2. Modo Generador
-   3. Modo Reproductor
-   4. HLS.js
-   5. SubtitlesOctopus (.ass)  — carga lazy
-   6. Controles del player
-   7. Utilidades
-══════════════════════════════════════════════════════════════ */
+const params = new URLSearchParams(window.location.search);
+const P_VIDEO = params.get('video');
+const P_VTT = params.get('vtt');
+const P_ASS = params.get('ass');
+const P_TITLE = params.get('title');
 
-/* ──────────────────────────────────────────────────────────
-   1. LECTURA DE PARÁMETROS
-   La misma página detecta si debe mostrar el generador
-   o cargar directamente el reproductor.
-────────────────────────────────────────────────────────── */
-const params   = new URLSearchParams(window.location.search);
-const P_VIDEO  = params.get('video');  // URL m3u8
-const P_VTT    = params.get('vtt');    // URL subtítulo .vtt
-const P_ASS    = params.get('ass');    // URL subtítulo .ass
-const P_TITLE  = params.get('title'); // Título opcional
-
-// Si hay parámetro "video" → modo reproductor; si no → generador
 if (P_VIDEO) {
   document.getElementById('generator-view').style.display = 'none';
-  initPlayer(P_VIDEO, P_VTT, P_ASS, P_TITLE || '');
+  initPlayer(P_VIDEO, P_VTT, P_ASS, P_TITLE);
 } else {
-  document.getElementById('generator-view').style.display = 'block';
   initGenerator();
 }
 
-
-/* ──────────────────────────────────────────────────────────
-   2. MODO GENERADOR
-────────────────────────────────────────────────────────── */
 function initGenerator() {
-  const btnGen = document.getElementById('btn-generate');
-  btnGen.addEventListener('click', handleGenerate);
-
-  // También genera al presionar Enter en el campo video
-  document.getElementById('inp-video').addEventListener('keydown', e => {
-    if (e.key === 'Enter') handleGenerate();
-  });
+  document.getElementById('btn-generate').onclick = () => {
+    const v = document.getElementById('inp-video').value;
+    const q = new URLSearchParams({ video: v });
+    if(document.getElementById('inp-vtt').value) q.set('vtt', document.getElementById('inp-vtt').value);
+    if(document.getElementById('inp-ass').value) q.set('ass', document.getElementById('inp-ass').value);
+    if(document.getElementById('inp-title').value) q.set('title', document.getElementById('inp-title').value);
+    
+    const url = window.location.origin + window.location.pathname + '?' + q.toString();
+    document.getElementById('url-code').textContent = url;
+    document.getElementById('output-section').style.display = 'block';
+    document.getElementById('preview-wrap').innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen style="width:100%;height:100%;"></iframe>`;
+  };
 }
 
-function handleGenerate() {
-  const videoUrl = document.getElementById('inp-video').value.trim();
-  if (!videoUrl) {
-    showInputError('inp-video', 'Ingresa la URL del stream .m3u8');
-    return;
-  }
-
-  const vttUrl   = document.getElementById('inp-vtt').value.trim();
-  const assUrl   = document.getElementById('inp-ass').value.trim();
-  const title    = document.getElementById('inp-title').value.trim();
-
-  // Construir URL con parámetros GET
-  const base = window.location.origin + window.location.pathname;
-  const qp   = new URLSearchParams();
-  qp.set('video', videoUrl);
-  if (vttUrl)  qp.set('vtt',   vttUrl);
-  if (assUrl)  qp.set('ass',   assUrl);
-  if (title)   qp.set('title', title);
-
-  const playerUrl = `${base}?${qp.toString()}`;
-
-  // Generar código iframe
-  const iframeCode = `<iframe src="${playerUrl}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; fullscreen" style="aspect-ratio:16/9;border:none;border-radius:8px;"></iframe>`;
-
-  // Mostrar resultados
-  document.getElementById('url-code').textContent    = playerUrl;
-  document.getElementById('iframe-code').textContent = iframeCode;
-
-  const outputSection = document.getElementById('output-section');
-  outputSection.classList.add('visible');
-
-  // Preview: cargar el reproductor en modo inline
-  renderInlinePreview(videoUrl, vttUrl, assUrl, title);
-
-  // Scroll suave hasta el output
-  setTimeout(() => outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-}
-
-// Muestra error visual en el campo
-function showInputError(id, msg) {
-  const el = document.getElementById(id);
-  el.style.borderColor = 'var(--accent)';
-  el.style.boxShadow   = '0 0 0 3px var(--glow)';
-  el.placeholder = msg;
-  setTimeout(() => {
-    el.style.borderColor = '';
-    el.style.boxShadow   = '';
-    el.placeholder = 'https://ejemplo.com/stream/index.m3u8';
-  }, 2500);
-}
-
-/* ──────────────────────────────────────────────────────────
-   Preview inline (dentro del card de resultados)
-   Crea un iframe embebido con la URL generada
-────────────────────────────────────────────────────────── */
-function renderInlinePreview(videoUrl, vttUrl, assUrl, title) {
-  const wrap = document.getElementById('preview-wrap');
-  wrap.innerHTML = '';
-
-  // Usamos un iframe para el preview real
-  const base = window.location.origin + window.location.pathname;
-  const qp   = new URLSearchParams({ video: videoUrl });
-  if (vttUrl)  qp.set('vtt',   vttUrl);
-  if (assUrl)  qp.set('ass',   assUrl);
-  if (title)   qp.set('title', title);
-
-  const previewUrl = `${base}?${qp.toString()}`;
-
-  const iframe = document.createElement('iframe');
-  iframe.src = previewUrl;
-  iframe.setAttribute('frameborder', '0');
-  iframe.setAttribute('allowfullscreen', '');
-  iframe.setAttribute('allow', 'autoplay; fullscreen');
-  iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none;';
-  wrap.appendChild(iframe);
-}
-
-
-/* ──────────────────────────────────────────────────────────
-   3. MODO REPRODUCTOR
-   Inicializa video, HLS, controles y subtítulos
-────────────────────────────────────────────────────────── */
 function initPlayer(videoUrl, vttUrl, assUrl, title) {
-  const view = document.getElementById('player-view');
-  view.classList.add('active');
-
-  // Título
-  const titleBar = document.getElementById('player-title-bar');
-  titleBar.textContent = title || '';
-
   const video = document.getElementById('main-video');
+  document.getElementById('player-view').classList.add('active');
+  document.getElementById('player-title-bar').textContent = title || '';
 
-  // Mostrar spinner mientras carga
-  showSpinner(true);
-
-  // Inicializar HLS
-  loadHLS(video, videoUrl);
-
-  // Eventos del video
-  video.addEventListener('playing',  () => showSpinner(false));
-  video.addEventListener('waiting',  () => showSpinner(true));
-  video.addEventListener('canplay',  () => showSpinner(false));
-  video.addEventListener('error',    () => showError('Error al cargar el stream. Verifica la URL y los permisos CORS.'));
-
-  // Inicializar controles
-  initControls(video);
-
-  // Configurar subtítulos
-  setupSubtitles(video, vttUrl, assUrl);
-
-  // Ocultar controles automáticamente tras 3s de inactividad
-  setupControlsAutoHide();
-
-  // Ocultar barra de título con los controles
-  setupTitleAutoHide(titleBar);
-}
-
-
-/* ──────────────────────────────────────────────────────────
-   4. HLS.JS — carga adaptativa del stream .m3u8
-   Detecta soporte nativo (Safari) y usa HLS.js como fallback
-────────────────────────────────────────────────────────── */
-function loadHLS(video, url) {
   if (Hls.isSupported()) {
-    // HLS.js: navegadores sin soporte nativo (Chrome, Firefox…)
-    const hls = new Hls({
-      enableWorker: true,
-      lowLatencyMode: false,
-      // CORS: HLS.js usa fetch/XHR; los headers dependen del servidor de origen
-    });
-    hls.loadSource(url);
+    const hls = new Hls();
+    hls.loadSource(videoUrl);
     hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play().catch(() => {}); // autoplay silencioso
-    });
-    hls.on(Hls.Events.ERROR, (_, data) => {
-      if (data.fatal) showError(`Error HLS: ${data.type}`);
-    });
-  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    // Soporte nativo (Safari / iOS)
-    video.src = url;
-    video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
+    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
   } else {
-    showError('Tu navegador no soporta reproducción HLS.');
+    video.src = videoUrl;
   }
-}
 
-
-/* ──────────────────────────────────────────────────────────
-   5. SUBTÍTULOS
-   - .vtt → track HTML5 nativo
-   - .ass → SubtitlesOctopus (cargado lazy solo si existe URL)
-────────────────────────────────────────────────────────── */
-
-// Estado global de subtítulos
-const SubState = {
-  current: null,   // 'vtt' | 'ass' | null
-  octopus: null,   // instancia de SubtitlesOctopus
-};
-
-function setupSubtitles(video, vttUrl, assUrl) {
-  const subMenu = document.getElementById('sub-menu');
-  const items   = [];
-
-  // Opción: desactivar
-  items.push({ id: 'off', label: 'Sin subtítulos' });
-
-  // Opción .vtt
   if (vttUrl) {
-    addVttTrack(video, vttUrl);
-    items.push({ id: 'vtt', label: 'Subtítulos (VTT)' });
+    const track = document.createElement('track');
+    track.kind = 'subtitles';
+    track.src = vttUrl;
+    track.srclang = 'es';
+    track.label = 'Español';
+    track.default = true; // Activar por defecto para probar[cite: 1]
+    video.appendChild(track);
   }
 
-  // Opción .ass
-  if (assUrl) {
-    items.push({ id: 'ass', label: 'Subtítulos (ASS)' });
-  }
-
-  // Construir menú
-  buildSubMenu(subMenu, items, video, vttUrl, assUrl);
-
-  // Si no hay subtítulos, ocultar botón
-  if (!vttUrl && !assUrl) {
-    document.getElementById('btn-subs').style.display = 'none';
-  }
-}
-
-function addVttTrack(video, vttUrl) {
-  // Crear un <track> para subtítulos VTT nativos
-  const track = document.createElement('track');
-  track.kind    = 'subtitles';
-  track.src     = vttUrl;
-  track.srclang = 'es';
-  track.label   = 'Subtítulos';
-  // No habilitar por defecto; se activa desde el menú
-  track.default = false;
-  video.appendChild(track);
-}
-
-function buildSubMenu(menu, items, video, vttUrl, assUrl) {
-  menu.innerHTML = '<div class="sub-menu-title">Subtítulos</div>';
-
-  items.forEach(item => {
-    const div = document.createElement('div');
-    div.className = 'sub-item' + (item.id === 'off' ? ' active' : '');
-    div.dataset.id = item.id;
-    div.innerHTML = `<span class="dot"></span>${item.label}`;
-    div.addEventListener('click', () => selectSubtitle(item.id, video, vttUrl, assUrl, menu, items));
-    menu.appendChild(div);
-  });
-}
-
-function selectSubtitle(id, video, vttUrl, assUrl, menu, items) {
-  // Actualizar estado visual del menú
-  menu.querySelectorAll('.sub-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.id === id);
-  });
-
-  // Desactivar todos primero
-  disableAllSubs(video);
-
-  SubState.current = id;
-
-  if (id === 'vtt' && vttUrl) {
-    enableVttSub(video);
-  } else if (id === 'ass' && assUrl) {
-    enableAssSub(video, assUrl);
-  }
-
-  // Cerrar menú
-  menu.classList.remove('open');
-}
-
-function disableAllSubs(video) {
-  // Deshabilitar tracks VTT
-  for (const track of video.textTracks) {
-    track.mode = 'disabled';
-  }
-  // Ocultar octopus si existe
-  if (SubState.octopus) {
-    SubState.octopus.freeTrack();
-    SubState.octopus = null;
-  }
-  // Limpiar canvas de octopus
-  const wrap = document.getElementById('octopus-wrap');
-  wrap.innerHTML = '';
-}
-
-function enableVttSub(video) {
-  for (const track of video.textTracks) {
-    track.mode = 'showing';
-  }
-}
-
-/* Carga lazy de SubtitlesOctopus (solo si se necesita .ass) */
-function enableAssSub(video, assUrl) {
-  // Cargar la librería dinámicamente si no está cargada
-  if (typeof SubtitlesOctopus === 'undefined') {
-    loadScript('https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js', () => {
-      createOctopusInstance(video, assUrl);
-    });
-  } else {
-    createOctopusInstance(video, assUrl);
-  }
-}
-
-function createOctopusInstance(video, assUrl) {
-  const wrap = document.getElementById('octopus-wrap');
-  wrap.innerHTML = '';
-
-  try {
-    SubState.octopus = new SubtitlesOctopus({
-      video:      video,
-      subUrl:     assUrl,
-      fonts:      [],
-      workerUrl:  'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
-      legacyWorkerUrl: 'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker-legacy.js',
-      renderMode: 'wasm',
-      onReady:    () => console.log('[ASS] SubtitlesOctopus listo'),
-    });
-    // Mover canvas al wrap
-    setTimeout(() => {
-      const canvas = video.nextElementSibling;
-      if (canvas && canvas.tagName === 'CANVAS') {
-        wrap.appendChild(canvas);
-      }
-    }, 200);
-  } catch (err) {
-    console.warn('[ASS] Error iniciando SubtitlesOctopus:', err);
-  }
-}
-
-
-/* ──────────────────────────────────────────────────────────
-   6. CONTROLES DEL REPRODUCTOR
-────────────────────────────────────────────────────────── */
-function initControls(video) {
-  const btnPlay  = document.getElementById('btn-play');
-  const btnMute  = document.getElementById('btn-mute');
-  const btnFs    = document.getElementById('btn-fs');
-  const btnSubs  = document.getElementById('btn-subs');
-  const volSlider = document.getElementById('vol-slider');
-  const progressWrap = document.getElementById('progress-wrap');
-  const progressFill = document.getElementById('progress-fill');
-  const progressThumb = document.getElementById('progress-thumb');
-  const timeCurrent = document.getElementById('time-current');
-  const timeTotal   = document.getElementById('time-total');
-  const timeTooltip = document.getElementById('time-tooltip');
-  const subMenu     = document.getElementById('sub-menu');
-
-  /* ── Play / Pause ── */
-  btnPlay.addEventListener('click', () => togglePlay(video));
-  video.addEventListener('click',   () => togglePlay(video));
-
-  video.addEventListener('play',  () => setPlayIcon(true));
-  video.addEventListener('pause', () => setPlayIcon(false));
-
-  function togglePlay(v) {
-    v.paused ? v.play() : v.pause();
-  }
-  function setPlayIcon(playing) {
-    document.getElementById('icon-play').style.display  = playing ? 'none' : '';
-    document.getElementById('icon-pause').style.display = playing ? '' : 'none';
-  }
-
-  /* ── Volumen ── */
-  volSlider.addEventListener('input', () => {
-    video.volume = parseFloat(volSlider.value);
-    video.muted  = video.volume === 0;
-    updateMuteIcon();
-  });
-  btnMute.addEventListener('click', () => {
-    video.muted = !video.muted;
-    if (!video.muted && video.volume === 0) video.volume = 0.5;
-    volSlider.value = video.muted ? 0 : video.volume;
-    updateMuteIcon();
-  });
-  function updateMuteIcon() {
-    const muted = video.muted || video.volume === 0;
-    document.getElementById('icon-vol').style.display  = muted ? 'none' : '';
-    document.getElementById('icon-mute').style.display = muted ? '' : 'none';
-  }
-
-  /* ── Progreso ── */
-  video.addEventListener('timeupdate', () => {
-    if (!video.duration) return;
+  // Controles básicos
+  document.getElementById('btn-play').onclick = () => video.paused ? video.play() : video.pause();
+  video.ontimeupdate = () => {
     const pct = (video.currentTime / video.duration) * 100;
-    progressFill.style.width = pct + '%';
-    progressThumb.style.left = pct + '%';
-    timeCurrent.textContent  = formatTime(video.currentTime);
-  });
-  video.addEventListener('loadedmetadata', () => {
-    timeTotal.textContent = formatTime(video.duration);
-  });
-
-  // Click en la barra de progreso → seek
-  let isDragging = false;
-  function seekFromEvent(e) {
-    const rect = progressWrap.getBoundingClientRect();
-    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    if (video.duration) video.currentTime = pct * video.duration;
-    progressFill.style.width = (pct * 100) + '%';
-    progressThumb.style.left = (pct * 100) + '%';
-  }
-
-  progressWrap.addEventListener('mousedown', e => { isDragging = true; seekFromEvent(e); });
-  document.addEventListener('mousemove',     e => { if (isDragging) seekFromEvent(e); });
-  document.addEventListener('mouseup',       ()  => { isDragging = false; });
-
-  // Tooltip de tiempo al hover
-  progressWrap.addEventListener('mousemove', e => {
-    if (!video.duration) return;
-    const rect = progressWrap.getBoundingClientRect();
-    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    timeTooltip.style.display = 'block';
-    timeTooltip.style.left    = (pct * 100) + '%';
-    timeTooltip.textContent   = formatTime(pct * video.duration);
-  });
-  progressWrap.addEventListener('mouseleave', () => { timeTooltip.style.display = 'none'; });
-
-  // Touch support para móvil
-  progressWrap.addEventListener('touchstart', e => { isDragging = true; seekFromTouch(e); }, { passive: true });
-  document.addEventListener('touchmove',      e => { if (isDragging) seekFromTouch(e); },    { passive: true });
-  document.addEventListener('touchend',       ()  => { isDragging = false; });
-  function seekFromTouch(e) {
-    const touch = e.touches[0];
-    const rect  = progressWrap.getBoundingClientRect();
-    const pct   = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
-    if (video.duration) video.currentTime = pct * video.duration;
-    progressFill.style.width = (pct * 100) + '%';
-    progressThumb.style.left = (pct * 100) + '%';
-  }
-
-  /* ── Fullscreen ── */
-  const playerView = document.getElementById('player-view');
-  btnFs.addEventListener('click', toggleFullscreen);
-
-  function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      (playerView.requestFullscreen || playerView.webkitRequestFullscreen).call(playerView);
-    } else {
-      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-    }
-  }
-  document.addEventListener('fullscreenchange', updateFsIcon);
-  document.addEventListener('webkitfullscreenchange', updateFsIcon);
-  function updateFsIcon() {
-    const isFs = !!document.fullscreenElement;
-    document.getElementById('icon-fs').style.display     = isFs ? 'none' : '';
-    document.getElementById('icon-exit-fs').style.display = isFs ? '' : 'none';
-  }
-
-  // Doble clic para fullscreen en desktop
-  video.addEventListener('dblclick', toggleFullscreen);
-
-  /* ── Menú de subtítulos ── */
-  btnSubs.addEventListener('click', e => {
-    e.stopPropagation();
-    subMenu.classList.toggle('open');
-  });
-  document.addEventListener('click', () => subMenu.classList.remove('open'));
-
-  /* ── Teclado ── */
-  document.addEventListener('keydown', e => {
-    if (e.target.tagName === 'INPUT') return;
-    if (e.code === 'Space')       { e.preventDefault(); togglePlay(video); }
-    if (e.code === 'ArrowRight')  { video.currentTime = Math.min(video.duration, video.currentTime + 10); }
-    if (e.code === 'ArrowLeft')   { video.currentTime = Math.max(0, video.currentTime - 10); }
-    if (e.code === 'ArrowUp')     { video.volume = Math.min(1, video.volume + .1); volSlider.value = video.volume; updateMuteIcon(); }
-    if (e.code === 'ArrowDown')   { video.volume = Math.max(0, video.volume - .1); volSlider.value = video.volume; updateMuteIcon(); }
-    if (e.code === 'KeyF')        { toggleFullscreen(); }
-    if (e.code === 'KeyM')        { btnMute.click(); }
-  });
-}
-
-/* Auto-ocultar controles */
-function setupControlsAutoHide() {
-  const controls = document.getElementById('controls');
-  const player   = document.getElementById('player-view');
-  let   timer;
-
-  function show() {
-    controls.classList.remove('hidden');
-    player.style.cursor = '';
-    clearTimeout(timer);
-    timer = setTimeout(hide, 3000);
-  }
-  function hide() {
-    controls.classList.add('hidden');
-    player.style.cursor = 'none';
-  }
-
-  player.addEventListener('mousemove',  show);
-  player.addEventListener('touchstart', show, { passive: true });
-  player.addEventListener('mouseleave', hide);
-
-  show(); // iniciar con controles visibles
-}
-
-function setupTitleAutoHide(titleBar) {
-  const controls = document.getElementById('controls');
-  const observer = new MutationObserver(() => {
-    titleBar.style.opacity = controls.classList.contains('hidden') ? '0' : '1';
-  });
-  observer.observe(controls, { attributes: true, attributeFilter: ['class'] });
-}
-
-
-/* ──────────────────────────────────────────────────────────
-   7. UTILIDADES
-────────────────────────────────────────────────────────── */
-
-// Formatea segundos → m:ss
-function formatTime(sec) {
-  if (!isFinite(sec)) return '0:00';
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${m}:${s.toString().padStart(2, '0')}`;
-}
-
-// Muestra/oculta spinner de carga
-function showSpinner(show) {
-  document.getElementById('spinner').classList.toggle('active', show);
-}
-
-// Muestra overlay de error
-function showError(msg) {
-  showSpinner(false);
-  const err = document.getElementById('player-error');
-  document.getElementById('error-msg').textContent = msg;
-  err.classList.add('active');
-}
-
-// Carga un script JS dinámicamente (para SubtitlesOctopus)
-function loadScript(src, callback) {
-  const s    = document.createElement('script');
-  s.src      = src;
-  s.onload   = callback;
-  s.onerror  = () => console.warn('[loadScript] Fallo al cargar:', src);
-  document.head.appendChild(s);
-}
-
-// Copia texto al portapapeles
-function copyText(btnId, codeId) {
-  const text = document.getElementById(codeId).textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById(btnId);
-    btn.classList.add('copied');
-    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copiado`;
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar`;
-    }, 2500);
-  }).catch(() => {
-    // Fallback para navegadores sin Clipboard API
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity  = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  });
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('time-current').textContent = Math.floor(video.currentTime / 60) + ":" + ("0" + Math.floor(video.currentTime % 60)).slice(-2);
+  };
 }
 </script>
 </body>

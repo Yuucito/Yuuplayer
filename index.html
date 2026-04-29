@@ -8,83 +8,220 @@
   <!-- HLS.js para streams .m3u8 -->
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Syne (display) + DM Sans (body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
 
   <style>
-    /* Estilos originales de StreamForge */
+    /* ═══════════════════════════════════════════════════
+       TOKENS & VARIABLES[cite: 2]
+    ═══════════════════════════════════════════════════ */
     :root {
-      --bg: #080b10; --surface: #0d1117; --panel: #111827; --border: rgba(255,255,255,.07);
-      --accent: #e63946; --accent2: #f4a261; --glow: rgba(230,57,70,.35);
-      --text: #e8eaf0; --muted: #6b7280; --radius: 12px;
-      --font-head: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif;
-      --ease: cubic-bezier(.22,1,.36,1);
+      --bg:        #080b10;
+      --surface:   #0d1117;
+      --panel:     #111827;
+      --border:    rgba(255,255,255,.07);
+      --accent:    #e63946;
+      --accent2:   #f4a261;
+      --glow:      rgba(230,57,70,.35);
+      --text:      #e8eaf0;
+      --muted:     #6b7280;
+      --radius:    12px;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --ease:      cubic-bezier(.22,1,.36,1);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
 
-    /* Generador */
-    #generator-view { max-width: 860px; margin: 0 auto; padding: 60px 24px; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: .6;
+    }
+
+    /* ═══════════════════════════════════════════════════
+       GENERATOR VIEW[cite: 2]
+    ═══════════════════════════════════════════════════ */
+    #generator-view { max-width: 860px; margin: 0 auto; padding: 60px 24px 100px; }
     .header { text-align: center; margin-bottom: 56px; }
-    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 36px; }
+    .header-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(230,57,70,.12); border: 1px solid rgba(230,57,70,.25);
+      color: var(--accent); font-size: 11px; font-weight: 500; letter-spacing: .12em;
+      text-transform: uppercase; padding: 5px 14px; border-radius: 99px; margin-bottom: 20px;
+    }
+    .header-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; box-shadow: 0 0 0 0 var(--glow); }
+      50%      { opacity: .7; box-shadow: 0 0 0 6px transparent; }
+    }
+    .header h1 {
+      font-family: var(--font-head); font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800; letter-spacing: -.03em; line-height: 1.05;
+      background: linear-gradient(135deg, #fff 30%, var(--accent) 80%, var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .header p { margin-top: 14px; color: var(--muted); font-size: 15px; max-width: 480px; margin-inline: auto; }
+
+    .card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 18px;
+      padding: 36px; position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; top: -60px; right: -60px; width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(230,57,70,.12) 0%, transparent 70%); pointer-events: none;
+    }
+
+    .form-section { margin-bottom: 28px; }
+    .form-section-title {
+      font-family: var(--font-head); font-size: 11px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .form-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
     .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 7px; letter-spacing: .04em; }
+    .field label span { color: var(--accent); font-size: 10px; margin-left: 5px; vertical-align: middle; }
+
+    .input-wrap { position: relative; }
+    .input-wrap svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); opacity: .35; pointer-events: none; }
+
     input[type="text"], input[type="url"] {
       width: 100%; background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); color: var(--text); padding: 12px 14px; outline: none;
+      border-radius: var(--radius); color: var(--text); font-family: var(--font-body);
+      font-size: 14px; padding: 12px 14px 12px 40px; transition: border-color .2s var(--ease), box-shadow .2s var(--ease); outline: none;
     }
+    input[type="text"]:focus, input[type="url"]:focus { border-color: rgba(230,57,70,.5); box-shadow: 0 0 0 3px rgba(230,57,70,.1); }
+
     .btn-generate {
       width: 100%; padding: 15px; background: linear-gradient(135deg, var(--accent), #c1121f);
-      border: none; border-radius: var(--radius); color: #fff; font-weight: 700; cursor: pointer;
+      border: none; border-radius: var(--radius); color: #fff; font-family: var(--font-head);
+      font-size: 15px; font-weight: 700; letter-spacing: .06em; cursor: pointer;
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+      box-shadow: 0 4px 24px rgba(230,57,70,.35); margin-top: 8px;
     }
-    #output-section { margin-top: 40px; display: none; }
-    .preview-wrap { position: relative; padding-top: 56.25%; background: #000; border-radius: var(--radius); overflow: hidden; margin-bottom: 24px; }
+    .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(230,57,70,.5); }
 
-    /* Reproductor */
+    #output-section { margin-top: 40px; display: none; }
+    .preview-wrap {
+      position: relative; width: 100%; padding-top: 56.25%; background: #000;
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 24px; border: 1px solid var(--border);
+    }
+    .preview-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+    .output-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+    .output-block-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 11px; color: var(--muted); }
+    .output-code { padding: 14px 16px; font-family: 'Courier New', monospace; font-size: 12px; color: #a5f3c0; word-break: break-all; max-height: 100px; overflow-y: auto; }
+    .btn-copy { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: rgba(255,255,255,.06); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 12px; cursor: pointer; }
+
+    /* ═══════════════════════════════════════════════════
+       PLAYER VIEW[cite: 2]
+    ═══════════════════════════════════════════════════ */
     #player-view { display: none; position: fixed; inset: 0; background: #000; z-index: 100; }
     #player-view.active { display: flex; flex-direction: column; }
-    #main-video { width: 100%; height: 100%; object-fit: contain; }
-    #controls { position: absolute; bottom: 0; left: 0; right: 0; z-index: 30; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); transition: opacity 0.3s; }
-    #controls.hidden { opacity: 0; pointer-events: none; }
-    #progress-wrap { height: 4px; background: rgba(255,255,255,0.2); cursor: pointer; margin-bottom: 15px; position: relative; }
-    #progress-fill { height: 100%; background: var(--accent); width: 0; }
-    .ctrl-row { display: flex; align-items: center; gap: 15px; }
-    .ctrl-btn { background: none; border: none; color: #fff; cursor: pointer; }
-    #sub-menu { position: absolute; bottom: 70px; right: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; display: none; padding: 10px; }
+    #player-title-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 30; padding: 18px 24px; background: linear-gradient(to bottom, rgba(0,0,0,.8) 0%, transparent 100%); font-family: var(--font-head); font-size: 16px; font-weight: 700; color: #fff; pointer-events: none; transition: opacity .4s; }
+    #main-video { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+    #controls { position: absolute; bottom: 0; left: 0; right: 0; z-index: 30; padding: 0 20px 18px; background: linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 100%); transition: opacity .35s, transform .35s var(--ease); }
+    #controls.hidden { opacity: 0; transform: translateY(16px); pointer-events: none; }
+
+    #progress-wrap { position: relative; height: 4px; background: rgba(255,255,255,.2); border-radius: 99px; margin-bottom: 14px; cursor: pointer; }
+    #progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 99px; width: 0%; }
+    #progress-thumb { position: absolute; top: 50%; transform: translate(-50%,-50%) scale(0); width: 14px; height: 14px; background: #fff; border-radius: 50%; transition: transform .15s; }
+    #progress-wrap:hover #progress-thumb { transform: translate(-50%,-50%) scale(1); }
+
+    .ctrl-row { display: flex; align-items: center; gap: 4px; }
+    .ctrl-row-right { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+    .ctrl-btn { background: none; border: none; color: rgba(255,255,255,.85); cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+    .ctrl-btn:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+    #sub-menu { position: absolute; bottom: 56px; right: 72px; background: rgba(12,15,20,.96); border: 1px solid var(--border); border-radius: var(--radius); min-width: 160px; overflow: hidden; display: none; box-shadow: 0 12px 40px rgba(0,0,0,.6); }
     #sub-menu.open { display: block; }
-    .sub-item { padding: 8px 12px; cursor: pointer; font-size: 14px; }
+    .sub-item { padding: 9px 14px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; }
     .sub-item.active { color: var(--accent); }
-    #octopus-wrap { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
+
+    #octopus-wrap { position: absolute; inset: 0; pointer-events: none; z-index: 20; overflow: hidden; }
+    #spinner { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 25; display: none; }
+    #spinner.active { display: block; }
+    .spin-ring { width: 44px; height: 44px; border: 3px solid rgba(255,255,255,.1); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
 <div id="generator-view">
-  <header class="header"><h1>StreamForge</h1><p>Generador de reproductores</p></header>
+  <header class="header">
+    <div class="header-badge">Reproductor Embebible</div>
+    <h1>StreamForge</h1>
+    <p>Genera reproductores de video con HLS, subtítulos .vtt y .ass.</p>
+  </header>
   <div class="card">
-    <div class="field"><label>URL .m3u8</label><input type="url" id="inp-video" placeholder="https://..."></div>
-    <div class="field"><label>Subtítulos .vtt</label><input type="url" id="inp-vtt" placeholder="https://..."></div>
-    <div class="field"><label>Subtítulos .ass</label><input type="url" id="inp-ass" placeholder="https://..."></div>
+    <div class="form-section">
+      <div class="form-section-title">Fuente de video</div>
+      <div class="field">
+        <label for="inp-video">URL .m3u8 <span>*</span></label>
+        <input type="url" id="inp-video" placeholder="https://..." />
+      </div>
+      <div class="field">
+        <label for="inp-title">Título</label>
+        <input type="text" id="inp-title" placeholder="Título del video" />
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title">Subtítulos</div>
+      <div class="field"><label for="inp-vtt">URL .vtt</label><input type="url" id="inp-vtt" /></div>
+      <div class="field"><label for="inp-ass">URL .ass</label><input type="url" id="inp-ass" /></div>
+    </div>
     <button class="btn-generate" id="btn-generate">⚡ Generar Reproductor</button>
   </div>
+
   <div id="output-section">
     <div class="preview-wrap" id="preview-wrap"></div>
-    <div class="output-code" id="url-code" style="background:#111; padding:10px; color:#4ade80; border-radius:8px; word-break:break-all;"></div>
+    <div class="output-block">
+      <div class="output-block-header"><strong>🔗 URL</strong></div>
+      <div class="output-code" id="url-code"></div>
+    </div>
   </div>
 </div>
 
 <div id="player-view">
+  <div id="player-title-bar"></div>
+  <!-- CORRECCIÓN: crossorigin="anonymous" es Vital para subtítulos externos[cite: 2] -->
   <video id="main-video" playsinline crossorigin="anonymous"></video>
   <div id="octopus-wrap"></div>
+  <div id="spinner"><div class="spin-ring"></div></div>
   <div id="controls">
-    <div id="progress-wrap"><div id="progress-fill"></div></div>
+    <div id="progress-wrap"><div id="progress-fill"></div><div id="progress-thumb"></div></div>
     <div class="ctrl-row">
-      <button class="ctrl-btn" id="btn-play">Play/Pause</button>
-      <span id="time-display" style="font-size:13px;">0:00 / 0:00</span>
-      <div style="margin-left:auto;">
+      <button class="ctrl-btn" id="btn-play">
+        <svg id="icon-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <svg id="icon-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      </button>
+      <span class="time-display" id="time-current">0:00</span>
+      <div class="ctrl-row-right">
         <button class="ctrl-btn" id="btn-subs">Subtítulos</button>
-        <button class="ctrl-btn" id="btn-fs">Fullscreen</button>
+        <button class="ctrl-btn" id="btn-fs">Full</button>
       </div>
     </div>
   </div>
@@ -93,11 +230,11 @@
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const P_VIDEO = params.get('video'), P_VTT = params.get('vtt'), P_ASS = params.get('ass');
+const P_VIDEO = params.get('video'), P_VTT = params.get('vtt'), P_ASS = params.get('ass'), P_TITLE = params.get('title');
 
 if (P_VIDEO) {
   document.getElementById('generator-view').style.display = 'none';
-  initPlayer(P_VIDEO, P_VTT, P_ASS);
+  initPlayer(P_VIDEO, P_VTT, P_ASS, P_TITLE);
 } else {
   initGenerator();
 }
@@ -105,109 +242,101 @@ if (P_VIDEO) {
 function initGenerator() {
   document.getElementById('btn-generate').onclick = () => {
     const v = document.getElementById('inp-video').value;
-    if(!v) return;
     const q = new URLSearchParams({ video: v });
     if(document.getElementById('inp-vtt').value) q.set('vtt', document.getElementById('inp-vtt').value);
     if(document.getElementById('inp-ass').value) q.set('ass', document.getElementById('inp-ass').value);
-    
+    if(document.getElementById('inp-title').value) q.set('title', document.getElementById('inp-title').value);
     const url = window.location.origin + window.location.pathname + '?' + q.toString();
     document.getElementById('url-code').textContent = url;
     document.getElementById('output-section').style.display = 'block';
-    document.getElementById('preview-wrap').innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;"></iframe>`;
+    document.getElementById('preview-wrap').innerHTML = `<iframe src="${url}" frameborder="0" allowfullscreen style="width:100%;height:100%;"></iframe>`;
   };
 }
 
-function initPlayer(videoUrl, vttUrl, assUrl) {
-  const video = document.getElementById('main-video');
-  const view = document.getElementById('player-view');
-  view.classList.add('active');
+const SubState = { octopus: null };
 
-  // HLS.js
+function initPlayer(videoUrl, vttUrl, assUrl, title) {
+  const video = document.getElementById('main-video');
+  document.getElementById('player-view').classList.add('active');
+  document.getElementById('player-title-bar').textContent = title || '';
+
   if (Hls.isSupported()) {
     const hls = new Hls();
     hls.loadSource(videoUrl);
     hls.attachMedia(video);
-  } else {
-    video.src = videoUrl;
-  }
+    hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+  } else { video.src = videoUrl; }
 
-  // Subtítulos VTT nativos[cite: 1]
   if (vttUrl) {
     const track = document.createElement('track');
-    track.kind = 'subtitles'; track.src = vttUrl; track.srclang = 'es'; track.label = 'VTT';
+    track.kind = 'subtitles'; track.src = vttUrl; track.label = 'VTT';
     video.appendChild(track);
   }
 
-  // Lógica de SubtitlesOctopus para .ass[cite: 1]
-  let octopus = null;
-  function loadAss(url) {
-    if (typeof SubtitlesOctopus === 'undefined') {
-      const s = document.createElement('script');
-      s.src = "https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js";
-      s.onload = () => createOctopus(url);
-      document.head.appendChild(s);
-    } else { createOctopus(url); }
-  }
-
-  function createOctopus(url) {
-    octopus = new SubtitlesOctopus({
-      video: video, subUrl: url,
-      workerUrl: "https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js"
-    });
-  }
-
-  // Menú de Subtítulos
+  // Menú y lógica de subtítulos[cite: 2]
   const menu = document.getElementById('sub-menu');
   const items = [{id:'off', n:'Desactivado'}];
-  if(vttUrl) items.push({id:'vtt', n:'Español (VTT)'});
-  if(assUrl) items.push({id:'ass', n:'Efectos (ASS)'});
+  if(vttUrl) items.push({id:'vtt', n:'VTT'});
+  if(assUrl) items.push({id:'ass', n:'ASS (Avanzado)'});
 
   items.forEach(it => {
     const d = document.createElement('div');
     d.className = 'sub-item'; d.textContent = it.n;
     d.onclick = () => {
-      // Limpiar anteriores
+      // Desactivar todo
       for(let t of video.textTracks) t.mode = 'disabled';
-      if(octopus) { octopus.freeTrack(); octopus = null; document.getElementById('octopus-wrap').innerHTML = ''; }
+      if(SubState.octopus) { SubState.octopus.freeTrack(); SubState.octopus = null; document.getElementById('octopus-wrap').innerHTML = ''; }
       
       if(it.id === 'vtt') video.textTracks[0].mode = 'showing';
-      if(it.id === 'ass') loadAss(assUrl);
+      if(it.id === 'ass') loadAss(assUrl, video);
       menu.classList.remove('open');
     };
     menu.appendChild(d);
   });
 
-  // Controles
+  // Controles originales: Adelantar/Atrás, Teclado, Progreso[cite: 2]
   document.getElementById('btn-play').onclick = () => video.paused ? video.play() : video.pause();
   document.getElementById('btn-subs').onclick = (e) => { e.stopPropagation(); menu.classList.toggle('open'); };
-  document.getElementById('btn-fs').onclick = () => view.requestFullscreen();
-  
-  // Barra de progreso y adelantar/atrás[cite: 1]
+  document.getElementById('btn-fs').onclick = () => document.getElementById('player-view').requestFullscreen();
+
   video.ontimeupdate = () => {
     const pct = (video.currentTime / video.duration) * 100;
     document.getElementById('progress-fill').style.width = pct + '%';
-    document.getElementById('time-display').textContent = formatTime(video.currentTime) + " / " + formatTime(video.duration);
+    document.getElementById('progress-thumb').style.left = pct + '%';
+    document.getElementById('time-current').textContent = formatTime(video.currentTime);
   };
 
   document.getElementById('progress-wrap').onclick = (e) => {
-    const rect = e.target.getBoundingClientRect();
-    const pos = (e.clientX - rect.left) / rect.width;
-    video.currentTime = pos * video.duration;
+    const rect = e.currentTarget.getBoundingClientRect();
+    video.currentTime = ((e.clientX - rect.left) / rect.width) * video.duration;
   };
 
-  // Teclado (Adelantar/Atrás)
   document.onkeydown = (e) => {
     if(e.key === "ArrowRight") video.currentTime += 10;
     if(e.key === "ArrowLeft") video.currentTime -= 10;
     if(e.key === " ") video.paused ? video.play() : video.pause();
   };
+}
 
-  function formatTime(s) {
-    if(!s) return "0:00";
-    const m = Math.floor(s/60);
-    const sec = Math.floor(s%60);
-    return m + ":" + (sec < 10 ? "0" + sec : sec);
-  }
+function loadAss(url, video) {
+  if (typeof SubtitlesOctopus === 'undefined') {
+    const s = document.createElement('script');
+    s.src = "https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js";
+    s.onload = () => createOctopus(url, video);
+    document.head.appendChild(s);
+  } else { createOctopus(url, video); }
+}
+
+function createOctopus(url, video) {
+  SubState.octopus = new SubtitlesOctopus({
+    video: video, subUrl: url,
+    workerUrl: "https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js"
+  });
+}
+
+function formatTime(s) {
+  const m = Math.floor(s/60); const sec = Math.floor(s%60);
+  return m + ":" + (sec < 10 ? "0" + sec : sec);
 }
 </script>
 </body>

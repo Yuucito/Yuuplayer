@@ -712,7 +712,7 @@
   <div id="controls">
 
     <!-- Barra de progreso -->
-    <div id="progress-wrap" id="progress-wrap">
+    <div id="progress-wrap">
       <div id="progress-fill"></div>
       <div id="progress-thumb"></div>
     </div>
@@ -766,28 +766,15 @@
 <script>
 /* ══════════════════════════════════════════════════════════════
    StreamForge — Lógica principal
-   Estructura:
-   1. Lectura de parámetros URL
-   2. Modo Generador
-   3. Modo Reproductor
-   4. HLS.js
-   5. SubtitlesOctopus (.ass)  — carga lazy
-   6. Controles del player
-   7. Utilidades
 ══════════════════════════════════════════════════════════════ */
 
-/* ──────────────────────────────────────────────────────────
-   1. LECTURA DE PARÁMETROS
-   La misma página detecta si debe mostrar el generador
-   o cargar directamente el reproductor.
-────────────────────────────────────────────────────────── */
-const params   = new URLSearchParams(window.location.search);
-const P_VIDEO  = params.get('video');  // URL m3u8
-const P_VTT    = params.get('vtt');    // URL subtítulo .vtt
-const P_ASS    = params.get('ass');    // URL subtítulo .ass
-const P_TITLE  = params.get('title'); // Título opcional
+/* ── 1. LECTURA DE PARÁMETROS ── */
+const params  = new URLSearchParams(window.location.search);
+const P_VIDEO = params.get('video');
+const P_VTT   = params.get('vtt');
+const P_ASS   = params.get('ass');
+const P_TITLE = params.get('title');
 
-// Si hay parámetro "video" → modo reproductor; si no → generador
 if (P_VIDEO) {
   document.getElementById('generator-view').style.display = 'none';
   initPlayer(P_VIDEO, P_VTT, P_ASS, P_TITLE || '');
@@ -796,15 +783,9 @@ if (P_VIDEO) {
   initGenerator();
 }
 
-
-/* ──────────────────────────────────────────────────────────
-   2. MODO GENERADOR
-────────────────────────────────────────────────────────── */
+/* ── 2. MODO GENERADOR ── */
 function initGenerator() {
-  const btnGen = document.getElementById('btn-generate');
-  btnGen.addEventListener('click', handleGenerate);
-
-  // También genera al presionar Enter en el campo video
+  document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('inp-video').addEventListener('keydown', e => {
     if (e.key === 'Enter') handleGenerate();
   });
@@ -812,74 +793,48 @@ function initGenerator() {
 
 function handleGenerate() {
   const videoUrl = document.getElementById('inp-video').value.trim();
-  if (!videoUrl) {
-    showInputError('inp-video', 'Ingresa la URL del stream .m3u8');
-    return;
-  }
+  if (!videoUrl) { showInputError('inp-video', 'Ingresa la URL del stream .m3u8'); return; }
 
-  const vttUrl   = document.getElementById('inp-vtt').value.trim();
-  const assUrl   = document.getElementById('inp-ass').value.trim();
-  const title    = document.getElementById('inp-title').value.trim();
+  const vttUrl = document.getElementById('inp-vtt').value.trim();
+  const assUrl = document.getElementById('inp-ass').value.trim();
+  const title  = document.getElementById('inp-title').value.trim();
 
-  // Construir URL con parámetros GET
-  const base = window.location.origin + window.location.pathname;
-  const qp   = new URLSearchParams();
-  qp.set('video', videoUrl);
-  if (vttUrl)  qp.set('vtt',   vttUrl);
-  if (assUrl)  qp.set('ass',   assUrl);
-  if (title)   qp.set('title', title);
-
-  const playerUrl = `${base}?${qp.toString()}`;
-
-  // Generar código iframe
-  const iframeCode = `<iframe src="${playerUrl}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; fullscreen" style="aspect-ratio:16/9;border:none;border-radius:8px;"></iframe>`;
-
-  // Mostrar resultados
-  document.getElementById('url-code').textContent    = playerUrl;
-  document.getElementById('iframe-code').textContent = iframeCode;
-
-  const outputSection = document.getElementById('output-section');
-  outputSection.classList.add('visible');
-
-  // Preview: cargar el reproductor en modo inline
-  renderInlinePreview(videoUrl, vttUrl, assUrl, title);
-
-  // Scroll suave hasta el output
-  setTimeout(() => outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-}
-
-// Muestra error visual en el campo
-function showInputError(id, msg) {
-  const el = document.getElementById(id);
-  el.style.borderColor = 'var(--accent)';
-  el.style.boxShadow   = '0 0 0 3px var(--glow)';
-  el.placeholder = msg;
-  setTimeout(() => {
-    el.style.borderColor = '';
-    el.style.boxShadow   = '';
-    el.placeholder = 'https://ejemplo.com/stream/index.m3u8';
-  }, 2500);
-}
-
-/* ──────────────────────────────────────────────────────────
-   Preview inline (dentro del card de resultados)
-   Crea un iframe embebido con la URL generada
-────────────────────────────────────────────────────────── */
-function renderInlinePreview(videoUrl, vttUrl, assUrl, title) {
-  const wrap = document.getElementById('preview-wrap');
-  wrap.innerHTML = '';
-
-  // Usamos un iframe para el preview real
   const base = window.location.origin + window.location.pathname;
   const qp   = new URLSearchParams({ video: videoUrl });
   if (vttUrl)  qp.set('vtt',   vttUrl);
   if (assUrl)  qp.set('ass',   assUrl);
   if (title)   qp.set('title', title);
 
-  const previewUrl = `${base}?${qp.toString()}`;
+  const playerUrl  = `${base}?${qp.toString()}`;
+  const iframeCode = `<iframe src="${playerUrl}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; fullscreen" style="aspect-ratio:16/9;border:none;border-radius:8px;"></iframe>`;
 
+  document.getElementById('url-code').textContent    = playerUrl;
+  document.getElementById('iframe-code').textContent = iframeCode;
+
+  const out = document.getElementById('output-section');
+  out.classList.add('visible');
+  renderInlinePreview(videoUrl, vttUrl, assUrl, title);
+  setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+function showInputError(id, msg) {
+  const el = document.getElementById(id);
+  el.style.borderColor = 'var(--accent)';
+  el.style.boxShadow   = '0 0 0 3px var(--glow)';
+  el.placeholder = msg;
+  setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; el.placeholder = 'https://ejemplo.com/stream/index.m3u8'; }, 2500);
+}
+
+function renderInlinePreview(videoUrl, vttUrl, assUrl, title) {
+  const wrap = document.getElementById('preview-wrap');
+  wrap.innerHTML = '';
+  const base = window.location.origin + window.location.pathname;
+  const qp   = new URLSearchParams({ video: videoUrl });
+  if (vttUrl) qp.set('vtt', vttUrl);
+  if (assUrl) qp.set('ass', assUrl);
+  if (title)  qp.set('title', title);
   const iframe = document.createElement('iframe');
-  iframe.src = previewUrl;
+  iframe.src = `${base}?${qp.toString()}`;
   iframe.setAttribute('frameborder', '0');
   iframe.setAttribute('allowfullscreen', '');
   iframe.setAttribute('allow', 'autoplay; fullscreen');
@@ -887,187 +842,181 @@ function renderInlinePreview(videoUrl, vttUrl, assUrl, title) {
   wrap.appendChild(iframe);
 }
 
-
-/* ──────────────────────────────────────────────────────────
-   3. MODO REPRODUCTOR
-   Inicializa video, HLS, controles y subtítulos
-────────────────────────────────────────────────────────── */
+/* ── 3. MODO REPRODUCTOR ── */
 function initPlayer(videoUrl, vttUrl, assUrl, title) {
-  const view = document.getElementById('player-view');
-  view.classList.add('active');
-
-  // Título
-  const titleBar = document.getElementById('player-title-bar');
-  titleBar.textContent = title || '';
+  document.getElementById('player-view').classList.add('active');
+  document.getElementById('player-title-bar').textContent = title || '';
 
   const video = document.getElementById('main-video');
-
-  // Mostrar spinner mientras carga
   showSpinner(true);
 
-  // Inicializar HLS
-  loadHLS(video, videoUrl);
+  // HLS: devuelve la instancia para leer subtitleTracks después
+  const hlsInstance = loadHLS(video, videoUrl);
 
-  // Eventos del video
-  video.addEventListener('playing',  () => showSpinner(false));
-  video.addEventListener('waiting',  () => showSpinner(true));
-  video.addEventListener('canplay',  () => showSpinner(false));
-  video.addEventListener('error',    () => showError('Error al cargar el stream. Verifica la URL y los permisos CORS.'));
+  video.addEventListener('playing', () => showSpinner(false));
+  video.addEventListener('waiting', () => showSpinner(true));
+  video.addEventListener('canplay', () => showSpinner(false));
+  video.addEventListener('error',   () => showError('Error al cargar el stream. Verifica la URL y los permisos CORS.'));
 
-  // Inicializar controles
   initControls(video);
 
-  // Configurar subtítulos
-  setupSubtitles(video, vttUrl, assUrl);
+  // setupSubtitles necesita la instancia HLS para leer pistas embebidas
+  setupSubtitles(video, vttUrl, assUrl, hlsInstance);
 
-  // Ocultar controles automáticamente tras 3s de inactividad
   setupControlsAutoHide();
-
-  // Ocultar barra de título con los controles
-  setupTitleAutoHide(titleBar);
+  setupTitleAutoHide(document.getElementById('player-title-bar'));
 }
 
-
-/* ──────────────────────────────────────────────────────────
-   4. HLS.JS — carga adaptativa del stream .m3u8
-   Detecta soporte nativo (Safari) y usa HLS.js como fallback
-────────────────────────────────────────────────────────── */
+/* ── 4. HLS.JS ── */
 function loadHLS(video, url) {
   if (Hls.isSupported()) {
-    // HLS.js: navegadores sin soporte nativo (Chrome, Firefox…)
     const hls = new Hls({
       enableWorker: true,
       lowLatencyMode: false,
-      xhrSetup: (xhr) => { xhr.withCredentials = false; },
+      xhrSetup: xhr => { xhr.withCredentials = false; },
     });
     hls.loadSource(url);
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play().catch(() => {}); // autoplay silencioso
+      video.play().catch(() => {});
     });
     hls.on(Hls.Events.ERROR, (_, data) => {
       if (data.fatal) showError(`Error HLS: ${data.type}`);
     });
+    return hls; // devolver para leer subtitleTracks
   } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    // Soporte nativo (Safari / iOS)
     video.src = url;
     video.addEventListener('loadedmetadata', () => video.play().catch(() => {}));
+    return null;
   } else {
     showError('Tu navegador no soporta reproducción HLS.');
+    return null;
   }
 }
 
+/* ── 5. SUBTÍTULOS ── */
+const SubState = { current: null, octopus: null };
 
-/* ──────────────────────────────────────────────────────────
-   5. SUBTÍTULOS
-   - .vtt → track HTML5 nativo
-   - .ass → SubtitlesOctopus (cargado lazy solo si existe URL)
-────────────────────────────────────────────────────────── */
-
-// Estado global de subtítulos
-const SubState = {
-  current: null,   // 'vtt' | 'ass' | null
-  octopus: null,   // instancia de SubtitlesOctopus
-};
-
-function setupSubtitles(video, vttUrl, assUrl) {
+function setupSubtitles(video, vttUrl, assUrl, hlsInstance) {
   const subMenu = document.getElementById('sub-menu');
-  const items   = [];
+  const items   = [{ id: 'off', label: 'Sin subtítulos' }];
 
-  // Opción: desactivar
-  items.push({ id: 'off', label: 'Sin subtítulos' });
-
-  // Opción .vtt
+  // Pista VTT externa
   if (vttUrl) {
-    addVttTrack(video, vttUrl);
-    items.push({ id: 'vtt', label: 'Subtítulos (VTT)' });
+    addVttTrack(video, vttUrl, 'ext', 'Subtítulos (VTT)');
+    items.push({ id: 'vtt:ext', label: 'Subtítulos (VTT)' });
   }
 
-  // Opción .ass
+  // Pistas embebidas en el .m3u8 — se leen cuando HLS.js ya parseó el manifiesto
+  if (hlsInstance) {
+    const applyHlsSubs = () => {
+      const tracks = hlsInstance.subtitleTracks || [];
+      tracks.forEach((t, i) => {
+        const trackId = `hls:${i}`;
+        const label   = t.name || t.lang || `Pista ${i + 1}`;
+        // Añadir <track> nativo ligado a HLS.js
+        items.push({ id: trackId, label: `${label} (M3U8)` });
+      });
+      // Si hay pistas HLS, reconstruir menú ahora
+      if (tracks.length > 0) {
+        buildSubMenu(subMenu, items, video, vttUrl, assUrl, hlsInstance);
+        document.getElementById('btn-subs').style.display = '';
+      }
+    };
+
+    // MANIFEST_PARSED puede ya haber disparado; verificar inmediatamente
+    if ((hlsInstance.subtitleTracks || []).length > 0) {
+      applyHlsSubs();
+    } else {
+      hlsInstance.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, applyHlsSubs);
+    }
+  }
+
+  // Pista ASS externa
   if (assUrl) {
     items.push({ id: 'ass', label: 'Subtítulos (ASS)' });
   }
 
-  // Construir menú
-  buildSubMenu(subMenu, items, video, vttUrl, assUrl);
+  buildSubMenu(subMenu, items, video, vttUrl, assUrl, hlsInstance);
 
-  // Si no hay subtítulos, ocultar botón
   if (!vttUrl && !assUrl) {
+    // El botón se mostrará si hay pistas HLS; ocultarlo provisionalmente
     document.getElementById('btn-subs').style.display = 'none';
   }
 }
 
-function addVttTrack(video, vttUrl) {
-  // Crear un <track> para subtítulos VTT nativos
+function addVttTrack(video, src, id, label) {
+  // Eliminar track anterior con mismo id si existe
+  [...video.querySelectorAll('track')].forEach(t => { if (t.dataset.tid === id) t.remove(); });
   const track = document.createElement('track');
   track.kind    = 'subtitles';
-  track.src     = vttUrl;
-  track.srclang = 'es';
-  track.label   = 'Subtítulos';
+  track.src     = src;
+  track.srclang = 'und';
+  track.label   = label;
+  track.dataset.tid = id;
   track.setAttribute('crossorigin', 'anonymous');
-  // No habilitar por defecto; se activa desde el menú
   track.default = false;
   video.appendChild(track);
 }
 
-function buildSubMenu(menu, items, video, vttUrl, assUrl) {
+function buildSubMenu(menu, items, video, vttUrl, assUrl, hlsInstance) {
   menu.innerHTML = '<div class="sub-menu-title">Subtítulos</div>';
-
   items.forEach(item => {
     const div = document.createElement('div');
-    div.className = 'sub-item' + (item.id === 'off' ? ' active' : '');
+    div.className  = 'sub-item' + (item.id === 'off' ? ' active' : '');
     div.dataset.id = item.id;
-    div.innerHTML = `<span class="dot"></span>${item.label}`;
-    div.addEventListener('click', () => selectSubtitle(item.id, video, vttUrl, assUrl, menu, items));
+    div.innerHTML  = `<span class="dot"></span>${item.label}`;
+    div.addEventListener('click', e => {
+      e.stopPropagation();
+      selectSubtitle(item.id, video, vttUrl, assUrl, menu, hlsInstance);
+    });
     menu.appendChild(div);
   });
 }
 
-function selectSubtitle(id, video, vttUrl, assUrl, menu, items) {
-  // Actualizar estado visual del menú
+function selectSubtitle(id, video, vttUrl, assUrl, menu, hlsInstance) {
   menu.querySelectorAll('.sub-item').forEach(el => {
     el.classList.toggle('active', el.dataset.id === id);
   });
-
-  // Desactivar todos primero
-  disableAllSubs(video);
-
+  disableAllSubs(video, hlsInstance);
   SubState.current = id;
 
-  if (id === 'vtt' && vttUrl) {
-    enableVttSub(video);
+  if (id === 'vtt:ext' && vttUrl) {
+    enableVttSub(video, 'ext');
+  } else if (id.startsWith('hls:')) {
+    const idx = parseInt(id.split(':')[1], 10);
+    if (hlsInstance) {
+      hlsInstance.subtitleTrack = idx;
+    }
   } else if (id === 'ass' && assUrl) {
     enableAssSub(video, assUrl);
   }
 
-  // Cerrar menú
   menu.classList.remove('open');
 }
 
-function disableAllSubs(video) {
-  // Deshabilitar tracks VTT
-  for (const track of video.textTracks) {
-    track.mode = 'disabled';
-  }
-  // Ocultar octopus si existe
+function disableAllSubs(video, hlsInstance) {
+  for (const track of video.textTracks) track.mode = 'disabled';
+  if (hlsInstance) hlsInstance.subtitleTrack = -1;
   if (SubState.octopus) {
-    SubState.octopus.freeTrack();
+    try { SubState.octopus.freeTrack(); } catch(e) {}
     SubState.octopus = null;
   }
-  // Limpiar canvas de octopus
   const wrap = document.getElementById('octopus-wrap');
   wrap.innerHTML = '';
 }
 
-function enableVttSub(video) {
+function enableVttSub(video, tid) {
   for (const track of video.textTracks) {
-    track.mode = 'showing';
+    // Activar solo el track con el data-tid correcto
+    const el = [...video.querySelectorAll('track')].find(t => t.dataset.tid === tid);
+    if (el && track.label === el.label) {
+      track.mode = 'showing';
+    }
   }
 }
 
-/* Carga lazy de SubtitlesOctopus (solo si se necesita .ass) */
 function enableAssSub(video, assUrl) {
-  // Cargar la librería dinámicamente si no está cargada
   if (typeof SubtitlesOctopus === 'undefined') {
     loadScript('https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js', () => {
       createOctopusInstance(video, assUrl);
@@ -1080,57 +1029,52 @@ function enableAssSub(video, assUrl) {
 function createOctopusInstance(video, assUrl) {
   const wrap = document.getElementById('octopus-wrap');
   wrap.innerHTML = '';
-
+  const canvas = document.createElement('canvas');
+  wrap.appendChild(canvas);
   try {
     SubState.octopus = new SubtitlesOctopus({
-      video:      video,
-      subUrl:     assUrl,
-      fonts:      [],
-      workerUrl:  'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
+      video,
+      subUrl:  assUrl,
+      canvas,
+      fonts:   [],
+      workerUrl:       'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
       legacyWorkerUrl: 'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker-legacy.js',
       renderMode: 'wasm',
-      canvas:     (() => { const c = document.createElement('canvas'); wrap.appendChild(c); return c; })(),
-      onReady:    () => console.log('[ASS] SubtitlesOctopus listo'),
+      onReady: () => console.log('[ASS] SubtitlesOctopus listo'),
     });
   } catch (err) {
     console.warn('[ASS] Error iniciando SubtitlesOctopus:', err);
   }
 }
 
-
-/* ──────────────────────────────────────────────────────────
-   6. CONTROLES DEL REPRODUCTOR
-────────────────────────────────────────────────────────── */
+/* ── 6. CONTROLES ── */
 function initControls(video) {
-  const btnPlay  = document.getElementById('btn-play');
-  const btnMute  = document.getElementById('btn-mute');
-  const btnFs    = document.getElementById('btn-fs');
-  const btnSubs  = document.getElementById('btn-subs');
-  const volSlider = document.getElementById('vol-slider');
-  const progressWrap = document.getElementById('progress-wrap');
-  const progressFill = document.getElementById('progress-fill');
+  const btnPlay       = document.getElementById('btn-play');
+  const btnMute       = document.getElementById('btn-mute');
+  const btnFs         = document.getElementById('btn-fs');
+  const btnSubs       = document.getElementById('btn-subs');
+  const volSlider     = document.getElementById('vol-slider');
+  const progressWrap  = document.getElementById('progress-wrap');
+  const progressFill  = document.getElementById('progress-fill');
   const progressThumb = document.getElementById('progress-thumb');
-  const timeCurrent = document.getElementById('time-current');
-  const timeTotal   = document.getElementById('time-total');
-  const timeTooltip = document.getElementById('time-tooltip');
-  const subMenu     = document.getElementById('sub-menu');
+  const timeCurrent   = document.getElementById('time-current');
+  const timeTotal     = document.getElementById('time-total');
+  const timeTooltip   = document.getElementById('time-tooltip');
+  const subMenu       = document.getElementById('sub-menu');
+  const playerView    = document.getElementById('player-view');
 
-  /* ── Play / Pause ── */
-  btnPlay.addEventListener('click', () => togglePlay(video));
-  video.addEventListener('click',   () => togglePlay(video));
-
-  video.addEventListener('play',  () => setPlayIcon(true));
-  video.addEventListener('pause', () => setPlayIcon(false));
-
-  function togglePlay(v) {
-    v.paused ? v.play() : v.pause();
-  }
+  /* Play / Pause */
+  function togglePlay() { video.paused ? video.play() : video.pause(); }
   function setPlayIcon(playing) {
     document.getElementById('icon-play').style.display  = playing ? 'none' : '';
     document.getElementById('icon-pause').style.display = playing ? '' : 'none';
   }
+  btnPlay.addEventListener('click', e => { e.stopPropagation(); togglePlay(); });
+  video.addEventListener('click', togglePlay);
+  video.addEventListener('play',  () => setPlayIcon(true));
+  video.addEventListener('pause', () => setPlayIcon(false));
 
-  /* ── Volumen ── */
+  /* Volumen */
   volSlider.addEventListener('input', () => {
     video.volume = parseFloat(volSlider.value);
     video.muted  = video.volume === 0;
@@ -1143,12 +1087,12 @@ function initControls(video) {
     updateMuteIcon();
   });
   function updateMuteIcon() {
-    const muted = video.muted || video.volume === 0;
-    document.getElementById('icon-vol').style.display  = muted ? 'none' : '';
-    document.getElementById('icon-mute').style.display = muted ? '' : 'none';
+    const m = video.muted || video.volume === 0;
+    document.getElementById('icon-vol').style.display  = m ? 'none' : '';
+    document.getElementById('icon-mute').style.display = m ? '' : 'none';
   }
 
-  /* ── Progreso ── */
+  /* Progreso */
   video.addEventListener('timeupdate', () => {
     if (!video.duration) return;
     const pct = (video.currentTime / video.duration) * 100;
@@ -1160,21 +1104,18 @@ function initControls(video) {
     timeTotal.textContent = formatTime(video.duration);
   });
 
-  // Click en la barra de progreso → seek
   let isDragging = false;
-  function seekFromEvent(e) {
+  function seekFromX(clientX) {
     const rect = progressWrap.getBoundingClientRect();
-    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const pct  = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
     if (video.duration) video.currentTime = pct * video.duration;
     progressFill.style.width = (pct * 100) + '%';
     progressThumb.style.left = (pct * 100) + '%';
   }
+  progressWrap.addEventListener('mousedown', e => { e.stopPropagation(); isDragging = true; seekFromX(e.clientX); });
+  document.addEventListener('mousemove', e => { if (isDragging) seekFromX(e.clientX); });
+  document.addEventListener('mouseup',   () => { isDragging = false; });
 
-  progressWrap.addEventListener('mousedown', e => { isDragging = true; seekFromEvent(e); });
-  document.addEventListener('mousemove',     e => { if (isDragging) seekFromEvent(e); });
-  document.addEventListener('mouseup',       ()  => { isDragging = false; });
-
-  // Tooltip de tiempo al hover
   progressWrap.addEventListener('mousemove', e => {
     if (!video.duration) return;
     const rect = progressWrap.getBoundingClientRect();
@@ -1185,23 +1126,12 @@ function initControls(video) {
   });
   progressWrap.addEventListener('mouseleave', () => { timeTooltip.style.display = 'none'; });
 
-  // Touch support para móvil
-  progressWrap.addEventListener('touchstart', e => { isDragging = true; seekFromTouch(e); }, { passive: true });
-  document.addEventListener('touchmove',      e => { if (isDragging) seekFromTouch(e); },    { passive: true });
-  document.addEventListener('touchend',       ()  => { isDragging = false; });
-  function seekFromTouch(e) {
-    const touch = e.touches[0];
-    const rect  = progressWrap.getBoundingClientRect();
-    const pct   = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
-    if (video.duration) video.currentTime = pct * video.duration;
-    progressFill.style.width = (pct * 100) + '%';
-    progressThumb.style.left = (pct * 100) + '%';
-  }
+  // Touch seek
+  progressWrap.addEventListener('touchstart', e => { isDragging = true; seekFromX(e.touches[0].clientX); }, { passive: true });
+  document.addEventListener('touchmove', e => { if (isDragging) seekFromX(e.touches[0].clientX); }, { passive: true });
+  document.addEventListener('touchend', () => { isDragging = false; });
 
-  /* ── Fullscreen ── */
-  const playerView = document.getElementById('player-view');
-  btnFs.addEventListener('click', toggleFullscreen);
-
+  /* Fullscreen */
   function toggleFullscreen() {
     if (!document.fullscreenElement) {
       (playerView.requestFullscreen || playerView.webkitRequestFullscreen).call(playerView);
@@ -1209,105 +1139,104 @@ function initControls(video) {
       (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     }
   }
+  btnFs.addEventListener('click', e => { e.stopPropagation(); toggleFullscreen(); });
+  video.addEventListener('dblclick', toggleFullscreen);
+  function updateFsIcon() {
+    const fs = !!document.fullscreenElement;
+    document.getElementById('icon-fs').style.display      = fs ? 'none' : '';
+    document.getElementById('icon-exit-fs').style.display = fs ? '' : 'none';
+  }
   document.addEventListener('fullscreenchange', updateFsIcon);
   document.addEventListener('webkitfullscreenchange', updateFsIcon);
-  function updateFsIcon() {
-    const isFs = !!document.fullscreenElement;
-    document.getElementById('icon-fs').style.display     = isFs ? 'none' : '';
-    document.getElementById('icon-exit-fs').style.display = isFs ? '' : 'none';
-  }
 
-  // Doble clic para fullscreen en desktop
-  video.addEventListener('dblclick', toggleFullscreen);
-
-  /* ── Menú de subtítulos ── */
+  /* Menú de subs */
   btnSubs.addEventListener('click', e => {
     e.stopPropagation();
     subMenu.classList.toggle('open');
   });
   document.addEventListener('click', () => subMenu.classList.remove('open'));
 
-  /* ── Teclado ── */
+  /* Teclado */
   document.addEventListener('keydown', e => {
     if (e.target.tagName === 'INPUT') return;
-    if (e.code === 'Space')       { e.preventDefault(); togglePlay(video); }
-    if (e.code === 'ArrowRight')  { video.currentTime = Math.min(video.duration, video.currentTime + 10); }
-    if (e.code === 'ArrowLeft')   { video.currentTime = Math.max(0, video.currentTime - 10); }
-    if (e.code === 'ArrowUp')     { video.volume = Math.min(1, video.volume + .1); volSlider.value = video.volume; updateMuteIcon(); }
-    if (e.code === 'ArrowDown')   { video.volume = Math.max(0, video.volume - .1); volSlider.value = video.volume; updateMuteIcon(); }
-    if (e.code === 'KeyF')        { toggleFullscreen(); }
-    if (e.code === 'KeyM')        { btnMute.click(); }
+    if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
+    if (e.code === 'ArrowRight') { video.currentTime = Math.min(video.duration||0, video.currentTime + 10); }
+    if (e.code === 'ArrowLeft')  { video.currentTime = Math.max(0, video.currentTime - 10); }
+    if (e.code === 'ArrowUp')    { video.volume = Math.min(1, video.volume + .1); volSlider.value = video.volume; updateMuteIcon(); }
+    if (e.code === 'ArrowDown')  { video.volume = Math.max(0, video.volume - .1); volSlider.value = video.volume; updateMuteIcon(); }
+    if (e.code === 'KeyF')       { toggleFullscreen(); }
+    if (e.code === 'KeyM')       { btnMute.click(); }
   });
 }
 
-/* Auto-ocultar controles */
+/* ── Auto-ocultar controles ── */
 function setupControlsAutoHide() {
   const controls = document.getElementById('controls');
   const player   = document.getElementById('player-view');
-  let   timer;
+  let timer;
+  let mouseInControls = false;
 
   function show() {
     controls.classList.remove('hidden');
     player.style.cursor = '';
     clearTimeout(timer);
-    timer = setTimeout(hide, 3000);
+    // No ocultar si el ratón está sobre los controles o el menú abierto
+    if (!mouseInControls) {
+      timer = setTimeout(hide, 3000);
+    }
   }
   function hide() {
+    if (mouseInControls) return;
     controls.classList.add('hidden');
     player.style.cursor = 'none';
   }
 
-  player.addEventListener('mousemove',  show);
+  player.addEventListener('mousemove', show);
   player.addEventListener('touchstart', show, { passive: true });
-  player.addEventListener('mouseleave', hide);
+  player.addEventListener('mouseleave', () => { clearTimeout(timer); hide(); });
 
-  show(); // iniciar con controles visibles
+  // Mantener visibles si el cursor está sobre los controles
+  controls.addEventListener('mouseenter', () => { mouseInControls = true; clearTimeout(timer); controls.classList.remove('hidden'); player.style.cursor = ''; });
+  controls.addEventListener('mouseleave', () => { mouseInControls = false; clearTimeout(timer); timer = setTimeout(hide, 3000); });
+
+  // Pausa → mostrar controles permanentemente hasta que se reanude
+  const video = document.getElementById('main-video');
+  video.addEventListener('pause', () => { clearTimeout(timer); controls.classList.remove('hidden'); player.style.cursor = ''; });
+  video.addEventListener('play',  () => { timer = setTimeout(hide, 3000); });
+
+  show();
 }
 
 function setupTitleAutoHide(titleBar) {
   const controls = document.getElementById('controls');
-  const observer = new MutationObserver(() => {
+  const obs = new MutationObserver(() => {
     titleBar.style.opacity = controls.classList.contains('hidden') ? '0' : '1';
   });
-  observer.observe(controls, { attributes: true, attributeFilter: ['class'] });
+  obs.observe(controls, { attributes: true, attributeFilter: ['class'] });
 }
 
-
-/* ──────────────────────────────────────────────────────────
-   7. UTILIDADES
-────────────────────────────────────────────────────────── */
-
-// Formatea segundos → m:ss
+/* ── 7. UTILIDADES ── */
 function formatTime(sec) {
   if (!isFinite(sec)) return '0:00';
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60);
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
-
-// Muestra/oculta spinner de carga
 function showSpinner(show) {
   document.getElementById('spinner').classList.toggle('active', show);
 }
-
-// Muestra overlay de error
 function showError(msg) {
   showSpinner(false);
-  const err = document.getElementById('player-error');
   document.getElementById('error-msg').textContent = msg;
-  err.classList.add('active');
+  document.getElementById('player-error').classList.add('active');
 }
-
-// Carga un script JS dinámicamente (para SubtitlesOctopus)
-function loadScript(src, callback) {
-  const s    = document.createElement('script');
-  s.src      = src;
-  s.onload   = callback;
-  s.onerror  = () => console.warn('[loadScript] Fallo al cargar:', src);
+function loadScript(src, cb) {
+  const s = document.createElement('script');
+  s.src    = src;
+  s.onload = cb;
+  s.onerror = () => console.warn('[loadScript] Error:', src);
   document.head.appendChild(s);
 }
-
-// Copia texto al portapapeles
 function copyText(btnId, codeId) {
   const text = document.getElementById(codeId).textContent;
   navigator.clipboard.writeText(text).then(() => {
@@ -1319,15 +1248,10 @@ function copyText(btnId, codeId) {
       btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar`;
     }, 2500);
   }).catch(() => {
-    // Fallback para navegadores sin Clipboard API
     const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity  = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
+    ta.value = text; ta.style.cssText = 'position:fixed;opacity:0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
   });
 }
 </script>

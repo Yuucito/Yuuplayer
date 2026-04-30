@@ -1082,7 +1082,7 @@ function initGenerator() {
   document.getElementById('inp-video').addEventListener('keydown', e => {
     if (e.key === 'Enter') handleGenerate();
   });
-  document.getElementById('btn-add-sub').addEventListener('click', addSubTrackRow);
+  document.getElementById('btn-add-sub').addEventListener('click', () => addSubTrackRow());
   // Agregar una pista por defecto
   addSubTrackRow();
 }

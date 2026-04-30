@@ -1066,6 +1066,9 @@ function parseSubsParam(raw, legacyVtt, legacyAss) {
 
 const P_TRACKS = parseSubsParam(P_SUBS_RAW, params.get('vtt'), params.get('ass'));
 
+/* ── 2. MODO GENERADOR ── */
+let subTrackCount = 0;
+
 if (P_VIDEO) {
   document.getElementById('generator-view').style.display = 'none';
   initPlayer(P_VIDEO, P_TRACKS, P_DEFAULT_SUB, P_TITLE || '');
@@ -1073,9 +1076,6 @@ if (P_VIDEO) {
   document.getElementById('generator-view').style.display = 'block';
   initGenerator();
 }
-
-/* ── 2. MODO GENERADOR ── */
-let subTrackCount = 0;
 
 function initGenerator() {
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);

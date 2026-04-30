@@ -199,6 +199,71 @@
     }
     input::placeholder { color: var(--muted); opacity: .6; }
 
+
+    /* ── Multi-track subtitle builder ── */
+    .btn-add-sub {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 16px;
+      background: rgba(244,162,97,.08);
+      border: 1px dashed rgba(244,162,97,.3);
+      border-radius: var(--radius);
+      color: var(--accent2);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      justify-content: center;
+      transition: background .2s, border-color .2s;
+      margin-top: 4px;
+    }
+    .btn-add-sub:hover { background: rgba(244,162,97,.14); border-color: rgba(244,162,97,.5); }
+
+    .sub-track-row {
+      display: grid;
+      grid-template-columns: 1fr 130px 36px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .sub-track-row .url-col { position: relative; }
+    .sub-track-row .url-col svg { position: absolute; left:13px; top:50%; transform:translateY(-50%); opacity:.35; pointer-events:none; }
+    .sub-track-row input[type="url"] { padding-left: 38px !important; }
+    .sub-track-lang {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 6px;
+    }
+    .sub-track-lang select, .sub-track-lang input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 13px;
+      padding: 10px 10px;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color .2s;
+    }
+    .sub-track-lang select:focus, .sub-track-lang input:focus { border-color: rgba(230,57,70,.5); }
+    .btn-remove-sub {
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(230,57,70,.08);
+      border: 1px solid rgba(230,57,70,.2);
+      border-radius: 8px;
+      color: var(--accent);
+      cursor: pointer;
+      transition: background .2s;
+      flex-shrink: 0;
+    }
+    .btn-remove-sub:hover { background: rgba(230,57,70,.18); }
+
     /* Buttons */
     .btn-generate {
       width: 100%;
@@ -744,19 +809,20 @@
     <div class="form-section">
       <div class="form-section-title">Subtítulos</div>
 
-      <div class="field">
-        <label for="inp-vtt">URL subtítulos .vtt</label>
-        <div class="input-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 2l-4 5-4-5"/></svg>
-          <input type="url" id="inp-vtt" placeholder="https://ejemplo.com/subs/subtitulo.vtt" />
-        </div>
-      </div>
+      <div id="sub-tracks-list"></div>
 
-      <div class="field">
-        <label for="inp-ass">URL subtítulos .ass / .ssa <span>(estilos avanzados)</span></label>
+      <button type="button" class="btn-add-sub" id="btn-add-sub">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Agregar pista de subtítulos
+      </button>
+
+      <div class="field" style="margin-top:14px;">
+        <label for="inp-default-sub">Subtítulo activo por defecto</label>
         <div class="input-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 2l-4 5-4-5"/></svg>
-          <input type="url" id="inp-ass" placeholder="https://ejemplo.com/subs/subtitulo.ass" />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <select id="inp-default-sub" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-body);font-size:14px;padding:12px 14px 12px 40px;outline:none;appearance:none;-webkit-appearance:none;">
+            <option value="">Sin subtítulos por defecto</option>
+          </select>
         </div>
       </div>
     </div>
@@ -946,42 +1012,167 @@
    StreamForge — Lógica principal
 ══════════════════════════════════════════════════════════════ */
 
+/* ══ IDIOMAS PREDEFINIDOS ══ */
+const LANG_PRESETS = [
+  { code: 'es',    label: 'Español' },
+  { code: 'es-ES', label: 'Español (España)' },
+  { code: 'es-LA', label: 'Español (Latino)' },
+  { code: 'en',    label: 'English' },
+  { code: 'en-US', label: 'English (US)' },
+  { code: 'en-GB', label: 'English (UK)' },
+  { code: 'pt',    label: 'Português' },
+  { code: 'pt-BR', label: 'Português (Brasil)' },
+  { code: 'fr',    label: 'Français' },
+  { code: 'de',    label: 'Deutsch' },
+  { code: 'it',    label: 'Italiano' },
+  { code: 'ja',    label: '日本語' },
+  { code: 'zh',    label: '中文' },
+  { code: 'ko',    label: '한국어' },
+  { code: 'ar',    label: 'العربية' },
+  { code: 'custom','label': 'Otro...' },
+];
+
 /* ── 1. LECTURA DE PARÁMETROS ── */
 const params  = new URLSearchParams(window.location.search);
-const P_VIDEO = params.get('video');
-const P_VTT   = params.get('vtt');
-const P_ASS   = params.get('ass');
-const P_TITLE = params.get('title');
+const P_VIDEO  = params.get('video');
+const P_TITLE  = params.get('title');
+// Formato multi-pista: subs=Label:tipo:url|Label:tipo:url|...
+// Retrocompatibilidad con parámetros vtt/ass legacy
+const P_SUBS_RAW   = params.get('subs');
+const P_DEFAULT_SUB = params.get('defaultSub') || '';
+
+function parseSubsParam(raw, legacyVtt, legacyAss) {
+  const tracks = [];
+  if (raw) {
+    raw.split('|').forEach(part => {
+      const idx = part.indexOf(':');
+      if (idx < 0) return;
+      const label = decodeURIComponent(part.slice(0, idx));
+      const rest  = part.slice(idx + 1);
+      const idx2  = rest.indexOf(':');
+      if (idx2 < 0) return;
+      const type = rest.slice(0, idx2);
+      const url  = decodeURIComponent(rest.slice(idx2 + 1));
+      if (url) tracks.push({ label, type, url });
+    });
+  }
+  // legacy fallback
+  if (tracks.length === 0) {
+    if (legacyVtt) tracks.push({ label: 'Subtítulos', type: 'vtt', url: legacyVtt });
+    if (legacyAss) tracks.push({ label: 'Subtítulos (ASS)', type: 'ass', url: legacyAss });
+  }
+  return tracks;
+}
+
+const P_TRACKS = parseSubsParam(P_SUBS_RAW, params.get('vtt'), params.get('ass'));
 
 if (P_VIDEO) {
   document.getElementById('generator-view').style.display = 'none';
-  initPlayer(P_VIDEO, P_VTT, P_ASS, P_TITLE || '');
+  initPlayer(P_VIDEO, P_TRACKS, P_DEFAULT_SUB, P_TITLE || '');
 } else {
   document.getElementById('generator-view').style.display = 'block';
   initGenerator();
 }
 
 /* ── 2. MODO GENERADOR ── */
+let subTrackCount = 0;
+
 function initGenerator() {
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('inp-video').addEventListener('keydown', e => {
     if (e.key === 'Enter') handleGenerate();
   });
+  document.getElementById('btn-add-sub').addEventListener('click', addSubTrackRow);
+  // Agregar una pista por defecto
+  addSubTrackRow();
+}
+
+function addSubTrackRow(defaults = {}) {
+  subTrackCount++;
+  const id  = subTrackCount;
+  const list = document.getElementById('sub-tracks-list');
+  const row  = document.createElement('div');
+  row.className  = 'sub-track-row';
+  row.dataset.id = id;
+
+  // Opciones de idioma
+  const langOpts = LANG_PRESETS.map(l =>
+    `<option value="${l.code}" ${defaults.lang === l.code ? 'selected' : ''}>${l.label}</option>`
+  ).join('');
+
+  row.innerHTML = `
+    <div class="url-col">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 2l-4 5-4-5"/></svg>
+      <input type="url" class="sub-url-input" placeholder="https://…/subtitulo.vtt o .ass" value="${defaults.url || ''}" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-body);font-size:14px;padding:12px 14px 12px 38px;outline:none;" />
+    </div>
+    <div class="sub-track-lang">
+      <select class="sub-type-select" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-body);font-size:13px;padding:10px 8px;outline:none;appearance:none;">
+        <option value="vtt" ${(defaults.type||'vtt')==='vtt'?'selected':''}>VTT</option>
+        <option value="ass" ${defaults.type==='ass'?'selected':''}>ASS</option>
+      </select>
+      <select class="sub-lang-select" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-body);font-size:13px;padding:10px 8px;outline:none;appearance:none;">
+        ${langOpts}
+      </select>
+    </div>
+    <button type="button" class="btn-remove-sub" title="Eliminar pista">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+
+  // Custom label input para "Otro..."
+  const langSel = row.querySelector('.sub-lang-select');
+  langSel.addEventListener('change', () => updateDefaultSubOptions());
+
+  row.querySelector('.btn-remove-sub').addEventListener('click', () => {
+    row.remove();
+    updateDefaultSubOptions();
+  });
+
+  row.querySelector('.sub-url-input').addEventListener('input', updateDefaultSubOptions);
+
+  list.appendChild(row);
+  updateDefaultSubOptions();
+}
+
+function getSubTracks() {
+  const rows = document.querySelectorAll('.sub-track-row');
+  const tracks = [];
+  rows.forEach(row => {
+    const url  = row.querySelector('.sub-url-input').value.trim();
+    const type = row.querySelector('.sub-type-select').value;
+    const langCode = row.querySelector('.sub-lang-select').value;
+    const label = LANG_PRESETS.find(l => l.code === langCode)?.label || langCode;
+    if (url) tracks.push({ label, type, url });
+  });
+  return tracks;
+}
+
+function updateDefaultSubOptions() {
+  const sel = document.getElementById('inp-default-sub');
+  const prev = sel.value;
+  const tracks = getSubTracks();
+  sel.innerHTML = '<option value="">Sin subtítulos por defecto</option>' +
+    tracks.map(t => `<option value="${t.label}" ${prev===t.label?'selected':''}>${t.label} (${t.type.toUpperCase()})</option>`).join('');
 }
 
 function handleGenerate() {
   const videoUrl = document.getElementById('inp-video').value.trim();
   if (!videoUrl) { showInputError('inp-video', 'Ingresa la URL del stream .m3u8'); return; }
 
-  const vttUrl = document.getElementById('inp-vtt').value.trim();
-  const assUrl = document.getElementById('inp-ass').value.trim();
-  const title  = document.getElementById('inp-title').value.trim();
+  const title      = document.getElementById('inp-title').value.trim();
+  const tracks     = getSubTracks();
+  const defaultSub = document.getElementById('inp-default-sub').value;
 
   const base = window.location.origin + window.location.pathname;
   const qp   = new URLSearchParams({ video: videoUrl });
-  if (vttUrl)  qp.set('vtt',   vttUrl);
-  if (assUrl)  qp.set('ass',   assUrl);
-  if (title)   qp.set('title', title);
+  if (title)      qp.set('title', title);
+  if (tracks.length > 0) {
+    const subsParam = tracks.map(t =>
+      `${encodeURIComponent(t.label)}:${t.type}:${encodeURIComponent(t.url)}`
+    ).join('|');
+    qp.set('subs', subsParam);
+  }
+  if (defaultSub) qp.set('defaultSub', defaultSub);
 
   const playerUrl  = `${base}?${qp.toString()}`;
   const iframeCode = `<iframe src="${playerUrl}" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; fullscreen" style="aspect-ratio:16/9;border:none;border-radius:8px;"></iframe>`;
@@ -991,7 +1182,7 @@ function handleGenerate() {
 
   const out = document.getElementById('output-section');
   out.classList.add('visible');
-  renderInlinePreview(videoUrl, vttUrl, assUrl, title);
+  renderInlinePreview(playerUrl);
   setTimeout(() => out.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
 
@@ -1003,16 +1194,11 @@ function showInputError(id, msg) {
   setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; el.placeholder = 'https://ejemplo.com/stream/index.m3u8'; }, 2500);
 }
 
-function renderInlinePreview(videoUrl, vttUrl, assUrl, title) {
+function renderInlinePreview(playerUrl) {
   const wrap = document.getElementById('preview-wrap');
   wrap.innerHTML = '';
-  const base = window.location.origin + window.location.pathname;
-  const qp   = new URLSearchParams({ video: videoUrl });
-  if (vttUrl) qp.set('vtt', vttUrl);
-  if (assUrl) qp.set('ass', assUrl);
-  if (title)  qp.set('title', title);
   const iframe = document.createElement('iframe');
-  iframe.src = `${base}?${qp.toString()}`;
+  iframe.src = playerUrl;
   iframe.setAttribute('frameborder', '0');
   iframe.setAttribute('allowfullscreen', '');
   iframe.setAttribute('allow', 'autoplay; fullscreen');
@@ -1021,14 +1207,13 @@ function renderInlinePreview(videoUrl, vttUrl, assUrl, title) {
 }
 
 /* ── 3. MODO REPRODUCTOR ── */
-function initPlayer(videoUrl, vttUrl, assUrl, title) {
+function initPlayer(videoUrl, tracks, defaultSub, title) {
   document.getElementById('player-view').classList.add('active');
   document.getElementById('player-title-bar').textContent = title || '';
 
   const video = document.getElementById('main-video');
   showSpinner(true);
 
-  // HLS: devuelve la instancia para leer subtitleTracks después
   const hlsInstance = loadHLS(video, videoUrl);
 
   video.addEventListener('playing', () => showSpinner(false));
@@ -1037,10 +1222,7 @@ function initPlayer(videoUrl, vttUrl, assUrl, title) {
   video.addEventListener('error',   () => showError('Error al cargar el stream. Verifica la URL y los permisos CORS.'));
 
   initControls(video);
-
-  // setupSubtitles necesita la instancia HLS para leer pistas embebidas
-  setupSubtitles(video, vttUrl, assUrl, hlsInstance);
-
+  setupSubtitles(video, tracks, defaultSub, hlsInstance);
   setupControlsAutoHide();
   setupTitleAutoHide(document.getElementById('player-title-bar'));
 }
@@ -1119,35 +1301,35 @@ function setupQualityMenu(hls, levels) {
 /* ── 5. SUBTÍTULOS ── */
 const SubState = { current: null, octopus: null };
 
-function setupSubtitles(video, vttUrl, assUrl, hlsInstance) {
+// tracks: [{ label, type:'vtt'|'ass', url }]
+function setupSubtitles(video, tracks, defaultSub, hlsInstance) {
   const subMenu = document.getElementById('sub-menu');
-  const items   = [{ id: 'off', label: 'Sin subtítulos' }];
+  // items: [{ id, label, type, url }]
+  const items = [{ id: 'off', label: 'Sin subtítulos', type: 'off', url: '' }];
 
-  // Pista VTT externa
-  if (vttUrl) {
-    addVttTrack(video, vttUrl, 'ext', 'Subtítulos (VTT)');
-    items.push({ id: 'vtt:ext', label: 'Subtítulos (VTT)' });
-  }
+  // Pistas externas pasadas como parámetro
+  tracks.forEach((t, i) => {
+    const tid = `ext:${i}`;
+    if (t.type === 'vtt') {
+      addVttTrack(video, t.url, tid, t.label);
+    }
+    items.push({ id: tid, label: t.label, type: t.type, url: t.url });
+  });
 
-  // Pistas embebidas en el .m3u8 — se leen cuando HLS.js ya parseó el manifiesto
+  // Pistas embebidas en el .m3u8
   if (hlsInstance) {
     const applyHlsSubs = () => {
-      const tracks = hlsInstance.subtitleTracks || [];
-      tracks.forEach((t, i) => {
-        const trackId = `hls:${i}`;
-        const label   = t.name || t.lang || `Pista ${i + 1}`;
-        // Añadir <track> nativo ligado a HLS.js
-        items.push({ id: trackId, label: `${label} (M3U8)` });
+      const hlsTracks = hlsInstance.subtitleTracks || [];
+      hlsTracks.forEach((t, i) => {
+        const label = t.name || t.lang || `Pista ${i + 1}`;
+        items.push({ id: `hls:${i}`, label: `${label} (M3U8)`, type: 'hls', url: '' });
       });
-      // Si hay pistas HLS, reconstruir menú ahora
-      if (tracks.length > 0) {
-        buildSubMenu(subMenu, items, video, vttUrl, assUrl, hlsInstance);
+      if (hlsTracks.length > 0) {
+        buildSubMenu(subMenu, items, video, hlsInstance, defaultSub);
         document.getElementById('btn-subs').style.display = '';
         document.getElementById('btn-sub-style').style.display = '';
       }
     };
-
-    // MANIFEST_PARSED puede ya haber disparado; verificar inmediatamente
     if ((hlsInstance.subtitleTracks || []).length > 0) {
       applyHlsSubs();
     } else {
@@ -1155,23 +1337,35 @@ function setupSubtitles(video, vttUrl, assUrl, hlsInstance) {
     }
   }
 
-  // Pista ASS externa
-  if (assUrl) {
-    items.push({ id: 'ass', label: 'Subtítulos (ASS)' });
-  }
+  buildSubMenu(subMenu, items, video, hlsInstance, defaultSub);
 
-  buildSubMenu(subMenu, items, video, vttUrl, assUrl, hlsInstance);
+  const hasSubs = tracks.length > 0;
+  document.getElementById('btn-subs').style.display      = hasSubs ? '' : 'none';
+  document.getElementById('btn-sub-style').style.display = hasSubs ? '' : 'none';
 
-  if (!vttUrl && !assUrl) {
-    document.getElementById('btn-subs').style.display = 'none';
-    document.getElementById('btn-sub-style').style.display = 'none';
-  } else {
-    document.getElementById('btn-sub-style').style.display = '';
+  // Activar por defecto automáticamente
+  if (defaultSub) {
+    const defItem = items.find(it => it.label === defaultSub);
+    if (defItem) {
+      // Pequeño delay para que el video cargue primero
+      setTimeout(() => {
+        selectSubtitle(defItem.id, video, items, subMenu, hlsInstance);
+      }, 800);
+    }
+  } else if (tracks.length > 0) {
+    // Si no hay defaultSub explícito, activar el primer sub VTT español automáticamente
+    const autoSub = items.find(it =>
+      it.type === 'vtt' && /espa|español|spanish|es[^a-z]/i.test(it.label)
+    );
+    if (autoSub) {
+      setTimeout(() => {
+        selectSubtitle(autoSub.id, video, items, subMenu, hlsInstance);
+      }, 800);
+    }
   }
 }
 
 function addVttTrack(video, src, id, label) {
-  // Eliminar track anterior con mismo id si existe
   [...video.querySelectorAll('track')].forEach(t => { if (t.dataset.tid === id) t.remove(); });
   const track = document.createElement('track');
   track.kind    = 'subtitles';
@@ -1184,37 +1378,42 @@ function addVttTrack(video, src, id, label) {
   video.appendChild(track);
 }
 
-function buildSubMenu(menu, items, video, vttUrl, assUrl, hlsInstance) {
+function buildSubMenu(menu, items, video, hlsInstance, defaultSub) {
   menu.innerHTML = '<div class="sub-menu-title">Subtítulos</div>';
   items.forEach(item => {
     const div = document.createElement('div');
     div.className  = 'sub-item' + (item.id === 'off' ? ' active' : '');
     div.dataset.id = item.id;
-    div.innerHTML  = `<span class="dot"></span>${item.label}`;
+    // Badge de tipo para pistas externas
+    const badge = item.type !== 'off' && item.type !== 'hls'
+      ? `<span style="margin-left:auto;font-size:10px;opacity:.5;font-weight:600;">${item.type.toUpperCase()}</span>`
+      : '';
+    div.innerHTML  = `<span class="dot"></span>${item.label}${badge}`;
     div.addEventListener('click', e => {
       e.stopPropagation();
-      selectSubtitle(item.id, video, vttUrl, assUrl, menu, hlsInstance);
+      selectSubtitle(item.id, video, items, menu, hlsInstance);
     });
     menu.appendChild(div);
   });
 }
 
-function selectSubtitle(id, video, vttUrl, assUrl, menu, hlsInstance) {
+function selectSubtitle(id, video, items, menu, hlsInstance) {
   menu.querySelectorAll('.sub-item').forEach(el => {
     el.classList.toggle('active', el.dataset.id === id);
   });
   disableAllSubs(video, hlsInstance);
   SubState.current = id;
 
-  if (id === 'vtt:ext' && vttUrl) {
-    enableVttSub(video, 'ext');
+  const item = items.find(it => it.id === id);
+  if (!item || id === 'off') return;
+
+  if (item.type === 'vtt') {
+    enableVttSub(video, id);
+  } else if (item.type === 'ass') {
+    enableAssSub(video, item.url);
   } else if (id.startsWith('hls:')) {
     const idx = parseInt(id.split(':')[1], 10);
-    if (hlsInstance) {
-      hlsInstance.subtitleTrack = idx;
-    }
-  } else if (id === 'ass' && assUrl) {
-    enableAssSub(video, assUrl);
+    if (hlsInstance) hlsInstance.subtitleTrack = idx;
   }
 
   menu.classList.remove('open');

@@ -1241,14 +1241,46 @@ function enableVttSub(video, tid) {
   }
 }
 
-function enableAssSub(video, assUrl) {
-  if (typeof SubtitlesOctopus === 'undefined') {
-    loadScript('https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus.js', () => {
-      createOctopusInstance(video, assUrl);
-    });
-  } else {
-    createOctopusInstance(video, assUrl);
+/* Los Web Workers NO pueden cargarse cross-origin directamente.
+   Solución: hacer fetch del worker JS y crear un Blob URL local
+   para que el browser lo considere same-origin. */
+
+const CDN_BASE = 'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/';
+const OctopusWorkerCache = { url: null, legacyUrl: null };
+
+async function fetchWorkerBlobUrl(src) {
+  try {
+    const res  = await fetch(src);
+    const text = await res.text();
+    const blob = new Blob([text], { type: 'application/javascript' });
+    return URL.createObjectURL(blob);
+  } catch (e) {
+    console.warn('[ASS] No se pudo crear Blob URL para worker:', e);
+    return src; // fallback al URL original (puede fallar)
   }
+}
+
+async function enableAssSub(video, assUrl) {
+  // 1. Cargar el script principal de SubtitlesOctopus si aún no está
+  if (typeof SubtitlesOctopus === 'undefined') {
+    await new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = CDN_BASE + 'subtitles-octopus.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  // 2. Preparar Blob URLs para los workers (solo la primera vez)
+  if (!OctopusWorkerCache.url) {
+    [OctopusWorkerCache.url, OctopusWorkerCache.legacyUrl] = await Promise.all([
+      fetchWorkerBlobUrl(CDN_BASE + 'subtitles-octopus-worker.js'),
+      fetchWorkerBlobUrl(CDN_BASE + 'subtitles-octopus-worker-legacy.js'),
+    ]);
+  }
+
+  createOctopusInstance(video, assUrl);
 }
 
 function createOctopusInstance(video, assUrl) {
@@ -1259,13 +1291,14 @@ function createOctopusInstance(video, assUrl) {
   try {
     SubState.octopus = new SubtitlesOctopus({
       video,
-      subUrl:  assUrl,
+      subUrl:          assUrl,
       canvas,
-      fonts:   [],
-      workerUrl:       'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker.js',
-      legacyWorkerUrl: 'https://cdn.jsdelivr.net/npm/javascript-subtitles-octopus@5.1.1/dist/subtitles-octopus-worker-legacy.js',
+      fonts:           [],
+      workerUrl:       OctopusWorkerCache.url       || (CDN_BASE + 'subtitles-octopus-worker.js'),
+      legacyWorkerUrl: OctopusWorkerCache.legacyUrl || (CDN_BASE + 'subtitles-octopus-worker-legacy.js'),
       renderMode: 'wasm',
       onReady: () => console.log('[ASS] SubtitlesOctopus listo'),
+      onError: (e) => console.warn('[ASS] Error:', e),
     });
   } catch (err) {
     console.warn('[ASS] Error iniciando SubtitlesOctopus:', err);

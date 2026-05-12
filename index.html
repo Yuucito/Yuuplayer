@@ -746,105 +746,47 @@
     #player-error.active { display: flex; }
     #player-error strong { color: var(--accent); font-size: 18px; }
 
-    /* ═══════════════════════════════════════════════════
-       VAST AD OVERLAY
-    ═══════════════════════════════════════════════════ */
+    /* ── VAST AD OVERLAY ── */
     #ad-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 50;
-      display: none;
-      background: #000;
+      position: absolute; inset: 0; z-index: 50;
+      display: none; background: #000;
     }
     #ad-overlay.active { display: block; }
-
-    #ad-video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    #ad-ui {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 51;
-    }
-
-    /* Ad label top-left */
+    #ad-video { width: 100%; height: 100%; object-fit: contain; display: block; }
+    #ad-ui { position: absolute; inset: 0; pointer-events: none; z-index: 51; }
     #ad-label {
-      position: absolute;
-      top: 14px; left: 14px;
-      background: rgba(0,0,0,.65);
-      color: rgba(255,255,255,.7);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 4px;
+      position: absolute; top: 14px; left: 14px;
+      background: rgba(0,0,0,.65); color: rgba(255,255,255,.65);
+      font-size: 10px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 4px;
+    }
+    #ad-click-area {
+      position: absolute; inset: 0; cursor: pointer; z-index: 0;
       pointer-events: none;
     }
-
-    /* Countdown / skip button */
+    #ad-duration {
+      position: absolute; bottom: 18px; left: 18px;
+      font-size: 12px; color: rgba(255,255,255,.55); pointer-events: none;
+    }
     #ad-skip-btn {
-      position: absolute;
-      bottom: 18px; right: 18px;
+      position: absolute; bottom: 18px; right: 18px;
       pointer-events: all;
-      background: rgba(0,0,0,.75);
-      border: 1px solid rgba(255,255,255,.25);
-      color: #fff;
-      font-family: var(--font-body);
-      font-size: 13px;
-      padding: 9px 16px;
-      border-radius: 6px;
-      cursor: default;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: background .2s, border-color .2s;
-      white-space: nowrap;
+      background: rgba(0,0,0,.75); border: 1px solid rgba(255,255,255,.25);
+      color: #fff; font-family: var(--font-body); font-size: 13px;
+      padding: 9px 16px; border-radius: 6px; cursor: default;
+      display: flex; align-items: center; gap: 7px;
+      transition: background .2s, border-color .2s; white-space: nowrap;
     }
     #ad-skip-btn.skippable {
-      cursor: pointer;
-      border-color: rgba(255,255,255,.55);
-      background: rgba(230,57,70,.7);
+      cursor: pointer; border-color: rgba(255,255,255,.55);
+      background: rgba(230,57,70,.75);
     }
-    #ad-skip-btn.skippable:hover { background: rgba(230,57,70,.9); }
-
-    /* Click-through link */
-    #ad-click-area {
-      position: absolute;
-      inset: 0;
-      pointer-events: all;
-      cursor: pointer;
-      z-index: 0;
-    }
-
-    /* Ad progress bar */
+    #ad-skip-btn.skippable:hover { background: rgba(230,57,70,.95); }
     #ad-progress-bar {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 3px;
-      background: rgba(255,255,255,.15);
-      pointer-events: none;
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px; background: rgba(255,255,255,.15); pointer-events: none;
     }
-    #ad-progress-fill {
-      height: 100%;
-      background: var(--accent);
-      width: 0%;
-      transition: width .5s linear;
-    }
-
-    /* Ad duration info */
-    #ad-duration {
-      position: absolute;
-      bottom: 18px; left: 18px;
-      font-size: 12px;
-      color: rgba(255,255,255,.6);
-      pointer-events: none;
-    }
+    #ad-progress-fill { height: 100%; background: var(--accent); width: 0%; }
 
     /* Mobile tweaks */
     @media (max-width: 600px) {
@@ -929,21 +871,21 @@
 
     <!-- ── Sección: Anuncios VAST ── -->
     <div class="form-section">
-      <div class="form-section-title">Anuncios (VAST)</div>
+      <div class="form-section-title">Anuncios VAST <span style="font-weight:400;opacity:.5;font-size:10px;text-transform:none;letter-spacing:0;">opcional</span></div>
 
       <div class="field">
-        <label for="inp-vast">URL del tag VAST <span style="color:var(--muted);font-size:10px;margin-left:4px;">opcional</span></label>
+        <label for="inp-vast">URL del tag VAST</label>
         <div class="input-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="8" cy="10" r="2"/><path d="M14 9h4"/><path d="M14 13h4"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="8" cy="9" r="1.5" fill="currentColor"/><path d="M14 8h4M14 12h4"/></svg>
           <input type="url" id="inp-vast" placeholder="https://ejemplo.com/vast.xml" autocomplete="off" spellcheck="false" />
         </div>
       </div>
 
       <div class="field">
-        <label for="inp-skip-delay">Segundos para poder saltar el anuncio</label>
+        <label for="inp-skip-delay">Segundos para poder saltar <span style="opacity:.5;font-size:10px;">(0 = skip inmediato, vacío = no saltable)</span></label>
         <div class="input-wrap">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <input type="text" id="inp-skip-delay" placeholder="5  (0 = no saltable)" value="5" style="padding-left:40px;" />
+          <input type="text" id="inp-skip-delay" placeholder="5" value="5" />
         </div>
       </div>
     </div>
@@ -999,12 +941,12 @@
 ══════════════════════════════════════════════════ -->
 <div id="player-view">
 
-  <!-- ── AD OVERLAY (VAST) ── -->
+  <!-- AD OVERLAY (VAST pre-roll) -->
   <div id="ad-overlay">
     <video id="ad-video" playsinline preload="auto"></video>
     <div id="ad-ui">
       <div id="ad-label">Anuncio</div>
-      <div id="ad-click-area" title="Más información"></div>
+      <div id="ad-click-area"></div>
       <div id="ad-duration"></div>
       <button id="ad-skip-btn">Anuncio termina en <span id="ad-skip-count">5</span>s</button>
       <div id="ad-progress-bar"><div id="ad-progress-fill"></div></div>
@@ -1174,10 +1116,10 @@ const P_TITLE  = params.get('title');
 const P_SUBS_RAW   = params.get('subs');
 const P_DEFAULT_SUB = params.get('defaultSub') || '';
 
-const P_VAST       = params.get('vast');
-const P_SKIP_DELAY = parseInt(params.get('skipDelay') || '5', 10);
+const P_VAST        = params.get('vast');
+const P_SKIP_DELAY  = params.get('skipDelay');
 
-
+function parseSubsParam(raw, legacyVtt, legacyAss) {
   const tracks = [];
   if (raw) {
     raw.split('|').forEach(part => {
@@ -1310,8 +1252,8 @@ function handleGenerate() {
     ).join('|');
     qp.set('subs', subsParam);
   }
-  if (defaultSub) qp.set('defaultSub', defaultSub);
-  if (vastUrl)    qp.set('vast', vastUrl);
+  if (defaultSub)           qp.set('defaultSub', defaultSub);
+  if (vastUrl)              qp.set('vast', vastUrl);
   if (vastUrl && skipDelay !== '') qp.set('skipDelay', skipDelay);
 
   const playerUrl  = `${base}?${qp.toString()}`;
@@ -1347,7 +1289,7 @@ function renderInlinePreview(playerUrl) {
 }
 
 /* ── 3. MODO REPRODUCTOR ── */
-function initPlayer(videoUrl, tracks, defaultSub, title, vastUrl, skipDelay) {
+function initPlayer(videoUrl, tracks, defaultSub, title, vastUrl, skipDelayStr) {
   document.getElementById('player-view').classList.add('active');
   document.getElementById('player-title-bar').textContent = title || '';
 
@@ -1361,271 +1303,170 @@ function initPlayer(videoUrl, tracks, defaultSub, title, vastUrl, skipDelay) {
   video.addEventListener('canplay', () => showSpinner(false));
   video.addEventListener('error',   () => showError('Error al cargar el stream. Verifica la URL y los permisos CORS.'));
 
+  // Siempre inicializar controles y subtítulos
+  initControls(video);
+  setupSubtitles(video, tracks, defaultSub, hlsInstance);
+  setupControlsAutoHide();
+  setupTitleAutoHide(document.getElementById('player-title-bar'));
+
+  // Si hay VAST, mostrar el anuncio encima sin tocar nada del reproductor
   if (vastUrl) {
-    // Pausar el video principal hasta que termine el anuncio
-    video.pause();
-    playVastAd(vastUrl, skipDelay ?? 5, () => {
-      // Callback: anuncio terminado → iniciar reproducción
-      initControls(video);
-      setupSubtitles(video, tracks, defaultSub, hlsInstance);
-      setupControlsAutoHide();
-      setupTitleAutoHide(document.getElementById('player-title-bar'));
-    });
-  } else {
-    initControls(video);
-    setupSubtitles(video, tracks, defaultSub, hlsInstance);
-    setupControlsAutoHide();
-    setupTitleAutoHide(document.getElementById('player-title-bar'));
+    const skipDelay = skipDelayStr !== null && skipDelayStr !== '' ? parseInt(skipDelayStr, 10) : null;
+    playVastAd(vastUrl, skipDelay);
   }
 }
 
 /* ══════════════════════════════════════════════════════════════
-   VAST AD ENGINE
-   Soporta: VAST 2.x / 3.x / 4.x inline & wrapper (1 nivel)
-   Tipos: Linear (pre-roll de video)
+   VAST AD ENGINE  —  pre-roll lineal, VAST 2/3/4, wrapper 1 nivel
 ══════════════════════════════════════════════════════════════ */
-
-async function playVastAd(vastUrl, skipDelay, onComplete) {
+async function playVastAd(vastUrl, skipDelay) {
   try {
-    const adData = await fetchAndParseVAST(vastUrl);
-    if (!adData || !adData.mediaUrl) throw new Error('No se encontró media lineal en el VAST.');
-    runAdPlayback(adData, skipDelay, onComplete);
+    const adData = await fetchAndParseVAST(vastUrl, 0);
+    if (!adData || !adData.mediaUrl) throw new Error('Sin media lineal en el VAST.');
+    runAdPlayback(adData, skipDelay);
   } catch (err) {
-    console.warn('[VAST] Error, saltando anuncio:', err.message);
-    onComplete();
+    console.warn('[VAST] Saltando anuncio:', err.message);
   }
 }
 
-/* ── Fetch + parse VAST XML (con soporte wrapper 1 nivel) ── */
 async function fetchAndParseVAST(url, depth) {
-  depth = depth || 0;
   if (depth > 3) throw new Error('Demasiados redirects VAST Wrapper.');
-
   let xml;
   try {
-    // Intentar fetch directo; si falla CORS usar proxy
-    const res = await fetch(url, { mode: 'cors' });
+    const res  = await fetch(url, { mode: 'cors' });
     const text = await res.text();
     xml = new DOMParser().parseFromString(text, 'application/xml');
-  } catch (e) {
-    throw new Error('No se pudo descargar el VAST XML: ' + e.message);
-  }
-
-  // Verificar error de parseo
+  } catch(e) { throw new Error('No se pudo descargar el VAST: ' + e.message); }
   if (xml.querySelector('parsererror')) throw new Error('XML VAST inválido.');
-
-  // Buscar el primer <Ad>
   const ad = xml.querySelector('Ad');
-  if (!ad) throw new Error('No se encontró elemento <Ad> en el VAST.');
+  if (!ad) throw new Error('Sin elemento <Ad>.');
 
-  // ── VAST Wrapper: redirige a otro VAST ──
+  // Wrapper → seguir redirigiendo
   const wrapper = ad.querySelector('Wrapper');
   if (wrapper) {
-    const wrapperUrl = getNodeText(wrapper, 'VASTAdTagURI');
-    if (!wrapperUrl) throw new Error('Wrapper sin VASTAdTagURI.');
-    return fetchAndParseVAST(wrapperUrl.trim(), depth + 1);
+    const wUrl = (ad.querySelector('VASTAdTagURI') || {}).textContent;
+    if (!wUrl) throw new Error('Wrapper sin VASTAdTagURI.');
+    return fetchAndParseVAST(wUrl.trim(), depth + 1);
   }
 
-  // ── InLine ──
   const inline = ad.querySelector('InLine');
-  if (!inline) throw new Error('No se encontró InLine ni Wrapper.');
+  if (!inline) throw new Error('Sin InLine ni Wrapper.');
 
-  // Recopilar medias lineales
-  const creatives = [...inline.querySelectorAll('Creative')];
-  let mediaUrl = null;
-  let clickUrl = null;
-  let duration = 0;
-  const impressionUrls = [];
+  const impressionUrls = [...inline.querySelectorAll('Impression')]
+    .map(el => el.textContent.trim()).filter(Boolean);
+
   const trackingMap = {};
+  let mediaUrl = null, clickUrl = null;
 
-  // Impresiones
-  inline.querySelectorAll('Impression').forEach(el => {
-    if (el.textContent.trim()) impressionUrls.push(el.textContent.trim());
-  });
-
-  for (const creative of creatives) {
+  for (const creative of inline.querySelectorAll('Creative')) {
     const linear = creative.querySelector('Linear');
     if (!linear) continue;
-
-    // Duración
-    const durStr = getNodeText(linear, 'Duration');
-    if (durStr) duration = parseDuration(durStr);
-
-    // Click
-    clickUrl = getNodeText(linear, 'ClickThrough') || null;
-
-    // Tracking
+    clickUrl = (linear.querySelector('ClickThrough') || {}).textContent?.trim() || null;
     linear.querySelectorAll('Tracking').forEach(t => {
       const ev = t.getAttribute('event');
       if (ev && t.textContent.trim()) {
-        trackingMap[ev] = trackingMap[ev] || [];
-        trackingMap[ev].push(t.textContent.trim());
+        (trackingMap[ev] = trackingMap[ev] || []).push(t.textContent.trim());
       }
     });
-
-    // MediaFiles — elegir el mejor MP4
-    const mediaFiles = [...linear.querySelectorAll('MediaFile')];
-    const mp4 = mediaFiles
-      .filter(mf => {
-        const type = mf.getAttribute('type') || '';
-        return type.includes('mp4') || type.includes('x-flv') || type.includes('webm') || type.includes('ogg');
-      })
-      .sort((a, b) => {
-        const bwA = parseInt(a.getAttribute('bitrate') || '0', 10);
-        const bwB = parseInt(b.getAttribute('bitrate') || '0', 10);
-        return bwB - bwA; // mayor bitrate primero
-      })[0];
-
-    if (mp4) {
-      mediaUrl = mp4.textContent.trim();
-      break;
-    }
+    const best = [...linear.querySelectorAll('MediaFile')]
+      .filter(mf => /mp4|webm|ogg/i.test(mf.getAttribute('type') || ''))
+      .sort((a,b) => (+b.getAttribute('bitrate')||0) - (+a.getAttribute('bitrate')||0))[0];
+    if (best) { mediaUrl = best.textContent.trim(); break; }
   }
-
-  return { mediaUrl, clickUrl, duration, impressionUrls, trackingMap, skipDelay: 0 };
+  return { mediaUrl, clickUrl, impressionUrls, trackingMap };
 }
 
-/* ── Playback del anuncio ── */
-function runAdPlayback(adData, skipDelay, onComplete) {
+function runAdPlayback(adData, skipDelay) {
   const overlay   = document.getElementById('ad-overlay');
   const adVideo   = document.getElementById('ad-video');
   const skipBtn   = document.getElementById('ad-skip-btn');
-  const skipCount = document.getElementById('ad-skip-count');
   const clickArea = document.getElementById('ad-click-area');
   const progFill  = document.getElementById('ad-progress-fill');
   const durLabel  = document.getElementById('ad-duration');
+  const mainVideo = document.getElementById('main-video');
 
   overlay.classList.add('active');
+  // Pausar el video principal mientras corre el anuncio
+  mainVideo.pause();
   adVideo.src = adData.mediaUrl;
 
-  let skippable = false;
-  let skipTimer = null;
   let impressionFired = false;
+  let skipTimer = null;
 
-  // ── Función de fin de anuncio ──
-  function endAd() {
-    fireTracking('complete');
-    cleanup();
-    onComplete();
+  function fireTracking(ev) {
+    ((adData.trackingMap||{})[ev]||[]).forEach(u => { try{ new Image().src=u; }catch(e){} });
   }
-
-  function cleanup() {
-    overlay.classList.remove('active');
-    adVideo.pause();
-    adVideo.src = '';
-    if (skipTimer) clearInterval(skipTimer);
-    adVideo.removeEventListener('ended', endAd);
-  }
-
-  // ── Impresiones ──
   function fireImpression() {
-    if (impressionFired) return;
-    impressionFired = true;
-    (adData.impressionUrls || []).forEach(url => {
-      new Image().src = url; // pixel tracking
-    });
+    if (impressionFired) return; impressionFired = true;
+    (adData.impressionUrls||[]).forEach(u => new Image().src = u);
     fireTracking('start');
   }
 
-  // ── Tracking ──
-  function fireTracking(event) {
-    const urls = (adData.trackingMap || {})[event] || [];
-    urls.forEach(url => { try { new Image().src = url; } catch(e){} });
+  function endAd() {
+    fireTracking('complete');
+    cleanup();
+  }
+  function cleanup() {
+    overlay.classList.remove('active');
+    adVideo.pause(); adVideo.src = '';
+    if (skipTimer) clearInterval(skipTimer);
+    mainVideo.play().catch(()=>{});
   }
 
-  // ── Click ──
+  // Click-through
   if (adData.clickUrl) {
     clickArea.style.pointerEvents = 'all';
-    clickArea.onclick = () => {
-      fireTracking('clickThrough');
-      window.open(adData.clickUrl, '_blank', 'noopener');
-    };
-  } else {
-    clickArea.style.pointerEvents = 'none';
-    clickArea.onclick = null;
+    clickArea.onclick = () => { fireTracking('clickThrough'); window.open(adData.clickUrl,'_blank','noopener'); };
   }
 
-  // ── Skip countdown ──
-  const canSkip = skipDelay >= 0;
-  let remaining = skipDelay;
-
-  if (!canSkip || skipDelay === 0) {
-    // Saltable inmediatamente o sin skip
-    if (canSkip && skipDelay === 0) {
-      skipBtn.textContent = 'Saltar anuncio ›';
-      skipBtn.classList.add('skippable');
-      skippable = true;
-      skipBtn.onclick = () => { fireTracking('skip'); cleanup(); onComplete(); };
-    } else {
-      skipBtn.textContent = 'Anuncio';
-      skipBtn.classList.remove('skippable');
-    }
-  } else {
-    skipCount.textContent = remaining;
-    skipBtn.innerHTML = `Saltar en <span id="ad-skip-count">${remaining}</span>s`;
+  // Skip logic
+  const canSkip = skipDelay !== null && !isNaN(skipDelay);
+  if (canSkip && skipDelay === 0) {
+    skipBtn.textContent = 'Saltar anuncio ›';
+    skipBtn.classList.add('skippable');
+    skipBtn.onclick = () => { fireTracking('skip'); cleanup(); };
+  } else if (canSkip && skipDelay > 0) {
+    let rem = skipDelay;
+    const sc = document.getElementById('ad-skip-count');
+    skipBtn.innerHTML = `Saltar en <span id="ad-skip-count">${rem}</span>s`;
     skipBtn.classList.remove('skippable');
     skipTimer = setInterval(() => {
-      remaining--;
-      const sc = document.getElementById('ad-skip-count');
-      if (sc) sc.textContent = remaining;
-      if (remaining <= 0) {
+      rem--;
+      const el = document.getElementById('ad-skip-count');
+      if (el) el.textContent = rem;
+      if (rem <= 0) {
         clearInterval(skipTimer);
         skipBtn.textContent = 'Saltar anuncio ›';
         skipBtn.classList.add('skippable');
-        skippable = true;
-        skipBtn.onclick = () => { fireTracking('skip'); cleanup(); onComplete(); };
+        skipBtn.onclick = () => { fireTracking('skip'); cleanup(); };
       }
     }, 1000);
+  } else {
+    // No saltable
+    skipBtn.textContent = 'Anuncio';
+    skipBtn.classList.remove('skippable');
   }
 
-  // ── Progreso ──
+  // Progreso y tracking de cuartiles
+  let q1=false, q2=false, q3=false;
   adVideo.addEventListener('timeupdate', () => {
     if (!adVideo.duration) return;
     const pct = (adVideo.currentTime / adVideo.duration) * 100;
     progFill.style.width = pct + '%';
-
-    // Tiempo restante
-    const rem = Math.max(0, adVideo.duration - adVideo.currentTime);
-    durLabel.textContent = `Anuncio: ${Math.ceil(rem)}s restantes`;
-
-    // Cuartiles de tracking
-    const q = pct;
-    if (q >= 25 && q < 26)  fireTracking('firstQuartile');
-    if (q >= 50 && q < 51)  fireTracking('midpoint');
-    if (q >= 75 && q < 76)  fireTracking('thirdQuartile');
-
+    durLabel.textContent = `Anuncio: ${Math.ceil(adVideo.duration - adVideo.currentTime)}s`;
     if (!impressionFired && adVideo.currentTime > 0) fireImpression();
+    if (!q1 && pct >= 25) { q1=true; fireTracking('firstQuartile'); }
+    if (!q2 && pct >= 50) { q2=true; fireTracking('midpoint'); }
+    if (!q3 && pct >= 75) { q3=true; fireTracking('thirdQuartile'); }
   });
 
   adVideo.addEventListener('ended', endAd);
-  adVideo.addEventListener('error', () => {
-    console.warn('[VAST] Error reproduciendo anuncio, saltando...');
-    cleanup();
-    onComplete();
-  });
+  adVideo.addEventListener('error', () => { console.warn('[VAST] Error en media, saltando.'); cleanup(); });
 
   adVideo.play().catch(() => {
-    // Autoplay blocked → esperar interacción del usuario
-    overlay.style.cursor = 'pointer';
-    overlay.addEventListener('click', () => {
-      adVideo.play().catch(() => { cleanup(); onComplete(); });
-      overlay.style.cursor = '';
-    }, { once: true });
+    // Autoplay bloqueado: el usuario debe hacer clic para iniciar
+    overlay.addEventListener('click', () => adVideo.play().catch(()=>{ cleanup(); }), { once: true });
   });
-}
-
-/* ── Helpers ── */
-function getNodeText(parent, tagName) {
-  const el = parent.querySelector(tagName);
-  return el ? el.textContent.trim() : null;
-}
-
-function parseDuration(str) {
-  // HH:MM:SS
-  const parts = str.split(':').map(Number);
-  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  if (parts.length === 2) return parts[0] * 60 + parts[1];
-  return parseFloat(str) || 0;
 }
 
 /* ── 4. HLS.JS ── */

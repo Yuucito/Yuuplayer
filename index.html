@@ -1089,6 +1089,17 @@
         <label class="ssp-label">Opacidad texto <span id="lbl-text-opacity">100%</span></label>
         <input type="range" id="ssp-text-opacity" min="20" max="100" value="100" step="5" />
       </div>
+      <div class="ssp-row">
+        <label class="ssp-label">
+          Posición vertical
+          <span id="lbl-position" style="font-size:10px;opacity:.6;margin-left:4px;">abajo</span>
+        </label>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5;flex-shrink:0"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+          <input type="range" id="ssp-position" min="0" max="100" value="90" step="1" style="flex:1;" />
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5;flex-shrink:0"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+        </div>
+      </div>
     </div>
     <div class="ssp-preview">
       <span id="ssp-preview-text">Así se verán los subtítulos</span>
@@ -1851,6 +1862,7 @@ function initSubtitleStyles() {
   const bgColorPicker   = document.getElementById('ssp-bg-color');
   const shadowSlider    = document.getElementById('ssp-shadow');
   const textOpacSlider  = document.getElementById('ssp-text-opacity');
+  const posSlider       = document.getElementById('ssp-position');
   const preview         = document.getElementById('ssp-preview-text');
 
   function hexToRgb(hex) {
@@ -1860,6 +1872,14 @@ function initSubtitleStyles() {
     return `${r},${g},${b}`;
   }
 
+  function posLabel(v) {
+    if (v <= 15)  return 'arriba del todo';
+    if (v <= 35)  return 'arriba';
+    if (v <= 55)  return 'centro';
+    if (v <= 75)  return 'abajo';
+    return 'abajo del todo';
+  }
+
   function apply() {
     const color      = colorPicker.value;
     const size       = sizSlider.value;
@@ -1867,6 +1887,7 @@ function initSubtitleStyles() {
     const bgColor    = bgColorPicker.value;
     const shadow     = shadowSlider.value / 100;
     const textOpac   = (textOpacSlider.value / 100).toFixed(2);
+    const pos        = parseInt(posSlider.value, 10); // 0=top … 100=bottom
 
     // Update labels
     document.getElementById('lbl-color').textContent       = color;
@@ -1875,6 +1896,7 @@ function initSubtitleStyles() {
     document.getElementById('lbl-bg-color').textContent    = bgColor;
     document.getElementById('lbl-shadow').textContent      = shadowSlider.value + '%';
     document.getElementById('lbl-text-opacity').textContent= textOpacSlider.value + '%';
+    document.getElementById('lbl-position').textContent    = posLabel(pos);
 
     const bgRgb = hexToRgb(bgColor);
     const colorRgb = hexToRgb(color);
@@ -1886,6 +1908,8 @@ function initSubtitleStyles() {
       ? `${shadowPx}px ${shadowPx}px ${shadowPx*2}px rgba(0,0,0,${shadowOpac}), -1px -1px ${shadowPx}px rgba(0,0,0,${(shadow*0.5).toFixed(2)})`
       : 'none';
 
+    // Posición: line% en WebVTT cue (0=top, 100=bottom)
+    // Inyectamos JS para modificar los cues activos en tiempo real
     const styleId = 'sf-cue-style';
     let styleEl = document.getElementById(styleId);
     if (!styleEl) {
@@ -1904,6 +1928,25 @@ function initSubtitleStyles() {
       }
     `;
 
+    // Posición vertical: manipular todos los cues activos del textTrack
+    const video = document.getElementById('main-video');
+    if (video) {
+      for (const track of video.textTracks) {
+        if (track.mode !== 'showing') continue;
+        const cues = track.cues || [];
+        for (const cue of cues) {
+          // line: porcentaje desde arriba. 90% = abajo (por defecto), 10% = arriba
+          cue.line = pos;
+          cue.snapToLines = false;
+        }
+        // Guardar preferencia para cues que aún no han cargado
+        track._sfPositionPref = pos;
+      }
+    }
+
+    // Guardar en variable global para aplicar a cues futuros
+    window._sfSubPosition = pos;
+
     // Update preview
     preview.style.color           = `rgba(${colorRgb}, ${textOpac})`;
     preview.style.background      = `rgba(${bgRgb}, ${bgOpac})`;
@@ -1914,8 +1957,25 @@ function initSubtitleStyles() {
     preview.style.display         = 'inline';
   }
 
-  [colorPicker, sizSlider, bgOpacSlider, bgColorPicker, shadowSlider, textOpacSlider]
+  [colorPicker, sizSlider, bgOpacSlider, bgColorPicker, shadowSlider, textOpacSlider, posSlider]
     .forEach(el => el.addEventListener('input', apply));
+
+  // Aplicar posición a cues cuando se agreguen nuevos
+  const video = document.getElementById('main-video');
+  if (video) {
+    video.addEventListener('loadedmetadata', () => {
+      for (const track of video.textTracks) {
+        track.addEventListener('cuechange', () => {
+          if (window._sfSubPosition === undefined) return;
+          const cues = track.activeCues || [];
+          for (const cue of cues) {
+            cue.line = window._sfSubPosition;
+            cue.snapToLines = false;
+          }
+        });
+      }
+    });
+  }
 
   apply(); // estado inicial
 }

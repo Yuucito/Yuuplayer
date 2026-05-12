@@ -1402,14 +1402,21 @@ function runAdPlayback(adData, skipDelay) {
     fireTracking('start');
   }
 
+  let cleanedUp = false;
   function endAd() {
     fireTracking('complete');
     cleanup();
   }
   function cleanup() {
-    overlay.classList.remove('active');
-    adVideo.pause(); adVideo.src = '';
+    if (cleanedUp) return;
+    cleanedUp = true;
     if (skipTimer) clearInterval(skipTimer);
+    // Detener completamente el audio/video del anuncio
+    adVideo.pause();
+    adVideo.muted = true;
+    adVideo.removeAttribute('src');
+    adVideo.load(); // fuerza reset del elemento media
+    overlay.classList.remove('active');
     mainVideo.play().catch(()=>{});
   }
 

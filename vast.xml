@@ -1,33 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<VAST version="3.0">
-  <Ad id="github-custom-ad">
+<VAST version="2.0">
+  <Ad id="custom-ad">
     <InLine>
-      <AdSystem>GitHub Custom VAST</AdSystem>
-      <AdTitle>Video Personalizado GitHub</AdTitle>
-      <Description>Archivo VAST configurado con MP4 directo</Description>
-      
-      <!-- URLs opcionales de seguimiento (puedes quitarlas si no las usas) -->
-      <Error><![CDATA[https://tu-sitio.com/error]]></Error>
-      
+      <AdSystem>Custom VAST</AdSystem>
+      <AdTitle>Video Ad</AdTitle>
       <Creatives>
-        <Creative id="video-creative-1" sequence="1">
+        <Creative sequence="1">
           <Linear>
-            <!-- Duración del video en formato HH:MM:SS -->
             <Duration>00:00:30</Duration>
-            
-            <TrackingEvents>
-              <Tracking event="start"><![CDATA[https://tu-sitio.com/start]]></Tracking>
-              <Tracking event="complete"><![CDATA[https://tu-sitio.com/complete]]></Tracking>
-            </TrackingEvents>
-            
             <VideoClicks>
-              <!-- Enlace al que redirige al hacer clic en el video -->
-              <ClickThrough><![CDATA[https://github.com/tu-usuario]]></ClickThrough>
+              <ClickThrough><![CDATA[https://github.com/Yuucito]]></ClickThrough>
             </VideoClicks>
-            
             <MediaFiles>
-              <!-- Enlace directo al archivo MP4 -->
-              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720" bitrate="1000">
+              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720">
                 <![CDATA[https://cdn4.videas.fr/5c5862a04b124dedb2393d2b86d3650a/01-lo-haras-conmigo-aqui-mp4-source.mp4]]>
               </MediaFile>
             </MediaFiles>

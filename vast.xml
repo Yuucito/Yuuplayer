@@ -1,18 +1,33 @@
-<VAST version="2.0">
-  <Ad id="custom-ad">
+<VAST version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vast3.xsd">
+  <Ad id="custom_ad_01">
     <InLine>
-      <AdSystem>Custom VAST</AdSystem>
-      <AdTitle>Video Ad</AdTitle>
+      <AdSystem version="1.0">Custom VAST Generator</AdSystem>
+      <AdTitle>Anuncio Personalizado Saltable</AdTitle>
+      <Description>Anuncio con salto programado a los 5 segundos</Description>
+      
+      {/* Píxeles de seguimiento opcionales (puedes dejarlos o vaciarlos) */}
+      <Error><![CDATA[https://tusitio.com/error]]></Error>
+      <Impression><![CDATA[https://tusitio.com/impression]]></Impression>
+      
       <Creatives>
-        <Creative sequence="1">
-          <Linear>
+        <Creative id="creative_01" sequence="1">
+          <Linear skipoffset="00:00:05">
             <Duration>00:00:30</Duration>
+            <TrackingEvents>
+              <Tracking event="start"><![CDATA[https://tusitio.com/start]]></Tracking>
+              <Tracking event="firstQuartile"><![CDATA[https://tusitio.com/firstQuartile]]></Tracking>
+              <Tracking event="midpoint"><![CDATA[https://tusitio.com/midpoint]]></Tracking>
+              <Tracking event="thirdQuartile"><![CDATA[https://tusitio.com/thirdQuartile]]></Tracking>
+              <Tracking event="complete"><![CDATA[https://tusitio.com/complete]]></Tracking>
+              <Tracking event="skip"><![CDATA[https://tusitio.com/skip]]></Tracking>
+            </TrackingEvents>
             <VideoClicks>
-              <ClickThrough><![CDATA[https://github.com/Yuucito]]></ClickThrough>
+              <ClickThrough><![CDATA[https://tusitio.com/landing]]></ClickThrough>
             </VideoClicks>
             <MediaFiles>
-              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720">
-                <![CDATA[https://cdn4.videas.fr/5c5862a04b124dedb2393d2b86d3650a/01-lo-haras-conmigo-aqui-mp4-source.mp4]]>
+              <!-- REEMPLAZA ESTE ENLACE CON LA URL DIRECTA DE TU MP4 -->
+              <MediaFile delivery="progressive" type="video/mp4" width="1280" height="720" bitrate="500" scalable="true" maintainAspectRatio="true">
+                <![CDATA[https://cdn4.videas.fr/f75ab48e6d7042c3a6624ad474ad2fda/videoplayback-1-mp4-source.mp4]]>
               </MediaFile>
             </MediaFiles>
           </Linear>
